@@ -8,6 +8,12 @@ allowed-tools: Read, Glob, Grep, Bash
 
 Automatically checks consistency between AI-SDD documents (PRD, `*_spec.md`, `*_design.md`) and detects inconsistencies.
 
+## Prerequisites
+
+**Before execution, you must read `sdd-workflow:sdd-workflow` agent content to understand AI-SDD principles.**
+
+This skill follows the sdd-workflow agent principles for document consistency checking.
+
 ## Document Dependencies
 
 ```mermaid

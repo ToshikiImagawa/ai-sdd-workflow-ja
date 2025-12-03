@@ -9,7 +9,9 @@ Organizes documents under `.docs/review/`, integrating important design decision
 
 ## Prerequisites
 
-**Cleanup follows the sdd-workflow agent principles.**
+**Before execution, you must read `sdd-workflow:sdd-workflow` agent content to understand AI-SDD principles.**
+
+This command follows the sdd-workflow agent principles for cleanup.
 
 ### Document Persistence Rules (Reference)
 

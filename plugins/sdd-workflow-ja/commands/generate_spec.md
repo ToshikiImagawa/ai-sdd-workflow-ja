@@ -12,7 +12,9 @@ description: "入力された内容から抽象仕様書（Specification）と�
 
 ## 前提条件
 
-**sdd-workflow エージェントの原則に従って生成を行います。**
+**実行前に必ず `sdd-workflow-ja:sdd-workflow` エージェントの内容を読み込み、AI-SDDの原則を理解してください。**
+
+このコマンドはsdd-workflowエージェントの原則に従って仕様書・設計書を生成します。
 
 生成前に以下を確認してください：
 

@@ -9,7 +9,9 @@ Verifies consistency between implementation code and specifications (`*_spec.md`
 
 ## Prerequisites
 
-**Consistency checking follows the sdd-workflow agent principles.**
+**Before execution, you must read `sdd-workflow:sdd-workflow` agent content to understand AI-SDD principles.**
+
+This command follows the sdd-workflow agent principles for consistency checking.
 
 ### Document Dependencies (Reference)
 

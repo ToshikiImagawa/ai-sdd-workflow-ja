@@ -8,6 +8,12 @@ allowed-tools: Read, Glob, Grep, AskUserQuestion
 
 Analyzes user input to detect Vibe Coding (the problem where AI must guess undefined requirements due to vague instructions).
 
+## Prerequisites
+
+**Before execution, you must read `sdd-workflow:sdd-workflow` agent content to understand AI-SDD principles.**
+
+This skill follows the sdd-workflow agent principles for Vibe Coding detection.
+
 ## Detection Patterns
 
 ### Vague Instructions

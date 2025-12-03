@@ -9,7 +9,9 @@ description: "ビジネス要求からPRD（要求仕様書）をSysML要求図�
 
 ## 前提条件
 
-**sdd-workflow エージェントの原則に従って生成を行います。**
+**実行前に必ず `sdd-workflow-ja:sdd-workflow` エージェントの内容を読み込み、AI-SDDの原則を理解してください。**
+
+このコマンドはsdd-workflowエージェントの原則に従ってPRDを生成します。
 
 ### PRD / 要求図の位置づけ（参照）
 

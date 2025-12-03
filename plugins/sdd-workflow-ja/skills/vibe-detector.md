@@ -8,6 +8,12 @@ allowed-tools: Read, Glob, Grep, AskUserQuestion
 
 ユーザーの入力を分析し、Vibe Coding（曖昧な指示によりAIが未定義要件を推測せざるを得ない問題）を検出します。
 
+## 前提条件
+
+**実行前に必ず `sdd-workflow-ja:sdd-workflow` エージェントの内容を読み込み、AI-SDDの原則を理解してください。**
+
+このスキルはsdd-workflowエージェントの原則に従ってVibe Codingを検出します。
+
 ## 検出パターン
 
 ### 曖昧な指示

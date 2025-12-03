@@ -9,7 +9,9 @@ Loads technical design document (`*_design.md`) and breaks it down into independ
 
 ## Prerequisites
 
-**Task breakdown follows the sdd-workflow agent principles.**
+**Before execution, you must read `sdd-workflow:sdd-workflow` agent content to understand AI-SDD principles.**
+
+This command follows the sdd-workflow agent principles for task breakdown.
 
 ### Tasks Phase Positioning (Reference)
 

@@ -8,6 +8,12 @@ allowed-tools: Read, Glob, Grep, Bash
 
 AI-SDD ドキュメント間（PRD、`*_spec.md`、`*_design.md`）の整合性を自動チェックし、不整合を検出します。
 
+## 前提条件
+
+**実行前に必ず `sdd-workflow-ja:sdd-workflow` エージェントの内容を読み込み、AI-SDDの原則を理解してください。**
+
+このスキルはsdd-workflowエージェントの原則に従ってドキュメント整合性をチェックします。
+
 ## ドキュメント間の依存関係
 
 ```mermaid
