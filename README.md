@@ -37,34 +37,34 @@ Claude Codeで `/plugin` コマンドを実行し、`sdd-workflow-ja` が表示�
 
 ### エージェント
 
-| エージェント | 説明 |
-|:---|:---|
-| `sdd-workflow` | AI-SDD開発フローの管理。フェーズ判定、Vibe Coding防止、ドキュメント整合性チェック |
-| `spec-reviewer` | 仕様書の品質レビューと改善提案。曖昧な記述の検出、不足セクションの指摘 |
+| エージェント          | 説明                                                |
+|:----------------|:--------------------------------------------------|
+| `sdd-workflow`  | AI-SDD開発フローの管理。フェーズ判定、Vibe Coding防止、ドキュメント整合性チェック |
+| `spec-reviewer` | 仕様書の品質レビューと改善提案。曖昧な記述の検出、不足セクションの指摘               |
 
 ### コマンド
 
-| コマンド | 説明 |
-|:---|:---|
-| `/generate_spec` | 入力から抽象仕様書と技術設計書を生成 |
-| `/generate_prd` | ビジネス要求からPRD（要求仕様書）をSysML要求図形式で生成 |
-| `/check_spec` | 実装コードと仕様書の整合性をチェックし、差異を検出 |
-| `/review_cleanup` | 実装完了後のreview/ディレクトリを整理し、設計判断を統合 |
-| `/task_breakdown` | 技術設計書からタスクを分解し、小タスクのリストを生成 |
+| コマンド              | 説明                               |
+|:------------------|:---------------------------------|
+| `/generate_spec`  | 入力から抽象仕様書と技術設計書を生成               |
+| `/generate_prd`   | ビジネス要求からPRD（要求仕様書）をSysML要求図形式で生成 |
+| `/check_spec`     | 実装コードと仕様書の整合性をチェックし、差異を検出        |
+| `/review_cleanup` | 実装完了後のreview/ディレクトリを整理し、設計判断を統合  |
+| `/task_breakdown` | 技術設計書からタスクを分解し、小タスクのリストを生成       |
 
 ### スキル
 
-| スキル | 説明 |
-|:---|:---|
-| `vibe-detector` | ユーザー入力を分析し、Vibe Coding（曖昧な指示）を自動検出 |
+| スキル                       | 説明                                  |
+|:--------------------------|:------------------------------------|
+| `vibe-detector`           | ユーザー入力を分析し、Vibe Coding（曖昧な指示）を自動検出  |
 | `doc-consistency-checker` | ドキュメント間（PRD、spec、design）の整合性を自動チェック |
 
 ### フック
 
-| フック | トリガー | 説明 |
-|:---|:---|:---|
-| `check-spec-exists` | PreToolUse（Edit/Write） | 実装前に仕様書の存在を確認し、警告を表示 |
-| `check-commit-prefix` | PostToolUse（Bash） | コミットメッセージ規約をチェック |
+| フック                   | トリガー                   | 説明                   |
+|:----------------------|:-----------------------|:---------------------|
+| `check-spec-exists`   | PreToolUse（Edit/Write） | 実装前に仕様書の存在を確認し、警告を表示 |
+| `check-commit-prefix` | PostToolUse（Bash）      | コミットメッセージ規約をチェック     |
 
 ## 使用方法
 
@@ -144,6 +144,53 @@ Claude Codeで `/plugin` コマンドを実行し、`sdd-workflow-ja` が表示�
 
 設定例は `hooks/settings.example.json` を参照してください。
 
+## Serena MCP 統合（オプション）
+
+[Serena](https://github.com/oraios/serena) MCP を設定することで、セマンティックコード分析による機能強化が可能です。
+
+### Serena とは
+
+Serena は LSP（Language Server Protocol）ベースのセマンティックコード分析ツールで、30以上のプログラミング言語に対応しています。シンボルレベルでのコード検索・分析が可能です。
+
+### 設定方法
+
+プロジェクトの `.mcp.json` に以下を追加：
+
+```json
+{
+  "mcpServers": {
+    "serena": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant",
+        "--project",
+        ".",
+        "--enable-web-dashboard",
+        "false"
+      ]
+    }
+  }
+}
+```
+
+### 強化される機能
+
+| コマンド              | Serena による強化内容                    |
+|:------------------|:----------------------------------|
+| `/generate_spec`  | 既存コードから API・型定義を参照し、一貫性のある仕様を生成   |
+| `/check_spec`     | シンボルベースで API 実装の存在・シグネチャ一致を高精度に検証 |
+| `/task_breakdown` | 変更の影響範囲を分析し、依存関係を正確にタスク化          |
+
+### Serena 未設定時
+
+Serena がなくても全機能は動作します。テキストベース検索（Grep/Glob）による分析となり、言語非依存で動作します。
+
 ## AI-SDD 開発フロー
 
 ```
@@ -193,10 +240,10 @@ ai-sdd-workflow-ja/
 
 ## コミットメッセージ規約
 
-| プレフィックス | 用途 |
-|:---|:---|
-| `[docs]` | ドキュメントの追加・更新 |
-| `[spec]` | 仕様書の追加・更新（`*_spec.md`） |
+| プレフィックス    | 用途                       |
+|:-----------|:-------------------------|
+| `[docs]`   | ドキュメントの追加・更新             |
+| `[spec]`   | 仕様書の追加・更新（`*_spec.md`）   |
 | `[design]` | 設計書の追加・更新（`*_design.md`） |
 
 ## ライセンス
