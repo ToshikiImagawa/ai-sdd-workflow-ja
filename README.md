@@ -18,19 +18,19 @@ AI駆動仕様駆動開発（AI-SDD）ワークフローを支援する日本語
 Claude Codeで以下を実行：
 
 ```
-/plugin marketplace add ToshikiImagawa/ai-sdd-workflow-ja
+/plugin marketplace add ToshikiImagawa/ai-sdd-workflow
 ```
 
 その後、プラグインをインストール：
 
 ```
-/plugin install sdd-workflow-ja@ToshikiImagawa/ai-sdd-workflow-ja
+/plugin install sdd-workflow-ja@ToshikiImagawa/ai-sdd-workflow
 ```
 
 ### 方法2: GitHubからクローン
 
 ```bash
-git clone https://github.com/ToshikiImagawa/ai-sdd-workflow-ja.git ~/.claude/plugins/sdd-workflow-ja
+git clone https://github.com/ToshikiImagawa/ai-sdd-workflow.git ~/.claude/plugins/sdd-workflow-ja
 ```
 
 インストール後、Claude Codeを再起動してください。
