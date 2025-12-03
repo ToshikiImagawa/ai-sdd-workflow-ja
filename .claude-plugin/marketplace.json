@@ -18,6 +18,16 @@
         "name": "toshiki.imagawa"
       },
       "license": "MIT"
+    },
+    {
+      "name": "sdd-workflow",
+      "source": "./plugins/sdd-workflow",
+      "description": "A plugin supporting AI-driven Specification-Driven Development (AI-SDD) workflow. Prevents Vibe Coding problems and achieves high-quality implementations using specifications as the source of truth.",
+      "version": "1.0.0",
+      "author": {
+        "name": "toshiki.imagawa"
+      },
+      "license": "MIT"
     }
   ]
 }
