@@ -17,116 +17,286 @@
 
 ---
 
-# {機能名} 要求仕様書 (PRD) `<MUST>`
+# {機能名} 要求仕様書 `<MUST>`
 
-**ドキュメント種別:** PRD (要求仕様書)
-**SDDフェーズ:** Specify (仕様化) - 最上流
-**最終更新日:** YYYY-MM-DD
-**ステータス:** Draft / Review / Approved
-**関連 Spec:** [xxx_spec.md へのリンク]
-**関連 Design Doc:** [xxx_design.md へのリンク]
+## 概要 `<MUST>`
+
+このドキュメントの目的と対象範囲を簡潔に説明します。
 
 ---
 
-# 1. 背景と目的 `<MUST>`
+# 1. 要求図の読み方 `<RECOMMENDED>`
 
-## 1.1. 背景
+## 1.1. 要求タイプ
 
-なぜこの機能が必要なのか、現状の課題を説明します。
+- **requirement**: 一般的な要求
+- **functionalRequirement**: 機能要求
+- **performanceRequirement**: パフォーマンス要求
+- **interfaceRequirement**: インターフェース要求
+- **designConstraint**: 設計制約
 
-## 1.2. 目的
+## 1.2. リスクレベル
 
-この機能で達成したいこと、ビジネス価値を説明します。
+- **High**: 高リスク（ビジネスクリティカル、実装困難）
+- **Medium**: 中リスク（重要だが代替可能）
+- **Low**: 低リスク（Nice to have）
 
-## 1.3. 成功基準 `<RECOMMENDED>`
+## 1.3. 検証方法
 
-- 定量的または定性的な成功指標
+- **Analysis**: 分析による検証
+- **Test**: テストによる検証
+- **Demonstration**: デモンストレーションによる検証
+- **Inspection**: インスペクション（レビュー）による検証
 
----
+## 1.4. 関係タイプ
 
-# 2. 要求定義 `<MUST>`
-
-## 2.1. ユーザ要求（User Requirements）
-
-ユーザーの視点からの要求を定義します。
-
-| ID     | 要求            | 優先度                   | 検証方法   |
-|--------|---------------|-----------------------|--------|
-| UR-001 | [ユーザーが〜できること] | Must / Should / Could | [検証方法] |
-
-## 2.2. 機能要求（Functional Requirements）
-
-システムが提供すべき機能を定義します。
-
-| ID     | 要求           | 派生元    | 優先度                   | 検証方法   |
-|--------|--------------|--------|-----------------------|--------|
-| FR-001 | [システムが〜すること] | UR-001 | Must / Should / Could | [検証方法] |
-
-## 2.3. 非機能要求（Non-Functional Requirements） `<OPTIONAL>`
-
-| ID      | カテゴリ    | 要求        | 優先度                   | 検証方法   |
-|---------|---------|-----------|-----------------------|--------|
-| NFR-001 | パフォーマンス | [応答時間など]  | Must / Should / Could | [検証方法] |
-| NFR-002 | セキュリティ  | [認証・認可など] | Must / Should / Could | [検証方法] |
+- **contains**: 包含関係（親要求が子要求を含む）
+- **derives**: 派生関係（要求から別の要求が導出される）
+- **satisfies**: 満足関係（要素が要求を満たす）
+- **verifies**: 検証関係（テストケースが要求を検証する）
+- **refines**: 詳細化関係（要求をより詳細に定義する）
+- **traces**: トレース関係（要求間の追跡可能性）
 
 ---
 
-# 3. 要求図（SysML Requirements Diagram） `<RECOMMENDED>`
+# 2. 要求一覧 `<MUST>`
+
+## 2.1. ユースケース図（概要） `<RECOMMENDED>`
+
+主要機能とアクターの関係を示す概要図です。
 
 ```mermaid
 graph TB
-    subgraph "ユーザ要求"
-        UR001["UR-001<br/>{要求名}"]
+    subgraph "システム名"
+        Actor1((アクター1))
+        Actor2((アクター2))
+        Func1[機能1]
+        Func2[機能2]
+        Func3[機能3]
     end
 
-    subgraph "機能要求"
-        FR001["FR-001<br/>{要求名}"]
-        FR002["FR-002<br/>{要求名}"]
-    end
-
-    subgraph "非機能要求"
-        NFR001["NFR-001<br/>{要求名}"]
-    end
-
-%% deriveReqt: 派生関係
-    UR001 -->|deriveReqt| FR001
-    UR001 -->|deriveReqt| FR002
-%% refine: 詳細化関係
-    NFR001 -.->|refine| FR001
+    Actor1 --> Func1
+    Actor1 --> Func2
+    Actor2 --> Func3
+    Func1 -. 依存 .-> Func3
 ```
 
-## 3.1. 要求関係の凡例
+## 2.2. ユースケース図（詳細） `<OPTIONAL>`
 
-| 関係         | 意味                | 表記   |
-|------------|-------------------|------|
-| deriveReqt | 派生（上位要求から下位要求を導出） | 実線矢印 |
-| refine     | 詳細化（抽象的な要求を具体化）   | 点線矢印 |
-| satisfy    | 充足（設計要素が要求を満たす）   | -    |
-| verify     | 検証（テストケースが要求を検証）  | -    |
-| trace      | トレース（要求間の一般的な関連）  | -    |
+### {機能カテゴリ1}
+
+```mermaid
+graph TB
+    subgraph "機能カテゴリ1"
+        Actor((アクター))
+        UseCase1[ユースケース1]
+        UseCase2[ユースケース2]
+
+        subgraph "詳細"
+            Detail1[詳細1]
+            Detail2[詳細2]
+        end
+    end
+
+    Actor --> UseCase1
+    Actor --> UseCase2
+    UseCase1 -. 拡張 .-> Detail1
+    UseCase1 -. 拡張 .-> Detail2
+```
+
+## 2.3. 機能一覧（テキスト形式） `<MUST>`
+
+- 機能カテゴリ1
+    - サブ機能1-1
+        - 詳細1-1-1
+        - 詳細1-1-2
+    - サブ機能1-2
+- 機能カテゴリ2
+    - サブ機能2-1
 
 ---
 
-# 4. 制約事項 `<OPTIONAL>`
+# 3. 要求図（SysML Requirements Diagram） `<MUST>`
 
-## 4.1. 技術的制約
+## 3.1. 全体要求図
+
+```mermaid
+requirementDiagram
+    requirement SystemRequirement {
+        id: REQ_001
+        text: "システム全体の要求"
+        risk: high
+        verifymethod: demonstration
+    }
+
+    requirement CoreFunctionality {
+        id: REQ_002
+        text: "コア機能要求"
+        risk: high
+        verifymethod: demonstration
+    }
+
+    requirement Architecture {
+        id: REQ_003
+        text: "アーキテクチャ要求"
+        risk: high
+        verifymethod: inspection
+    }
+
+    requirement Quality {
+        id: REQ_004
+        text: "品質要求（非機能要求）"
+        risk: high
+        verifymethod: test
+    }
+
+    functionalRequirement Function1 {
+        id: FR_001
+        text: "機能要求1の説明"
+        risk: high
+        verifymethod: test
+    }
+
+    functionalRequirement Function2 {
+        id: FR_002
+        text: "機能要求2の説明"
+        risk: medium
+        verifymethod: test
+    }
+
+    performanceRequirement Performance1 {
+        id: PR_001
+        text: "パフォーマンス要求1"
+        risk: high
+        verifymethod: test
+    }
+
+    interfaceRequirement Interface1 {
+        id: IR_001
+        text: "インターフェース要求1"
+        risk: high
+        verifymethod: inspection
+    }
+
+    designConstraint Constraint1 {
+        id: DC_001
+        text: "設計制約1"
+        risk: high
+        verifymethod: inspection
+    }
+
+    SystemRequirement - contains -> CoreFunctionality
+    SystemRequirement - contains -> Architecture
+    SystemRequirement - contains -> Quality
+    CoreFunctionality - contains -> Function1
+    CoreFunctionality - contains -> Function2
+    Quality - contains -> Performance1
+    Architecture - contains -> Interface1
+    Architecture - contains -> Constraint1
+    Function1 - traces -> Interface1
+    Performance1 - traces -> Function1
+```
+
+## 3.2. 主要サブシステム詳細図 `<OPTIONAL>`
+
+### {サブシステム名}
+
+```mermaid
+requirementDiagram
+    requirement Subsystem {
+        id: REQ_002
+        text: "サブシステムの要求"
+        risk: high
+        verifymethod: demonstration
+    }
+
+    functionalRequirement SubFunction1 {
+        id: FR_001_01
+        text: "サブ機能1"
+        risk: high
+        verifymethod: test
+    }
+
+    functionalRequirement SubFunction2 {
+        id: FR_001_02
+        text: "サブ機能2"
+        risk: medium
+        verifymethod: test
+    }
+
+    Subsystem - contains -> SubFunction1
+    Subsystem - contains -> SubFunction2
+```
+
+---
+
+# 4. 要求の詳細説明 `<MUST>`
+
+## 4.1. 機能要求
+
+### FR_001: {機能要求名}
+
+{機能の詳細な説明}
+
+**含まれる機能:**
+
+- FR_001_01: {サブ機能1}
+- FR_001_02: {サブ機能2}
+
+**検証方法:** テストによる検証
+
+### FR_002: {機能要求名}
+
+{機能の詳細な説明}
+
+**検証方法:** テストによる検証
+
+## 4.2. パフォーマンス要求 `<OPTIONAL>`
+
+### PR_001: {パフォーマンス要求名}
+
+{パフォーマンス要求の詳細な説明と目標値}
+
+**検証方法:** テストによる検証
+
+## 4.3. インターフェース要求 `<OPTIONAL>`
+
+### IR_001: {インターフェース要求名}
+
+{インターフェース要求の詳細な説明}
+
+**検証方法:** インスペクションによる検証
+
+## 4.4. 設計制約 `<OPTIONAL>`
+
+### DC_001: {設計制約名}
+
+{設計制約の詳細な説明}
+
+**検証方法:** インスペクションによる検証
+
+---
+
+# 5. 制約事項 `<OPTIONAL>`
+
+## 5.1. 技術的制約
 
 - 技術的な制約
 
-## 4.2. ビジネス的制約
+## 5.2. ビジネス的制約
 
 - ビジネス的な制約（スケジュール、予算など）
 
 ---
 
-# 5. 前提条件 `<OPTIONAL>`
+# 6. 前提条件 `<OPTIONAL>`
 
 - この機能が動作するための前提
 - 依存する他システム・機能
 
 ---
 
-# 6. スコープ外 `<OPTIONAL>`
+# 7. スコープ外 `<OPTIONAL>`
 
 以下は本PRDのスコープ外とします：
 
@@ -135,7 +305,9 @@ graph TB
 
 ---
 
-# 7. 用語集 `<OPTIONAL>`
+# 8. 用語集 `<RECOMMENDED>`
+
+> **注意**: 用語集が大きくなる場合は、別ファイル（`glossary.md`）として管理することを推奨します。
 
 | 用語   | 定義   |
 |------|------|
@@ -157,13 +329,14 @@ graph TB
 
 ## 含めるべき内容
 
-- ✅ ビジネス要求と背景
-- ✅ ユーザ要求（UR-xxx）
-- ✅ 機能要求（FR-xxx）
-- ✅ 非機能要求（NFR-xxx）
-- ✅ 要求間の関係（派生、詳細化）
+- ✅ 概要と目的
+- ✅ ユースケース図（概要・詳細）
+- ✅ SysML要求図（requirementDiagram構文）
+- ✅ 要求の詳細説明（機能要求、パフォーマンス要求、インターフェース要求、設計制約）
+- ✅ 要求間の関係（contains, derives, satisfies, verifies, refines, traces）
 - ✅ 制約事項・前提条件
 - ✅ スコープ外の明示
+- ✅ 用語集
 
 ## 含めないべき内容（→ Spec / Design Doc へ）
 
@@ -179,10 +352,11 @@ graph TB
 
 このテンプレートをプロジェクト用にカスタマイズする際は、以下の項目を更新してください：
 
-1. **要求IDの命名規則**: プロジェクトの規約に合わせる（UR/FR/NFR以外のプレフィックスを使う場合）
-2. **優先度の分類**: プロジェクトの優先度分類方法に合わせる（MoSCoW法以外を使う場合）
-3. **関連ドキュメントのリンク形式**: プロジェクトのドキュメント管理方法に合わせる
-4. **非機能要求のカテゴリ**: プロジェクトで重視する品質特性に合わせる
+1. **要求IDの命名規則**: プロジェクトの規約に合わせる（REQ/FR/PR/IR/DC以外のプレフィックスを使う場合）
+2. **リスクレベルの分類**: プロジェクトのリスク評価基準に合わせる
+3. **検証方法の分類**: プロジェクトの検証プロセスに合わせる
+4. **ユースケース図のスタイル**: プロジェクトのアクター・機能構成に合わせる
+5. **用語集の管理方法**: 別ファイル管理にするか、PRD内に含めるか決定する
 
 ---
 
