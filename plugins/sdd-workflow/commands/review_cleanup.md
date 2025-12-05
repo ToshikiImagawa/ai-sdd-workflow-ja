@@ -1,6 +1,7 @@
 ---
 name: review_cleanup
 description: "Clean up review/ directory after implementation completion, integrating important design decisions into *_design.md before deletion"
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # Review Cleanup - Review Document Cleanup

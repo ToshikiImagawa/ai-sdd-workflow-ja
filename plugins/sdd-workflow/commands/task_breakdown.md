@@ -1,6 +1,7 @@
 ---
 name: task_breakdown
 description: "Break down tasks from technical design document, generating a list of independently testable small tasks"
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # Task Breakdown

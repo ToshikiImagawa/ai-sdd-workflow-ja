@@ -1,6 +1,7 @@
 ---
 name: generate_spec
 description: "Generate Abstract Specification and Technical Design Document from input content"
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # Specification & Design Doc Generator

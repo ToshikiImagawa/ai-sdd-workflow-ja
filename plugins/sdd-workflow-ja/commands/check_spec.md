@@ -1,6 +1,7 @@
 ---
 name: check_spec
 description: "実装コードと仕様書の整合性をチェックし、差異を検出する"
+allowed-tools: Read, Glob, Grep, AskUserQuestion
 ---
 
 # Check Spec - 仕様書整合性チェック

@@ -39,6 +39,20 @@ git clone https://github.com/ToshikiImagawa/ai-sdd-workflow.git ~/.claude/plugin
 
 Claude Codeで `/plugin` コマンドを実行し、`sdd-workflow-ja` が表示されることを確認してください。
 
+## クイックスタート
+
+**初めてこのプラグインを使用するプロジェクトでは、まず `/sdd_init` を実行することをお勧めします。**
+
+```
+/sdd_init
+```
+
+このコマンドは以下を自動的に設定します：
+
+- プロジェクトの `CLAUDE.md` にAI-SDD Instructionsセクションを追加
+- `.docs/` ディレクトリ構造を作成（requirement-diagram/, specification/, review/）
+- PRD、仕様書、設計書のテンプレートファイルを生成
+
 ## 含まれるコンポーネント
 
 ### エージェント

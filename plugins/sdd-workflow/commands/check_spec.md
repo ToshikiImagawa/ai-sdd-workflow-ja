@@ -1,6 +1,7 @@
 ---
 name: check_spec
 description: "Check consistency between implementation code and specifications, detecting discrepancies"
+allowed-tools: Read, Glob, Grep, AskUserQuestion
 ---
 
 # Check Spec - Specification Consistency Check

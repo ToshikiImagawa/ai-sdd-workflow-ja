@@ -1,6 +1,7 @@
 ---
 name: generate_prd
 description: "Generate PRD (Requirements Specification) in SysML requirements diagram format from business requirements"
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # Generate PRD - Requirements Specification Generation

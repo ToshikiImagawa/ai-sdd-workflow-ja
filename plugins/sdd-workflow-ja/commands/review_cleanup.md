@@ -1,6 +1,7 @@
 ---
 name: review_cleanup
 description: "実装完了後のreview/ディレクトリを整理し、重要な設計判断を*_design.mdに統合してから削除する"
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # Review Cleanup - レビュードキュメントのクリーンアップ

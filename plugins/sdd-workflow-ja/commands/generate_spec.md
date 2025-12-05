@@ -1,6 +1,7 @@
 ---
 name: generate_spec
 description: "入力された内容から抽象仕様書（Specification）と技術設計書（Design Doc）を生成する"
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # Specification & Design Doc Generator

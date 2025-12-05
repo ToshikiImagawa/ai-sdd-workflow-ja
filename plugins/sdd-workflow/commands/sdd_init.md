@@ -1,6 +1,7 @@
 ---
 name: sdd_init
 description: "Initialize AI-SDD workflow in the current project. Sets up CLAUDE.md and generates document templates."
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # SDD Init - AI-SDD Workflow Initializer
@@ -66,9 +67,11 @@ This project follows the AI-SDD (AI-driven Specification-Driven Development) wor
 
 ### Document Operations
 
-When working with files under `.docs/` directory, you MUST use the `sdd-workflow:sdd-workflow` agent to ensure proper AI-SDD workflow compliance.
+When working with files under `.docs/` directory, you MUST use the `sdd-workflow:sdd-workflow` agent to ensure proper
+AI-SDD workflow compliance.
 
 **Trigger Conditions**:
+
 - Reading or modifying any file under `.docs/`
 - Creating new specifications, designs, or requirements documents
 - Implementing features that reference documents in `.docs/`

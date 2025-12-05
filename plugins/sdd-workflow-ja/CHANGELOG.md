@@ -5,6 +5,44 @@
 形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に基づき、
 [Semantic Versioning](https://semver.org/lang/ja/) に準拠しています。
 
+## [1.1.0] - 2025-12-06
+
+### Added
+
+#### コマンド
+
+- `/sdd_init` - AI-SDDワークフロー初期化コマンドを追加
+    - プロジェクトの `CLAUDE.md` にAI-SDD Instructionsセクションを追加
+    - `.docs/` ディレクトリ構造を作成（requirement-diagram/, specification/, review/）
+    - `sdd-templates` スキルを使用してテンプレートファイルを生成
+
+#### スキル
+
+- `sdd-templates` - AI-SDDテンプレートスキルを追加
+    - PRD、仕様書、設計書テンプレートのフォールバック提供
+    - プロジェクトテンプレート優先のルールを明確化
+
+### Changed
+
+#### プラグイン設定
+
+- `plugin.json` - スキーマとauthorフィールドを強化
+    - `$schema` フィールドを追加（IDEでの補完とバリデーション対応）
+    - `author.url` フィールドを追加
+
+#### コマンド
+
+- 全コマンドに `allowed-tools` フィールドを追加
+    - 各コマンドで使用可能なツールを明示化
+    - セキュリティと明確性の向上
+
+#### スキル
+
+- スキルのディレクトリ構造を改善
+    - `skill-name.md` → `skill-name/SKILL.md` + `templates/` 構造に移行
+    - Progressive Disclosureパターンを適用
+    - テンプレートファイルを外部化し、SKILL.md をシンプル化
+
 ## [1.0.1] - 2025-12-04
 
 ### Changed

@@ -5,6 +5,44 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-12-06
+
+### Added
+
+#### Commands
+
+- `/sdd_init` - Added AI-SDD workflow initialization command
+    - Adds AI-SDD Instructions section to project's `CLAUDE.md`
+    - Creates `.docs/` directory structure (requirement-diagram/, specification/, review/)
+    - Generates template files using `sdd-templates` skill
+
+#### Skills
+
+- `sdd-templates` - Added AI-SDD templates skill
+    - Provides fallback templates for PRD, specification, and design documents
+    - Clarifies project template priority rules
+
+### Changed
+
+#### Plugin Configuration
+
+- `plugin.json` - Enhanced schema and author fields
+    - Added `$schema` field (IDE completion and validation support)
+    - Added `author.url` field
+
+#### Commands
+
+- Added `allowed-tools` field to all commands
+    - Explicitly specifies available tools for each command
+    - Improved security and clarity
+
+#### Skills
+
+- Improved skill directory structure
+    - Migrated from `skill-name.md` to `skill-name/SKILL.md` + `templates/` structure
+    - Applied Progressive Disclosure pattern
+    - Externalized template files, simplifying SKILL.md
+
 ## [1.0.1] - 2025-12-04
 
 ### Changed

@@ -1,6 +1,7 @@
 ---
 name: generate_prd
 description: "ビジネス要求からPRD（要求仕様書）をSysML要求図形式で生成する"
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # Generate PRD - 要求仕様書の生成
