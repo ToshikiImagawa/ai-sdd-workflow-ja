@@ -33,29 +33,29 @@ graph RL
 
 ### 1. PRD ↔ spec Consistency
 
-| Check Item | Description |
-|:---|:---|
-| **Requirement ID Mapping** | Are PRD requirement IDs referenced in spec? |
-| **Functional Requirement Coverage** | Are PRD functional requirements covered in spec? |
+| Check Item                                | Description                                            |
+|:------------------------------------------|:-------------------------------------------------------|
+| **Requirement ID Mapping**                | Are PRD requirement IDs referenced in spec?            |
+| **Functional Requirement Coverage**       | Are PRD functional requirements covered in spec?       |
 | **Non-Functional Requirement Reflection** | Are PRD non-functional requirements reflected in spec? |
-| **Terminology Consistency** | Is same terminology used in PRD and spec? |
+| **Terminology Consistency**               | Is same terminology used in PRD and spec?              |
 
 ### 2. spec ↔ design Consistency
 
-| Check Item | Description |
-|:---|:---|
-| **API Definition Match** | Is spec API detailed in design? |
-| **Data Model Match** | Do spec type definitions match design? |
+| Check Item                                     | Description                                          |
+|:-----------------------------------------------|:-----------------------------------------------------|
+| **API Definition Match**                       | Is spec API detailed in design?                      |
+| **Data Model Match**                           | Do spec type definitions match design?               |
 | **Requirement Reflection in Design Decisions** | Are spec requirements reflected in design decisions? |
-| **Constraint Consideration** | Are spec constraints considered in design? |
+| **Constraint Consideration**                   | Are spec constraints considered in design?           |
 
 ### 3. design ↔ Implementation Consistency
 
-| Check Item | Description |
-|:---|:---|
-| **Module Structure Match** | Does design module structure match actual directory structure? |
-| **Interface Definition Match** | Do design definitions match implementation code? |
-| **Technology Stack Match** | Are libraries documented in design actually being used? |
+| Check Item                     | Description                                                    |
+|:-------------------------------|:---------------------------------------------------------------|
+| **Module Structure Match**     | Does design module structure match actual directory structure? |
+| **Interface Definition Match** | Do design definitions match implementation code?               |
+| **Technology Stack Match**     | Are libraries documented in design actually being used?        |
 
 ## Automatic Detection Patterns
 
@@ -87,13 +87,13 @@ Use [templates/consistency_report.md](templates/consistency_report.md) for consi
 
 ## Check Execution Timing
 
-| Timing | Recommended Check |
-|:---|:---|
-| **Task Start** | Verify existing document existence and consistency |
-| **Plan Completion** | spec ↔ design consistency |
-| **Implementation Completion** | design ↔ implementation consistency |
-| **Review** | All inter-document consistency |
-| **Periodic Check** | Prevent documentation obsolescence |
+| Timing                        | Recommended Check                                  |
+|:------------------------------|:---------------------------------------------------|
+| **Task Start**                | Verify existing document existence and consistency |
+| **Plan Completion**           | spec ↔ design consistency                          |
+| **Implementation Completion** | design ↔ implementation consistency                |
+| **Review**                    | All inter-document consistency                     |
+| **Periodic Check**            | Prevent documentation obsolescence                 |
 
 ## Document Update Triggers
 

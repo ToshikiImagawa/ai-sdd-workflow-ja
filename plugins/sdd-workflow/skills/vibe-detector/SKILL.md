@@ -6,7 +6,8 @@ allowed-tools: Read, Glob, Grep, AskUserQuestion
 
 # Vibe Detector - Automatic Detection of Vague Instructions
 
-Analyzes user input to detect Vibe Coding (the problem where AI must guess undefined requirements due to vague instructions).
+Analyzes user input to detect Vibe Coding (the problem where AI must guess undefined requirements due to vague
+instructions).
 
 ## Prerequisites
 
@@ -18,38 +19,38 @@ This skill follows the sdd-workflow agent principles for Vibe Coding detection.
 
 ### Vague Instructions
 
-| Pattern | Examples |
-|:---|:---|
+| Pattern                    | Examples                                                       |
+|:---------------------------|:---------------------------------------------------------------|
 | **Subjective expressions** | "Make it nice," "somehow," "make it work," "make it look good" |
-| **Unclear degree** | "Make it faster," "improve a bit," "roughly working is fine" |
-| **Ambiguous scope** | "That feature," "the previous one," "the usual" |
-| **Implicit assumptions** | "Same as before," "as usual," "obviously..." |
-| **Ambiguous priority** | "If possible," "when you have time," "while you're at it" |
+| **Unclear degree**         | "Make it faster," "improve a bit," "roughly working is fine"   |
+| **Ambiguous scope**        | "That feature," "the previous one," "the usual"                |
+| **Implicit assumptions**   | "Same as before," "as usual," "obviously..."                   |
+| **Ambiguous priority**     | "If possible," "when you have time," "while you're at it"      |
 
 ### Missing Specifications
 
-| Pattern | Examples |
-|:---|:---|
-| **Missing requirements** | "Create X feature" (no details) |
-| **Undefined I/O** | No arguments, return values, error cases documented |
-| **Unknown boundary conditions** | Maximum/minimum values, edge cases undefined |
-| **Undefined error handling** | Abnormal case behavior unclear |
+| Pattern                         | Examples                                            |
+|:--------------------------------|:----------------------------------------------------|
+| **Missing requirements**        | "Create X feature" (no details)                     |
+| **Undefined I/O**               | No arguments, return values, error cases documented |
+| **Unknown boundary conditions** | Maximum/minimum values, edge cases undefined        |
+| **Undefined error handling**    | Abnormal case behavior unclear                      |
 
 ### Unclear Scope
 
-| Pattern | Examples |
-|:---|:---|
-| **Vague target** | "Improve performance" (which part? what criteria?) |
-| **Unknown impact scope** | "Refactor" (which scope?) |
-| **Missing completion criteria** | When is it considered complete? |
+| Pattern                         | Examples                                           |
+|:--------------------------------|:---------------------------------------------------|
+| **Vague target**                | "Improve performance" (which part? what criteria?) |
+| **Unknown impact scope**        | "Refactor" (which scope?)                          |
+| **Missing completion criteria** | When is it considered complete?                    |
 
 ## Risk Assessment Criteria
 
-| Level | Condition | Response |
-|:---|:---|:---|
-| **High** | No specs + vague instructions | **Require** specification creation before implementation |
-| **Medium** | Specs exist + some ambiguity | Clarify ambiguous points before implementation |
-| **Low** | Specs exist + clear requirements | Can start implementation |
+| Level      | Condition                        | Response                                                 |
+|:-----------|:---------------------------------|:---------------------------------------------------------|
+| **High**   | No specs + vague instructions    | **Require** specification creation before implementation |
+| **Medium** | Specs exist + some ambiguity     | Clarify ambiguous points before implementation           |
+| **Low**    | Specs exist + clear requirements | Can start implementation                                 |
 
 ## Detection Response Flow
 
