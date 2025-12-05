@@ -1,156 +1,189 @@
-# {Feature Name} Product Requirements Document (PRD)
+# PRD (Product Requirements Document) Template
 
-## Document Information
+This document is a template for creating PRD (Product Requirements Document) under `.docs/requirement-diagram/`.
+The filename should be `{feature-name}.md`.
 
-| Item | Content |
-|:---|:---|
-| Feature Name | {Feature Name} |
-| Created | YYYY-MM-DD |
-| Status | Draft / Review / Approved |
-| Related Documents | [Spec](.docs/specification/{feature-name}_spec.md), [Design](.docs/specification/{feature-name}_design.md) |
+> **Note**: This template is a fallback for the plugin.
+> When using in a project, customize it according to your project structure and
+> save it as `.docs/PRD_TEMPLATE.md`.
 
-## Background and Purpose
+## Difference from Spec / Design Doc
 
-### Background
+| Document                   | SDD Phase         | Role and Focus                                                                           | Abstraction           |
+|----------------------------|-------------------|------------------------------------------------------------------------------------------|-----------------------|
+| `requirement-diagram/*.md` | **Specify**       | **"What to build" "Why to build"** - Defines business requirements. No technical details | Highest (Abstract)    |
+| `xxx_spec.md`              | **Specify**       | **"What to build"** - Defines abstract structure and behavior. No technical details      | High (Abstract)       |
+| `xxx_design.md`            | **Plan (Design)** | **"How to implement"** - Concrete technical design. Ensures design decision transparency | Medium-Low (Concrete) |
 
-{Describe why this feature is needed and current challenges}
+---
 
-### Purpose
+# {Feature Name} Product Requirements Document (PRD) `<MUST>`
 
-{Describe what this feature aims to achieve and its business value}
+**Document Type:** PRD (Product Requirements Document)
+**SDD Phase:** Specify - Upstream
+**Last Updated:** YYYY-MM-DD
+**Status:** Draft / Review / Approved
+**Related Spec:** [link to xxx_spec.md]
+**Related Design Doc:** [link to xxx_design.md]
 
-### Success Criteria
+---
 
-- {Quantitative or qualitative success metric 1}
-- {Quantitative or qualitative success metric 2}
+# 1. Background and Purpose `<MUST>`
 
-## Requirements Definition
+## 1.1. Background
 
-### User Requirements
+Describe why this feature is needed and current challenges.
 
-Requirements from the user's perspective.
+## 1.2. Purpose
 
-| ID | Requirement | Priority | Verification Method |
-|:---|:---|:---|:---|
-| UR-001 | {User can do...} | Must / Should / Could | {Verification method} |
-| UR-002 | {User can do...} | Must / Should / Could | {Verification method} |
+Describe what this feature aims to achieve and its business value.
 
-### Functional Requirements
+## 1.3. Success Criteria `<RECOMMENDED>`
 
-Functions the system must provide.
+- Quantitative or qualitative success metrics
 
-| ID | Requirement | Derived From | Priority | Verification Method |
-|:---|:---|:---|:---|:---|
-| FR-001 | {System shall...} | UR-001 | Must / Should / Could | {Verification method} |
-| FR-002 | {System shall...} | UR-001 | Must / Should / Could | {Verification method} |
-| FR-003 | {System shall...} | UR-002 | Must / Should / Could | {Verification method} |
+---
 
-### Non-Functional Requirements
+# 2. Requirements Definition `<MUST>`
 
-| ID | Category | Requirement | Priority | Verification Method |
-|:---|:---|:---|:---|:---|
-| NFR-001 | Performance | {Response time, throughput, etc.} | Must / Should / Could | {Verification method} |
-| NFR-002 | Security | {Authentication, authorization, encryption, etc.} | Must / Should / Could | {Verification method} |
-| NFR-003 | Availability | {Uptime, disaster recovery, etc.} | Must / Should / Could | {Verification method} |
-| NFR-004 | Maintainability | {Code quality, documentation, etc.} | Must / Should / Could | {Verification method} |
+## 2.1. User Requirements
 
-## Requirements Diagram (SysML Requirements Diagram)
+Define requirements from the user's perspective.
+
+| ID     | Requirement      | Priority              | Verification Method |
+|--------|------------------|-----------------------|---------------------|
+| UR-001 | [User can do...] | Must / Should / Could | [Method]            |
+
+## 2.2. Functional Requirements
+
+Define functions the system must provide.
+
+| ID     | Requirement       | Derived From | Priority              | Verification Method |
+|--------|-------------------|--------------|-----------------------|---------------------|
+| FR-001 | [System shall...] | UR-001       | Must / Should / Could | [Method]            |
+
+## 2.3. Non-Functional Requirements `<OPTIONAL>`
+
+| ID      | Category    | Requirement          | Priority              | Verification Method |
+|---------|-------------|----------------------|-----------------------|---------------------|
+| NFR-001 | Performance | [Response time etc.] | Must / Should / Could | [Method]            |
+| NFR-002 | Security    | [Auth etc.]          | Must / Should / Could | [Method]            |
+
+---
+
+# 3. Requirements Diagram (SysML Requirements Diagram) `<RECOMMENDED>`
 
 ```mermaid
 graph TB
     subgraph "User Requirements"
         UR001["UR-001<br/>{Requirement name}"]
-        UR002["UR-002<br/>{Requirement name}"]
     end
 
     subgraph "Functional Requirements"
         FR001["FR-001<br/>{Requirement name}"]
         FR002["FR-002<br/>{Requirement name}"]
-        FR003["FR-003<br/>{Requirement name}"]
     end
 
     subgraph "Non-Functional Requirements"
         NFR001["NFR-001<br/>{Requirement name}"]
-        NFR002["NFR-002<br/>{Requirement name}"]
     end
 
-    %% deriveReqt: Derivation relationship
+%% deriveReqt: Derivation relationship
     UR001 -->|deriveReqt| FR001
     UR001 -->|deriveReqt| FR002
-    UR002 -->|deriveReqt| FR003
-
-    %% refine: Refinement relationship
+%% refine: Refinement relationship
     NFR001 -.->|refine| FR001
-    NFR002 -.->|refine| FR002
 ```
 
-### Requirements Relationship Legend
+## 3.1. Requirements Relationship Legend
 
-| Relationship | Meaning | Notation |
-|:---|:---|:---|
-| deriveReqt | Derivation (derive lower requirements from higher) | Solid arrow |
-| refine | Refinement (make abstract requirements concrete) | Dashed arrow |
-| satisfy | Satisfaction (design element satisfies requirement) | - |
-| verify | Verification (test case verifies requirement) | - |
-| trace | Trace (general association between requirements) | - |
-
-## Constraints
-
-### Technical Constraints
-
-- {Technical constraint 1}
-- {Technical constraint 2}
-
-### Business Constraints
-
-- {Business constraint 1}
-- {Schedule, budget constraints}
-
-### Legal/Regulatory Constraints
-
-- {Applicable regulations}
-- {Compliance requirements}
-
-## Assumptions
-
-- {Assumption for this feature to work 1}
-- {Dependent systems/features}
-- {User prerequisites/skills}
-
-## Out of Scope
-
-The following are out of scope for this PRD:
-
-- {Not included in this feature 1}
-- {May be considered in the future but not included now}
-- {Related but handled in separate PRD}
-
-## Glossary
-
-| Term | Definition |
-|:---|:---|
-| {Term 1} | {Definition} |
-| {Term 2} | {Definition} |
-
-## Risks and Mitigations
-
-| Risk | Impact | Probability | Mitigation |
-|:---|:---|:---|:---|
-| {Risk 1} | High/Medium/Low | High/Medium/Low | {Mitigation} |
-| {Risk 2} | High/Medium/Low | High/Medium/Low | {Mitigation} |
-
-## Approval
-
-| Role | Name | Date | Signature |
-|:---|:---|:---|:---|
-| Author | {Name} | YYYY-MM-DD | - |
-| Reviewer | {Name} | YYYY-MM-DD | - |
-| Approver | {Name} | YYYY-MM-DD | - |
+| Relationship | Meaning                                             | Notation     |
+|--------------|-----------------------------------------------------|--------------|
+| deriveReqt   | Derivation (derive lower requirements from higher)  | Solid arrow  |
+| refine       | Refinement (make abstract requirements concrete)    | Dashed arrow |
+| satisfy      | Satisfaction (design element satisfies requirement) | -            |
+| verify       | Verification (test case verifies requirement)       | -            |
+| trace        | Trace (general association between requirements)    | -            |
 
 ---
 
-## Change History
+# 4. Constraints `<OPTIONAL>`
 
-| Date | Version | Changes | Author |
-|:---|:---|:---|:---|
-| YYYY-MM-DD | 1.0 | Initial creation | {Name} |
+## 4.1. Technical Constraints
+
+- Technical constraints
+
+## 4.2. Business Constraints
+
+- Business constraints (schedule, budget, etc.)
+
+---
+
+# 5. Assumptions `<OPTIONAL>`
+
+- Prerequisites for this feature to work
+- Dependent systems/features
+
+---
+
+# 6. Out of Scope `<OPTIONAL>`
+
+The following are out of scope for this PRD:
+
+- Items not included in this feature
+- May be considered in the future but excluded for now
+
+---
+
+# 7. Glossary `<OPTIONAL>`
+
+| Term   | Definition   |
+|--------|--------------|
+| [Term] | [Definition] |
+
+---
+
+# Section Requirement Legend
+
+| Marker          | Meaning     | Description                  |
+|-----------------|-------------|------------------------------|
+| `<MUST>`        | Required    | Must be included in all PRDs |
+| `<RECOMMENDED>` | Recommended | Include whenever possible    |
+| `<OPTIONAL>`    | Optional    | Include as needed            |
+
+---
+
+# Guidelines
+
+## What to Include
+
+- ✅ Business requirements and background
+- ✅ User Requirements (UR-xxx)
+- ✅ Functional Requirements (FR-xxx)
+- ✅ Non-Functional Requirements (NFR-xxx)
+- ✅ Requirement relationships (derivation, refinement)
+- ✅ Constraints and assumptions
+- ✅ Explicit out of scope
+
+## What NOT to Include (→ Spec / Design Doc)
+
+- ❌ Technical implementation details
+- ❌ Architecture and module structure
+- ❌ Technology stack selection
+- ❌ API definitions and type definitions
+- ❌ Database schema
+
+---
+
+# Customization Guidelines for Projects
+
+When customizing this template for your project, update the following:
+
+1. **Requirement ID naming convention**: Adjust to project conventions (if using prefixes other than UR/FR/NFR)
+2. **Priority classification**: Adjust to project's prioritization method (if not using MoSCoW)
+3. **Related document link format**: Adjust to project's document management method
+4. **Non-functional requirement categories**: Adjust to quality characteristics important to the project
+
+---
+
+**This PRD serves as the source of truth for business requirements that AI agents reference during the Specify phase.**

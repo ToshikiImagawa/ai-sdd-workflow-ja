@@ -1,12 +1,40 @@
 ---
 name: sdd-templates
-description: "Provides templates for AI-SDD documents (PRD, specification, design doc). Used when generating documents with /generate_prd or /generate_spec commands."
-allowed-tools: Read
+description: "Provides fallback templates for AI-SDD documents. Use only when project templates do not exist in .docs/ directory."
+allowed-tools: Read, Glob
 ---
 
-# SDD Templates - AI-SDD Document Templates
+# SDD Templates - AI-SDD Document Templates (Fallback)
 
 Provides templates for various documents used in the AI-SDD workflow.
+
+## Important: Template Selection Procedure
+
+**These templates are fallbacks. You MUST follow the procedure below.**
+
+### Required Verification Steps
+
+When generating documents, **always search for templates in this order**:
+
+```
+1. Check for project templates (HIGHEST PRIORITY)
+   ├─ Does .docs/PRD_TEMPLATE.md exist?
+   ├─ Does .docs/SPECIFICATION_TEMPLATE.md exist?
+   └─ Does .docs/DESIGN_DOC_TEMPLATE.md exist?
+   ↓
+2. If project template EXISTS
+   → Use that template (DO NOT use this skill's templates)
+   ↓
+3. ONLY if project template does NOT exist
+   → Use this skill's templates to generate project-specific templates
+```
+
+### Template Priority (STRICTLY ENFORCED)
+
+| Priority         | Template          | Path                      | Usage Condition                         |
+|:-----------------|:------------------|:--------------------------|:----------------------------------------|
+| **1 (Highest)**  | Project templates | `.docs/*.md`              | Use if exists                           |
+| **2 (Fallback)** | Plugin templates  | This skill's `templates/` | ONLY when project templates don't exist |
 
 ## Prerequisites
 
@@ -14,44 +42,47 @@ Provides templates for various documents used in the AI-SDD workflow.
 
 This skill provides templates that follow the sdd-workflow agent principles.
 
-## Available Templates
+## Fallback Templates
 
-| Template | File | Usage |
-|:---|:---|:---|
-| **PRD (Requirements Specification)** | [templates/prd_template.md](templates/prd_template.md) | Used with `/generate_prd` command |
-| **Abstract Specification** | [templates/spec_template.md](templates/spec_template.md) | Used with `/generate_spec` command |
-| **Technical Design Doc** | [templates/design_template.md](templates/design_template.md) | Used with `/generate_spec` command |
+Used only when project templates do not exist:
+
+| Template                             | File                                                         | Corresponding Project Template    |
+|:-------------------------------------|:-------------------------------------------------------------|:----------------------------------|
+| **PRD (Requirements Specification)** | [templates/prd_template.md](templates/prd_template.md)       | `.docs/PRD_TEMPLATE.md`           |
+| **Abstract Specification**           | [templates/spec_template.md](templates/spec_template.md)     | `.docs/SPECIFICATION_TEMPLATE.md` |
+| **Technical Design Doc**             | [templates/design_template.md](templates/design_template.md) | `.docs/DESIGN_DOC_TEMPLATE.md`    |
 
 ## Usage
 
-### 1. Template Reference
-
-When executing commands (`/generate_prd`, `/generate_spec`), read and use the corresponding template.
+### Case 1: Project Template EXISTS
 
 ```
-/generate_prd {requirements}
-→ Reference templates/prd_template.md to generate PRD
-
 /generate_spec {specifications}
-→ Reference templates/spec_template.md to generate abstract specification
-→ Reference templates/design_template.md to generate technical design doc
+
+1. Check .docs/SPECIFICATION_TEMPLATE.md
+2. EXISTS → Use that template
+3. DO NOT reference this skill's templates
 ```
 
-### 2. Priority with Project Templates
+### Case 2: Project Template Does NOT Exist
 
-When project-specific templates exist, priority order is:
+```
+/generate_spec {specifications}
 
-1. **Project templates** (`.docs/SPECIFICATION_TEMPLATE.md`, etc.)
-2. **Plugin templates** (templates in this skill)
-3. **Default format** (format defined in commands)
+1. Check .docs/SPECIFICATION_TEMPLATE.md
+2. Does NOT exist → Use this skill's templates
+3. Customize according to project's language and structure
+4. Recommend saving to .docs/ as project template after generation
+```
 
-### 3. Customizing Templates
+### Initializing Project Templates
 
-When project-specific customization is needed:
+If your project has no templates, initialize with these steps:
 
-1. Copy templates from this skill to `.docs/`
-2. Modify according to project requirements
-3. Project templates will take priority thereafter
+1. Copy this skill's templates to `.docs/`
+2. Modify type definition syntax to match project's programming language
+3. Adjust paths to match project's directory structure
+4. Project templates will take priority thereafter
 
 ## Template Overview
 

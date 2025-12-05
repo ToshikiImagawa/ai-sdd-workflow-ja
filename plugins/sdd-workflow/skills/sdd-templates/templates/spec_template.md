@@ -1,266 +1,150 @@
-# {Feature Name} Specification
+# Abstract Specification Template
 
-## Document Information
+This document is a template for creating abstract specifications under `.docs/specification/`.
+The filename should be `{feature-name}_spec.md`.
 
-| Item | Content |
-|:---|:---|
-| Feature Name | {Feature Name} |
-| Created | YYYY-MM-DD |
-| Status | Draft / Review / Approved |
-| Related Documents | [PRD](.docs/requirement-diagram/{feature-name}.md), [Design](.docs/specification/{feature-name}_design.md) |
+> **Note**: This template is a fallback for the plugin.
+> When using in a project, customize it according to your programming language and project structure,
+> and save it as `.docs/SPECIFICATION_TEMPLATE.md`.
 
-## Background
+## Difference from Technical Design Doc
 
-{Describe why this feature is needed and the problem it solves}
-
-## Overview
-
-{Describe the overview of the functionality defined in this specification}
-
-### Scope
-
-- {What this specification covers 1}
-- {What this specification covers 2}
-
-### Out of Scope
-
-- {What this specification does not cover}
-
-## Functional Requirements
-
-Defines functional requirements to realize PRD requirements.
-
-### {Functional Category 1}
-
-| Requirement ID | Requirement | PRD Reference | Priority |
-|:---|:---|:---|:---|
-| SPEC-001 | {Functional requirement description} | FR-001, FR-002 | Must / Should / Could |
-| SPEC-002 | {Functional requirement description} | FR-003 | Must / Should / Could |
-
-#### SPEC-001: {Requirement Name}
-
-**Description**: {Detailed description}
-
-**Input**:
-- {Input parameter 1}: {Type} - {Description}
-- {Input parameter 2}: {Type} - {Description}
-
-**Output**:
-- {Output 1}: {Type} - {Description}
-
-**Behavior**:
-1. {Step 1}
-2. {Step 2}
-3. {Step 3}
-
-**Error Cases**:
-- {Error condition 1}: {Response}
-- {Error condition 2}: {Response}
-
-### {Functional Category 2}
-
-| Requirement ID | Requirement | PRD Reference | Priority |
-|:---|:---|:---|:---|
-| SPEC-003 | {Functional requirement description} | FR-004 | Must / Should / Could |
-
-## API
-
-Defines public interfaces in SysML Block Definition Diagram (bdd) format.
-
-### Block Definition Diagram
-
-```mermaid
-classDiagram
-    class {FeatureName}Service {
-        <<block>>
-        +operation1(param1: Type1): ReturnType1
-        +operation2(param2: Type2): ReturnType2
-    }
-
-    class {RelatedBlock1} {
-        <<block>>
-        +property1: Type
-        +property2: Type
-    }
-
-    class {RelatedBlock2} {
-        <<block>>
-        +property1: Type
-    }
-
-    {FeatureName}Service --> {RelatedBlock1} : uses
-    {FeatureName}Service --> {RelatedBlock2} : produces
-```
-
-### Interface Definition
-
-#### {Operation 1}
-
-```typescript
-/**
- * {Operation description}
- * @param {param1} - {Parameter description}
- * @returns {Return value description}
- * @throws {Error condition}
- */
-function operation1(param1: Type1): ReturnType1;
-```
-
-**Constraints**:
-- {Constraint 1}
-- {Constraint 2}
-
-#### {Operation 2}
-
-```typescript
-function operation2(param2: Type2): ReturnType2;
-```
-
-## Data Model
-
-### Type Definitions
-
-```typescript
-/**
- * {Type description}
- */
-interface {TypeName1} {
-  /** {Field description} */
-  field1: string;
-  /** {Field description} */
-  field2: number;
-  /** {Field description} */
-  field3?: OptionalType;
-}
-
-/**
- * {Type description}
- */
-interface {TypeName2} {
-  field1: Type;
-  field2: Type;
-}
-
-/**
- * {Enum description}
- */
-type {EnumName} = 'value1' | 'value2' | 'value3';
-```
-
-### Entity Relationship Diagram
-
-```mermaid
-erDiagram
-    {Entity1} ||--o{ {Entity2} : "has"
-    {Entity1} {
-        string id PK
-        string name
-        datetime createdAt
-    }
-    {Entity2} {
-        string id PK
-        string entity1Id FK
-        string value
-    }
-```
-
-## Behavior
-
-### Use Case 1: {Use Case Name}
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant System
-    participant {ExternalService}
-
-    User->>System: {Operation 1}
-    System->>System: {Internal processing}
-    System->>{ExternalService}: {External call}
-    {ExternalService}-->>System: {Response}
-    System-->>User: {Result}
-```
-
-**Preconditions**:
-- {Precondition 1}
-- {Precondition 2}
-
-**Postconditions**:
-- {Postcondition 1}
-- {Postcondition 2}
-
-### Use Case 2: {Use Case Name}
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant System
-
-    User->>System: {Operation}
-    alt Success
-        System-->>User: {Success response}
-    else Failure
-        System-->>User: {Error response}
-    end
-```
-
-## State Transition (If Applicable)
-
-```mermaid
-stateDiagram-v2
-    [*] --> {InitialState}
-    {InitialState} --> {State1} : {Event1}
-    {State1} --> {State2} : {Event2}
-    {State2} --> {State1} : {Event3}
-    {State2} --> [*] : {EndEvent}
-```
-
-| State | Description | Possible Transitions |
-|:---|:---|:---|
-| {InitialState} | {State description} | {State1} |
-| {State1} | {State description} | {State2} |
-| {State2} | {State description} | {State1}, End |
-
-## Constraints
-
-### Functional Constraints
-
-- {Functional constraint 1}
-- {Functional constraint 2}
-
-### Non-Functional Constraints (PRD NFR Reference)
-
-| Constraint | Requirement | NFR Reference |
-|:---|:---|:---|
-| Performance | {Specific requirement} | NFR-001 |
-| Security | {Specific requirement} | NFR-002 |
-| Availability | {Specific requirement} | NFR-003 |
-
-## Glossary
-
-| Term | Definition |
-|:---|:---|
-| {Term 1} | {Definition} |
-| {Term 2} | {Definition} |
-
-## PRD Reference
-
-- Related PRD: `.docs/requirement-diagram/{feature-name}.md`
-- Covered Requirements: {UR-001, FR-001, FR-002, NFR-001, ...}
-
-### Requirements Traceability Matrix
-
-| PRD Requirement ID | Coverage in This Spec | Status |
-|:---|:---|:---|
-| UR-001 | SPEC-001, SPEC-002 | Covered |
-| FR-001 | SPEC-001 | Covered |
-| FR-002 | SPEC-002 | Covered |
-| NFR-001 | Documented in Constraints | Covered |
+| Document        | SDD Phase         | Role and Focus                                                                                     | Abstraction           |
+|-----------------|-------------------|----------------------------------------------------------------------------------------------------|-----------------------|
+| `xxx_spec.md`   | **Specify**       | **"What to build" "Why to build"** - Defines abstract structure and behavior. No technical details | High (Abstract)       |
+| `xxx_design.md` | **Plan (Design)** | **"How to implement"** - Concrete technical design. Ensures design decision transparency           | Medium-Low (Concrete) |
 
 ---
 
-## Change History
+# {Feature Name} `<MUST>`
 
-| Date | Version | Changes | Author |
-|:---|:---|:---|:---|
-| YYYY-MM-DD | 1.0 | Initial creation | {Name} |
+**Document Type:** Abstract Specification (Spec)
+**SDD Phase:** Specify
+**Last Updated:** YYYY-MM-DD
+**Related Design Doc:** [link to xxx_design.md]
+**Related PRD:** [link to requirement-diagram/{feature-name}.md]
+
+---
+
+# 1. Background `<MUST>`
+
+Describe why this feature is needed.
+
+# 2. Overview `<MUST>`
+
+Describe the purpose and main design principles of the feature.
+**Do not include technical implementation details; focus on "what to achieve".**
+
+# 3. Requirements Definition `<RECOMMENDED>`
+
+## 3.1. Functional Requirements
+
+| ID     | Requirement   | Priority | Rationale |
+|--------|---------------|----------|-----------|
+| FR-001 | [Requirement] | Required | [Reason]  |
+
+## 3.2. Non-Functional Requirements `<OPTIONAL>`
+
+| ID      | Category    | Requirement   | Target   |
+|---------|-------------|---------------|----------|
+| NFR-001 | Performance | [Requirement] | [Target] |
+
+# 4. API `<MUST>`
+
+List of public APIs in table format.
+
+| pkg (directory name) | class (filename) | member   | description   |
+|----------------------|------------------|----------|---------------|
+| [pkg]                | [class]          | [member] | [description] |
+
+## 4.1. Type Definitions `<OPTIONAL>`
+
+<!--
+Modify the notation according to your project's programming language.
+e.g., TypeScript, Go, Python, Kotlin, etc.
+-->
+
+```
+// Describe type definitions according to your project's language
+interface SomeType {
+  property: string
+}
+```
+
+# 5. Glossary `<OPTIONAL>`
+
+| Term   | Description   |
+|--------|---------------|
+| [Term] | [Description] |
+
+# 6. Usage Examples `<RECOMMENDED>`
+
+<!--
+Modify the notation according to your project's programming language.
+-->
+
+```
+// Describe usage examples according to your project's language
+```
+
+# 7. Behavior Diagram `<OPTIONAL>`
+
+Describe behavior in Mermaid format.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant System
+    User ->> System: Operation
+    System -->> User: Result
+```
+
+# 8. Constraints `<OPTIONAL>`
+
+Describe business or technical constraints.
+
+---
+
+# Section Requirement Legend
+
+| Marker          | Meaning     | Description                            |
+|-----------------|-------------|----------------------------------------|
+| `<MUST>`        | Required    | Must be included in all specifications |
+| `<RECOMMENDED>` | Recommended | Include whenever possible              |
+| `<OPTIONAL>`    | Optional    | Include as needed                      |
+
+---
+
+# Guidelines
+
+## What to Include
+
+- ✅ Feature purpose and background
+- ✅ User stories and use cases
+- ✅ Public API (interface) definitions
+- ✅ Logical structure of data models
+- ✅ Abstract description of behavior
+- ✅ Functional and non-functional requirements
+- ✅ Glossary
+
+## What NOT to Include (→ Design Doc)
+
+- ❌ Implementation status and progress
+- ❌ Technology stack selection rationale
+- ❌ Architecture and module structure
+- ❌ Implementation patterns and design patterns
+- ❌ Directory structure and file placement
+- ❌ Test strategy and coverage goals
+- ❌ Design decision records
+- ❌ Change history and migration guides
+
+---
+
+# Customization Guidelines for Projects
+
+When customizing this template for your project, update the following:
+
+1. **Type definition notation**: Adjust to project's programming language
+2. **Usage example notation**: Adjust to project's programming language
+3. **API table columns**: Adjust to project's structure (package/module organization)
+4. **Related document link format**: Adjust to project's document management method
