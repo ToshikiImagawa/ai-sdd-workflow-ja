@@ -1,9 +1,11 @@
 {
+  "$schema": "https://code.claude.com/plugin.v0.schema.json",
   "name": "sdd-workflow-ja",
   "description": "AI駆動仕様駆動開発（AI-SDD）ワークフローを支援する日本語プラグイン。Vibe Coding問題を防ぎ、仕様書を真実の源として高品質な実装を実現します。",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": {
-    "name": "toshiki.imagawa"
+    "name": "toshiki.imagawa",
+    "url": "https://github.com/ToshikiImagawa"
   },
   "license": "MIT"
 }

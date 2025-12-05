@@ -1,6 +1,7 @@
 ---
 name: generate_spec
 description: "Generate Abstract Specification and Technical Design Document from input content"
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # Specification & Design Doc Generator
@@ -15,6 +16,21 @@ Generates the following documents from input content according to the AI-SDD wor
 **Before execution, you must read `sdd-workflow:sdd-workflow` agent content to understand AI-SDD principles.**
 
 This command follows the sdd-workflow agent principles for specification and design document generation.
+
+### Skills Used
+
+This command uses the following skills:
+
+| Skill                        | Purpose                                                                                                        |
+|:-----------------------------|:---------------------------------------------------------------------------------------------------------------|
+| `sdd-workflow:sdd-templates` | Generate `.docs/SPECIFICATION_TEMPLATE.md`, `.docs/DESIGN_DOC_TEMPLATE.md` when project templates do not exist |
+
+**Template Preparation Flow**:
+
+1. Use `.docs/SPECIFICATION_TEMPLATE.md`, `.docs/DESIGN_DOC_TEMPLATE.md` (project templates) if they exist
+2. If not, use `sdd-templates` skill to generate the templates
+
+### Pre-Generation Verification
 
 Before generation, verify the following:
 
@@ -40,11 +56,11 @@ Provides an API to check login status and middleware to protect endpoints requir
 
 Analyze input content and assess risk based on the following criteria:
 
-| Risk | Condition | Response |
-|:---|:---|:---|
-| High | No specs + vague instructions | Confirm missing information with user before generating |
-| Medium | Some requirements unclear | Clarify ambiguous points before generating |
-| Low | Requirements clear | Can generate as-is |
+| Risk   | Condition                     | Response                                                |
+|:-------|:------------------------------|:--------------------------------------------------------|
+| High   | No specs + vague instructions | Confirm missing information with user before generating |
+| Medium | Some requirements unclear     | Clarify ambiguous points before generating              |
+| Low    | Requirements clear            | Can generate as-is                                      |
 
 **Examples of Vague Input**:
 
@@ -58,24 +74,24 @@ Extract/infer the following from input:
 
 **For Spec (Abstract Specification)**:
 
-| Extraction Item | Description | Required |
-|:---|:---|:---|
-| **Feature Name** | Identifier used for filename | Yes |
-| **Background** | Why this feature is needed | Yes |
-| **Purpose** | What to achieve | Yes |
-| **Functional Requirements** | List of required functions | Yes |
-| **Public API** | Interfaces users will use | |
-| **Data Model** | Major types/entities | |
-| **Behavior** | Major use cases/sequences | |
+| Extraction Item             | Description                  | Required |
+|:----------------------------|:-----------------------------|:---------|
+| **Feature Name**            | Identifier used for filename | Yes      |
+| **Background**              | Why this feature is needed   | Yes      |
+| **Purpose**                 | What to achieve              | Yes      |
+| **Functional Requirements** | List of required functions   | Yes      |
+| **Public API**              | Interfaces users will use    |          |
+| **Data Model**              | Major types/entities         |          |
+| **Behavior**                | Major use cases/sequences    |          |
 
 **For Design Doc (Technical Design Document)**:
 
-| Extraction Item | Description | Required |
-|:---|:---|:---|
-| **Technology Stack** | Technologies/libraries to use | Yes |
-| **Architecture Proposal** | Module structure/layer design | Yes |
-| **Design Decisions** | Reasons for technology selection/alternatives | |
-| **Non-Functional Requirements** | Performance/security requirements | |
+| Extraction Item                 | Description                                   | Required |
+|:--------------------------------|:----------------------------------------------|:---------|
+| **Technology Stack**            | Technologies/libraries to use                 | Yes      |
+| **Architecture Proposal**       | Module structure/layer design                 | Yes      |
+| **Design Decisions**            | Reasons for technology selection/alternatives |          |
+| **Non-Functional Requirements** | Performance/security requirements             |          |
 
 ### 3. Missing Information Confirmation
 
@@ -108,53 +124,41 @@ Does .docs/specification/{feature-name}_design.md already exist?
 
 ### Phase 1: Abstract Specification (Specify Phase)
 
-If a template (`.docs/SPECIFICATION_TEMPLATE.md`) exists in the project, follow it.
-Otherwise, generate with the following structure:
+#### Template Preparation
 
-```markdown
-# {Feature Name} Specification
+Follow these steps to prepare the template:
 
-## Background
+1. Check if `.docs/SPECIFICATION_TEMPLATE.md` exists
+2. **If exists**: Use that template
+3. **If not exists**: Use `sdd-workflow:sdd-templates` skill to generate `.docs/SPECIFICATION_TEMPLATE.md`, then use the
+   generated template
 
-Why this feature is needed
+#### Template Application Notes
 
-## Overview
-
-What to achieve
-
-## Functional Requirements
-
-- Requirement 1
-- Requirement 2
-
-## API
-
-Public interface definitions
-
-## Data Model
-
-Major type definitions
-```
+- Replace template placeholders (`{Feature Name}`, etc.) based on input content
+- Sections with `<MUST>` markers are required, `<RECOMMENDED>` are recommended, `<OPTIONAL>` are optional
+- Reference PRD requirement IDs (UR-xxx, FR-xxx, NFR-xxx) in functional requirements
 
 **Save Location**: `.docs/specification/{feature-name}_spec.md`
 
 ### Phase 2: Technical Design Document (Plan Phase)
 
 After abstract specification generation is complete, generate the technical design document.
-If a template (`.docs/DESIGN_DOC_TEMPLATE.md`) exists in the project, follow it.
 
-**Content to Include in Design Doc**:
+#### Template Preparation
 
-| Section | Content | Required |
-|:---|:---|:---|
-| Implementation Status | Initially Not Implemented | Yes |
-| Design Goals | Technical goals to achieve | Yes |
-| Technology Stack | Technologies and selection rationale | Yes |
-| Architecture | System diagram/module breakdown | Yes |
-| Design Decisions | Decisions/options/rationale | Yes |
-| Data Model | Specific type definitions | |
-| Interface Definitions | Interface definitions for each layer | |
-| Testing Strategy | Test levels/coverage targets | |
+Follow these steps to prepare the template:
+
+1. Check if `.docs/DESIGN_DOC_TEMPLATE.md` exists
+2. **If exists**: Use that template
+3. **If not exists**: Use `sdd-workflow:sdd-templates` skill to generate `.docs/DESIGN_DOC_TEMPLATE.md`, then use the
+   generated template
+
+#### Template Application Notes
+
+- Set implementation status to "🔴 Not Implemented" initially
+- Design Goals, Technology Stack, Architecture, and Design Decisions are required sections
+- Ensure consistency with spec
 
 **Save Location**: `.docs/specification/{feature-name}_design.md`
 
@@ -199,12 +203,12 @@ If PRD exists, perform the following consistency checks on generated spec and re
 
 ### Check Items
 
-| Check Item | Verification Content |
-|:---|:---|
-| **Requirement Coverage** | Are all PRD functional requirements (FR-xxx) covered in spec? |
-| **Requirement ID References** | Do spec functional requirements appropriately reference PRD requirement IDs? |
-| **Non-Functional Requirement Reflection** | Are PRD non-functional requirements (NFR-xxx) reflected in spec? |
-| **Terminology Consistency** | Is the same terminology used in PRD and spec? |
+| Check Item                                | Verification Content                                                         |
+|:------------------------------------------|:-----------------------------------------------------------------------------|
+| **Requirement Coverage**                  | Are all PRD functional requirements (FR-xxx) covered in spec?                |
+| **Requirement ID References**             | Do spec functional requirements appropriately reference PRD requirement IDs? |
+| **Non-Functional Requirement Reflection** | Are PRD non-functional requirements (NFR-xxx) reflected in spec?             |
+| **Terminology Consistency**               | Is the same terminology used in PRD and spec?                                |
 
 ### Handling Inconsistencies
 
@@ -250,10 +254,10 @@ If Serena MCP is enabled, existing codebase semantic analysis can be leveraged t
 
 #### Specification Extraction from Existing Code
 
-| Feature | Usage |
-|:---|:---|
-| `find_symbol` | Search existing function/class definitions for API spec reference |
-| `find_referencing_symbols` | Infer behavior from existing code usage patterns |
+| Feature                    | Usage                                                             |
+|:---------------------------|:------------------------------------------------------------------|
+| `find_symbol`              | Search existing function/class definitions for API spec reference |
+| `find_referencing_symbols` | Infer behavior from existing code usage patterns                  |
 
 #### Enhanced Generation Items
 

@@ -4,11 +4,12 @@ A Claude Code plugin supporting AI-driven Specification-Driven Development (AI-S
 
 ## Overview
 
-This plugin provides tools to prevent Vibe Coding problems and achieve high-quality implementations using specifications as the source of truth.
+This plugin provides tools to prevent Vibe Coding problems and achieve high-quality implementations using specifications
+as the source of truth.
 
 ### What is Vibe Coding?
 
-The problem where AI must guess thousands of undefined requirements due to vague instructions.
+Vibe Coding occurs when AI must guess thousands of undefined requirements due to vague instructions.
 This plugin solves this problem by providing a specification-centered development flow.
 
 ## Installation
@@ -37,50 +38,64 @@ After installation, restart Claude Code.
 
 ### Verification
 
-Run `/plugin` command in Claude Code and verify that `sdd-workflow` is displayed.
+Run the `/plugin` command in Claude Code and verify that `sdd-workflow` is displayed.
+
+## Quick Start
+
+**For projects using this plugin for the first time, we recommend running `/sdd_init` first.**
+
+```
+/sdd_init
+```
+
+This command automatically:
+
+- Adds the AI-SDD Instructions section to your project's `CLAUDE.md`
+- Creates the `.docs/` directory structure (requirement-diagram/, specification/, review/)
+- Generates PRD, specification, and design document template files
 
 ## Included Components
 
 ### Agents
 
-| Agent | Description |
-|:---|:---|
-| `sdd-workflow` | AI-SDD development flow management. Phase determination, Vibe Coding prevention, document consistency checks |
-| `spec-reviewer` | Specification quality review and improvement suggestions. Ambiguous description detection, missing section identification |
+| Agent           | Description                                                                                                             |
+|:----------------|:------------------------------------------------------------------------------------------------------------------------|
+| `sdd-workflow`  | Manages AI-SDD development flow. Phase determination, Vibe Coding prevention, document consistency checks               |
+| `spec-reviewer` | Reviews specification quality and provides improvement suggestions. Detects ambiguous descriptions and missing sections |
 
 ### Commands
 
-| Command | Description |
-|:---|:---|
-| `/generate_spec` | Generate abstract specification and technical design document from input |
-| `/generate_prd` | Generate PRD (Requirements Specification) in SysML requirements diagram format from business requirements |
-| `/check_spec` | Check consistency between implementation code and specifications, detecting discrepancies |
-| `/review_cleanup` | Clean up review/ directory after implementation, integrating design decisions |
-| `/task_breakdown` | Break down tasks from technical design document into small task list |
+| Command           | Description                                                                                                  |
+|:------------------|:-------------------------------------------------------------------------------------------------------------|
+| `/generate_spec`  | Generates an abstract specification and technical design document from input                                 |
+| `/generate_prd`   | Generates a PRD (Requirements Specification) in SysML requirements diagram format from business requirements |
+| `/check_spec`     | Checks consistency between implementation code and specifications, detecting discrepancies                   |
+| `/review_cleanup` | Cleans up the review/ directory after implementation, integrating design decisions                           |
+| `/task_breakdown` | Breaks down tasks from the technical design document into a list of small tasks                              |
 
 ### Skills
 
-| Skill | Description |
-|:---|:---|
-| `vibe-detector` | Analyzes user input to automatically detect Vibe Coding (vague instructions) |
-| `doc-consistency-checker` | Automatically checks consistency between documents (PRD, spec, design) |
+| Skill                     | Description                                                                  |
+|:--------------------------|:-----------------------------------------------------------------------------|
+| `vibe-detector`           | Analyzes user input to automatically detect Vibe Coding (vague instructions) |
+| `doc-consistency-checker` | Automatically checks consistency between documents (PRD, spec, design)       |
 
 ### Hooks
 
-| Hook | Trigger | Description |
-|:---|:---|:---|
-| `check-spec-exists` | PreToolUse (Edit/Write) | Verifies specification existence before implementation, shows warning |
-| `check-commit-prefix` | PostToolUse (Bash) | Checks commit message convention |
+| Hook                  | Trigger                 | Description                                                           |
+|:----------------------|:------------------------|:----------------------------------------------------------------------|
+| `check-spec-exists`   | PreToolUse (Edit/Write) | Verifies specification existence before implementation, shows warning |
+| `check-commit-prefix` | PostToolUse (Bash)      | Checks commit message conventions                                     |
 
 ## Usage
 
 ### sdd-workflow Agent
 
-Automatically performs the following at task start:
+The agent automatically performs the following when a task starts:
 
-1. **Phase Determination**: Identify required phases based on task nature
-2. **Vibe Coding Prevention**: Detect vague instructions and promote specification clarification
-3. **Document Management**: Guide specification/design document creation and updates
+1. **Phase Determination**: Identifies required phases based on task nature
+2. **Vibe Coding Prevention**: Detects vague instructions and promotes specification clarification
+3. **Document Management**: Guides specification/design document creation and updates
 
 ### Command Usage Examples
 
@@ -148,15 +163,17 @@ To enable hooks, add the following to your project's `.claude/settings.json`:
 }
 ```
 
-See `hooks/settings.example.json` for configuration example.
+See `hooks/settings.example.json` for a configuration example.
 
 ## Serena MCP Integration (Optional)
 
-Configure [Serena](https://github.com/oraios/serena) MCP to enable enhanced functionality through semantic code analysis.
+Configure [Serena](https://github.com/oraios/serena) MCP to enable enhanced functionality through semantic code
+analysis.
 
-### What is Serena
+### What is Serena?
 
-Serena is a semantic code analysis tool based on LSP (Language Server Protocol), supporting 30+ programming languages. It enables symbol-level code search and analysis.
+Serena is a semantic code analysis tool based on LSP (Language Server Protocol) that supports 30+ programming languages.
+It enables symbol-level code search and analysis.
 
 ### Configuration
 
@@ -187,15 +204,15 @@ Add the following to your project's `.mcp.json`:
 
 ### Enhanced Features
 
-| Command | Enhancement with Serena |
-|:---|:---|
-| `/generate_spec` | Reference existing code API/type definitions for consistent specification generation |
-| `/check_spec` | High-precision API implementation and signature verification via symbol-based search |
-| `/task_breakdown` | Analyze change impact scope for accurate task dependency mapping |
+| Command           | Enhancement with Serena                                                                       |
+|:------------------|:----------------------------------------------------------------------------------------------|
+| `/generate_spec`  | References existing code API/type definitions for consistent specification generation         |
+| `/check_spec`     | Provides high-precision API implementation and signature verification via symbol-based search |
+| `/task_breakdown` | Analyzes change impact scope for accurate task dependency mapping                             |
 
 ### Without Serena
 
-All features work without Serena. Text-based search (Grep/Glob) is used for analysis, working language-agnostically.
+All features work without Serena. Text-based search (Grep/Glob) is used for analysis and works language-agnostically.
 
 ## AI-SDD Development Flow
 
@@ -246,10 +263,10 @@ sdd-workflow/
 
 ## Commit Message Convention
 
-| Prefix | Usage |
-|:---|:---|
-| `[docs]` | Add/update documentation |
-| `[spec]` | Add/update specifications (`*_spec.md`) |
+| Prefix     | Usage                                       |
+|:-----------|:--------------------------------------------|
+| `[docs]`   | Add/update documentation                    |
+| `[spec]`   | Add/update specifications (`*_spec.md`)     |
 | `[design]` | Add/update design documents (`*_design.md`) |
 
 ## License

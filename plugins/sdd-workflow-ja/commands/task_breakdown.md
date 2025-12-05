@@ -1,6 +1,7 @@
 ---
 name: task_breakdown
 description: "技術設計書からタスクを分解し、独立してテスト可能な小タスクのリストを生成する"
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # Task Breakdown - タスク分解
