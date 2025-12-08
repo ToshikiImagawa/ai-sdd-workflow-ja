@@ -4,8 +4,11 @@
 *.swp
 *.swo
 
-# Claude Code
+# claude
 .claude/settings.local.json
+
+# direnv
+.envrc
 
 # OS
 .DS_Store
