@@ -15,6 +15,12 @@ structure, persistence rules, and Vibe Coding prevention details.**
 
 This agent performs requirement analysis based on the sdd-workflow agent principles.
 
+### Configuration File Check
+
+**At runtime, check for `.sdd-config.json` at project root and use configuration values if present.**
+
+For configuration file details, refer to the "Project Configuration File" section in the `sdd-workflow:sdd-workflow` agent.
+
 ## SysML Requirements Diagram Theory
 
 ### Position of Requirements Diagrams
@@ -302,8 +308,28 @@ requirementDiagram
 
 ## Reference Documents
 
-Project requirement diagrams are typically located in the `.docs/requirement-diagram/` directory. Refer to appropriate
-documents according to the project being analyzed.
+Project requirement diagrams are located in the `.sdd/requirement/` directory.
+
+### Directory Structure
+
+Requirement diagrams support both flat and hierarchical structures:
+
+**Flat Structure**:
+```
+.sdd/requirement/
+└── {feature-name}.md
+```
+
+**Hierarchical Structure**:
+```
+.sdd/requirement/
+├── {feature-name}.md              # Top-level feature
+└── {parent-feature}/              # Parent feature directory
+    ├── index.md                   # Parent feature overview and requirements list
+    └── {child-feature}.md         # Child feature requirements
+```
+
+Refer to appropriate documents according to the project being analyzed. For hierarchical structures, `index.md` contains the parent feature's overall requirements overview and references to child requirements.
 
 ---
 

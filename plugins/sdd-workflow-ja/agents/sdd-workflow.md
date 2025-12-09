@@ -44,55 +44,158 @@ Specify（仕様化） → Plan（計画） → Tasks（タスク分解） → I
 |:-----------------------|:----------------------------------|:----------------|
 | **Specify**            | 「何を作るか」「なぜ作るか」を明確化。**技術的詳細は含めない** | PRD、`*_spec.md` |
 | **Plan**               | 「どのように実現するか」を検討。アーキテクチャ設計と技術選定    | `*_design.md`   |
-| **Tasks**              | 設計を独立してテスト可能な小タスクに分解              | `review/` 配下    |
+| **Tasks**              | 設計を独立してテスト可能な小タスクに分解              | `task/` 配下      |
 | **Implement & Review** | AIが各タスクを実行し、仕様との整合性を継続検証          | ソースコード          |
+
+## プロジェクト設定ファイル
+
+### 設定ファイルの仕様
+
+AI-SDDワークフローでは、`.sdd-config.json` ファイルによるディレクトリ名のカスタマイズをサポートします。
+
+**設定ファイルパス**: プロジェクトルートの `.sdd-config.json`
+
+```json
+{
+  "docsRoot": ".sdd",
+  "directories": {
+    "requirement": "requirement",
+    "specification": "specification",
+    "task": "task"
+  }
+}
+```
+
+### 設定項目
+
+| 項目                        | デフォルト値               | 説明                          |
+|:--------------------------|:---------------------|:----------------------------|
+| `docsRoot`                | `.sdd`              | ドキュメントルートディレクトリ             |
+| `directories.requirement` | `requirement` | PRD/要求仕様書ディレクトリ名            |
+| `directories.specification` | `specification`      | 抽象仕様書・技術設計書ディレクトリ名          |
+| `directories.task`        | `task`               | タスクログディレクトリ名（一時的な作業ログ）      |
+
+### 設定ファイルの読み込みルール
+
+1. プロジェクトルートに `.sdd-config.json` が存在するか確認
+2. 存在する場合: 設定値を読み込み、パス解決に使用
+3. 存在しない場合: デフォルト値を使用
+4. 部分的な設定も可能（指定されていない項目はデフォルト値を使用）
+
+### カスタム設定の例
+
+```json
+{
+  "docsRoot": "docs",
+  "directories": {
+    "requirement": "requirements",
+    "specification": "specs",
+    "task": "wip"
+  }
+}
+```
+
+この設定の場合、ディレクトリ構造は以下のようになります：
+
+```
+docs/
+├── requirements/          # PRD（要求仕様書）
+├── specs/                 # 仕様書・設計書
+└── wip/                   # 一時的なタスクログ
+```
 
 ## ドキュメント構成と管理ルール
 
 ### 推奨ディレクトリ構造
 
+フラット構造と階層構造の両方をサポートします。プロジェクトの規模に応じて選択してください。
+
+#### フラット構造（小〜中規模プロジェクト向け）
+
 ```
-.docs/
+.sdd/
 ├── SPECIFICATION_TEMPLATE.md     # 抽象仕様書テンプレート
 ├── DESIGN_DOC_TEMPLATE.md        # 技術設計書テンプレート
-├── requirement-diagram/          # PRD（要求仕様書）- SysML要求図形式
+├── requirement/          # PRD（要求仕様書）- SysML要求図形式
 │   └── {機能名}.md              # 高レベルな要求、ビジネス価値
 ├── specification/                # 永続的な知識資産
 │   ├── {機能名}_spec.md         # 抽象仕様書（SysMLモデル）
 │   └── {機能名}_design.md       # 技術設計書（Design Doc）
-└── review/                       # 一時的な作業ログ（実装完了後に削除）
+└── task/                         # 一時的なタスクログ（実装完了後に削除）
     └── {チケット番号}/
         └── xxx.md
 ```
+
+#### 階層構造（中〜大規模プロジェクト向け）
+
+```
+.sdd/
+├── SPECIFICATION_TEMPLATE.md     # 抽象仕様書テンプレート
+├── DESIGN_DOC_TEMPLATE.md        # 技術設計書テンプレート
+├── requirement/          # PRD（要求仕様書）- SysML要求図形式
+│   ├── {機能名}.md              # トップレベル機能（フラット構造との互換性）
+│   └── {親機能名}/              # 親機能ディレクトリ
+│       ├── index.md             # 親機能の概要・要求一覧
+│       └── {子機能名}.md        # 子機能の要求仕様
+├── specification/                # 永続的な知識資産
+│   ├── {機能名}_spec.md         # トップレベル機能（フラット構造との互換性）
+│   ├── {機能名}_design.md
+│   └── {親機能名}/              # 親機能ディレクトリ
+│       ├── index_spec.md        # 親機能の抽象仕様書
+│       ├── index_design.md      # 親機能の技術設計書
+│       ├── {子機能名}_spec.md   # 子機能の抽象仕様書
+│       └── {子機能名}_design.md # 子機能の技術設計書
+└── task/                         # 一時的なタスクログ（実装完了後に削除）
+    └── {チケット番号}/
+        └── xxx.md
+```
+
+#### 階層構造の使用ガイドライン
+
+| 条件             | 推奨構造   |
+|:---------------|:-------|
+| 機能数が10個以下      | フラット構造 |
+| 機能数が10個以上      | 階層構造   |
+| 複数のドメインにまたがる機能 | 階層構造   |
+| 機能間に親子関係がある    | 階層構造   |
+
+**階層構造でのパス指定例**:
+
+- `requirement/auth/index.md` → 認証ドメインの概要・要求一覧
+- `requirement/auth/user-login.md` → 認証ドメイン配下のユーザーログイン要求
+- `specification/auth/index_spec.md` → 認証ドメインの抽象仕様書
+- `specification/auth/index_design.md` → 認証ドメインの技術設計書
+- `specification/auth/user-login_spec.md` → 認証ドメイン配下のユーザーログイン仕様
+- `specification/payment/checkout_design.md` → 決済ドメイン配下のチェックアウト設計
 
 ### ドキュメントの永続性ルール
 
 | パス                          | 永続性     | 管理ルール                                         |
 |:----------------------------|:--------|:----------------------------------------------|
-| `requirement-diagram/`      | **永続**  | 高レベルな要求（ビジネス要求）を定義。SysML要求図の基盤                |
+| `requirement/`      | **永続**  | 高レベルな要求（ビジネス要求）を定義。SysML要求図の基盤                |
 | `specification/*_spec.md`   | **永続**  | システムの**抽象的な構造と振る舞い**を定義。技術詳細は含めない             |
 | `specification/*_design.md` | **永続**  | **具体的な技術設計**、アーキテクチャ、技術選定の根拠を記述               |
-| `review/`                   | **一時的** | 実装完了後に**削除**。重要な設計判断は `*_design.md` に統合してから削除 |
+| `task/`                     | **一時的** | 実装完了後に**削除**。重要な設計判断は `*_design.md` に統合してから削除 |
 
 ### ドキュメント間の依存関係
 
 ```mermaid
 graph RL
     IMPL[実装] --> DESIGN["*_design.md<br/>(技術設計)"]
-    REVIEW["review/<br/>(一時ログ)"] --> DESIGN
+    TASK["task/<br/>(タスクログ)"] --> DESIGN
     DESIGN --> SPEC["*_spec.md<br/>(抽象仕様)"]
-    SPEC --> PRD["requirement-diagram/<br/>(PRD/要求図)"]
+    SPEC --> PRD["requirement/<br/>(PRD/要求図)"]
 ```
 
 **依存方向の意味**:
 
 - `実装` は `*_design.md` を参照して作成される（技術的な「どのように」）
 - `*_design.md` は `*_spec.md` を参照して作成される（抽象的な「何を」を具体化）
-- `*_spec.md` は `requirement-diagram` を参照して作成される（ビジネス要求を技術仕様に変換）
+- `*_spec.md` は `requirement` を参照して作成される（ビジネス要求を技術仕様に変換）
 
 ## 各ドキュメントの役割と抽象度
 
-### 1. PRD / 要求図（`requirement-diagram/`）
+### 1. PRD / 要求図（`requirement/`）
 
 **抽象度: 最高** | **焦点: 何を作るか、なぜ作るか**
 
@@ -133,7 +236,7 @@ graph RL
 **必須セクション**: 実装ステータス、設計目標、技術スタック、アーキテクチャ、設計判断
 **任意セクション**: データモデル、インターフェース定義、テスト戦略、変更履歴
 
-### 4. レビューログ（`review/{チケット番号}/`）
+### 4. タスクログ（`task/{チケット番号}/`）
 
 **永続性: 一時的** | **焦点: タスク分解と実行ログ**
 
@@ -150,13 +253,13 @@ graph RL
 
 タスクの性質に応じて、必要なフェーズとドキュメントを判定します：
 
-| タスク種別      | 必要なフェーズ                            | 成果物                          |
-|:-----------|:-----------------------------------|:-----------------------------|
-| 新機能追加（大規模） | Specify → Plan → Tasks → Implement | PRD → spec → design → review |
-| 新機能追加（小規模） | Specify → Plan → Tasks → Implement | spec → design → review       |
-| バグ修正       | Tasks → Implement                  | review（調査ログ）のみ               |
-| リファクタリング   | Plan → Tasks → Implement           | design（変更計画）→ review         |
-| 技術調査       | Tasks                              | review（調査結果）のみ               |
+| タスク種別      | 必要なフェーズ                            | 成果物                        |
+|:-----------|:-----------------------------------|:---------------------------|
+| 新機能追加（大規模） | Specify → Plan → Tasks → Implement | PRD → spec → design → task |
+| 新機能追加（小規模） | Specify → Plan → Tasks → Implement | spec → design → task       |
+| バグ修正       | Tasks → Implement                  | task（調査ログ）のみ               |
+| リファクタリング   | Plan → Tasks → Implement           | design（変更計画）→ task         |
+| 技術調査       | Tasks                              | task（調査結果）のみ               |
 
 **タスク規模の判定基準**:
 
@@ -197,7 +300,7 @@ graph RL
    ↓
 3. ユーザーが拒否した場合：
    - リスクを明示的に警告
-   - 推測した仕様を review/ に記録（実装後に検証）
+   - 推測した仕様を task/ に記録（実装後に検証）
    ↓
 4. ガードレールとなる仕様を整備
 ```
@@ -206,22 +309,22 @@ graph RL
 
 ユーザーが仕様書作成を拒否した場合でも、以下の最低限のガードレールを確保：
 
-1. **推測仕様の明文化**: `review/{ticket}/assumed-spec.md` に推測した仕様を記録
+1. **推測仕様の明文化**: `task/{ticket}/assumed-spec.md` に推測した仕様を記録
 2. **検証ポイントの設定**: 実装完了時にユーザーと確認すべき項目をリスト化
 3. **リスクの可視化**: 仕様不足による潜在的な問題を警告
 
 ### 3. 知識資産の永続化管理
 
-`review/` 配下のファイルのライフサイクルを管理：
+`task/` 配下のファイルのライフサイクルを管理：
 
 **実装完了時のフロー**:
 
 ```
-1. review/ 配下の内容を確認
+1. task/ 配下の内容を確認
    ↓
 2. 重要な設計判断を *_design.md に統合
    ↓
-3. review/ 配下のファイルを削除
+3. task/ 配下のファイルを削除
    ↓
 4. コミット
 ```
@@ -308,9 +411,9 @@ graph RL
 ```
 1. 仕様との整合性を検証（Review）
    ↓
-2. review/ の重要内容を design に統合
+2. task/ の重要内容を design に統合
    ↓
-3. review/ を削除
+3. task/ を削除
    ↓
 4. コミット
 ```
@@ -336,10 +439,12 @@ graph RL
 
 | フェーズ | ドキュメント | ステータス |
 |:--|:--|:--|
-| Specify | .docs/requirement-diagram/{name}.md | 🟢 存在 / 🟡 要更新 / 🔴 要作成 |
-| Specify | .docs/specification/{name}_spec.md | 🟢 / 🟡 / 🔴 |
-| Plan | .docs/specification/{name}_design.md | 🟢 / 🟡 / 🔴 |
-| Tasks | .docs/review/{ticket}/ | 🔴 要作成 |
+| Specify | .sdd/requirement/[{path}/]{name}.md | 🟢 存在 / 🟡 要更新 / 🔴 要作成 |
+| Specify | .sdd/specification/[{path}/]{name}_spec.md | 🟢 / 🟡 / 🔴 |
+| Plan | .sdd/specification/[{path}/]{name}_design.md | 🟢 / 🟡 / 🔴 |
+| Tasks | .sdd/task/{ticket}/ | 🔴 要作成 |
+
+※ `[{path}/]` は階層構造の場合のみ指定（例: `auth/`）。親機能の場合は `{name}` が `index` になる
 
 ### 推奨ワークフロー
 
@@ -348,14 +453,14 @@ graph RL
    ...
 ```
 
-### レビューファイル削除確認
+### タスクログクリーンアップ確認
 
 ```markdown
-## review/ クリーンアップ確認
+## task/ クリーンアップ確認
 
 ### 対象ディレクトリ
 
-.docs/review/{チケット番号}/
+.sdd/task/{チケット番号}/
 
 ### 統合すべき内容（→ *_design.md へ）
 
@@ -370,7 +475,7 @@ graph RL
 ### 推奨アクション
 
 1. {設計判断} を {design.md} に追記
-2. review/{チケット番号}/ を削除
+2. task/{チケット番号}/ を削除
 ```
 
 ## コミットメッセージ規約

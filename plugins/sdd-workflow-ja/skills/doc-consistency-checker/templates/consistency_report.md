@@ -10,9 +10,9 @@
 
 | ドキュメント | パス                                    | 最終更新日      |
 |:-------|:--------------------------------------|:-----------|
-| PRD    | `.docs/requirement-diagram/{機能名}.md`  | YYYY-MM-DD |
-| spec   | `.docs/specification/{機能名}_spec.md`   | YYYY-MM-DD |
-| design | `.docs/specification/{機能名}_design.md` | YYYY-MM-DD |
+| PRD    | `.sdd/requirement/{機能名}.md`  | YYYY-MM-DD |
+| spec   | `.sdd/specification/{機能名}_spec.md`   | YYYY-MM-DD |
+| design | `.sdd/specification/{機能名}_design.md` | YYYY-MM-DD |
 
 ### チェック結果サマリー
 

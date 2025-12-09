@@ -1,12 +1,11 @@
 ---
-name: review_cleanup
-description: "Clean up review/ directory after implementation completion, integrating important design decisions into *_design.md before deletion"
+description: "Clean up task/ directory after implementation completion, integrating important design decisions into *_design.md before deletion"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
-# Review Cleanup - Review Document Cleanup
+# Task Cleanup - Task Log Cleanup
 
-Organizes documents under `.docs/review/`, integrating important design decisions into `.docs/specification/*_design.md`
+Organizes documents under `.sdd/task/`, integrating important design decisions into `.sdd/specification/*_design.md`
 before deletion.
 
 ## Prerequisites
@@ -15,12 +14,20 @@ before deletion.
 
 This command follows the sdd-workflow agent principles for cleanup.
 
+### Configuration File Check
+
+**At runtime, check for `.sdd-config.json` at project root and use configuration values to resolve directory paths if present.**
+
+For configuration file details, refer to the "Project Configuration File" section in the `sdd-workflow:sdd-workflow` agent.
+
+The following documentation uses default values (`.sdd`, `specification`, `task`), but replace with custom values if a configuration file exists.
+
 ### Document Persistence Rules (Reference)
 
 | Path                        | Persistence    | Management Rules                                                                                  |
 |:----------------------------|:---------------|:--------------------------------------------------------------------------------------------------|
 | `specification/*_design.md` | **Persistent** | Describe technical design, architecture, rationale for technology selection                       |
-| `review/`                   | **Temporary**  | **Delete** after implementation complete. Integrate important design decisions into `*_design.md` |
+| `task/`                     | **Temporary**  | **Delete** after implementation complete. Integrate important design decisions into `*_design.md` |
 
 ## Input
 
@@ -29,9 +36,9 @@ $ARGUMENTS
 ### Input Examples
 
 ```
-/review_cleanup TICKET-123
-/review_cleanup feature/task-management
-/review_cleanup  # Without arguments, targets entire review/
+/task_cleanup TICKET-123
+/task_cleanup feature/task-management
+/task_cleanup  # Without arguments, targets entire task/
 ```
 
 ## Processing Flow
@@ -39,15 +46,15 @@ $ARGUMENTS
 ### 1. Identify Target Directory
 
 ```
-With argument → Target .docs/review/{argument}/
-Without argument → Target entire .docs/review/
+With argument → Target .sdd/task/{argument}/
+Without argument → Target entire .sdd/task/
 ```
 
 ### 2. Check Target Files
 
 ```bash
 # Get file list in target directory
-ls -la .docs/review/{target}/
+ls -la .sdd/task/{target}/
 
 # Check last update date for each file
 git log -1 --format="%ci" -- <file_path>
@@ -100,30 +107,30 @@ When performing integration:
 
 ```bash
 # Delete files
-git rm .docs/review/{target}/{file}
+git rm .sdd/task/{target}/{file}
 
 # Delete entire directory (after all files processed)
-git rm -r .docs/review/{target}/
+git rm -r .sdd/task/{target}/
 ```
 
 ### 7. Commit
 
 ```bash
 # Commit integration and deletion together
-git commit -m "[docs] Clean up review/{target}
+git commit -m "[docs] Clean up task/{target}
 
 - Integrate design decisions into {design.md}
-- Delete temporary work logs"
+- Delete temporary task logs"
 ```
 
 ## Output Format
 
 ```markdown
-## review/ Cleanup Confirmation
+## task/ Cleanup Confirmation
 
 ### Target Directory
 
-`.docs/review/{target}/`
+`.sdd/task/{target}/`
 
 ### File List
 
@@ -134,7 +141,7 @@ git commit -m "[docs] Clean up review/{target}
 ### Content to Integrate (→ `*_design.md`)
 
 - [ ] **{Design Decision 1}**: {Summary}
-    - Integration Target: `.docs/specification/{name}_design.md`
+    - Integration Target: `.sdd/specification/{name}_design.md`
     - Target Section: Design Decisions / Technology Stack / Other
 - [ ] **{Design Decision 2}**: {Summary}
     - Integration Target: ...
@@ -148,7 +155,7 @@ git commit -m "[docs] Clean up review/{target}
 ### Recommended Actions
 
 1. Add {design decision} to {section} in `{design.md}`
-2. Delete `review/{target}/`
+2. Delete `task/{target}/`
 3. Commit
 
 ### Confirmation Items
@@ -162,7 +169,7 @@ git commit -m "[docs] Clean up review/{target}
 
 ### Cases Requiring Careful Judgment
 
-- **Implementation not complete**: Keep review/
+- **Implementation not complete**: Keep task/
 - **Integration target unclear**: Confirm with user
 - **Information spanning multiple features**: Integrate into most related document
 

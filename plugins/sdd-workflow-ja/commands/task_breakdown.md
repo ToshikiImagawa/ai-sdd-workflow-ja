@@ -1,5 +1,4 @@
 ---
-name: task_breakdown
 description: "技術設計書からタスクを分解し、独立してテスト可能な小タスクのリストを生成する"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
@@ -14,11 +13,19 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 このコマンドはsdd-workflowエージェントの原則に従ってタスク分解を行います。
 
+### 設定ファイルの確認
+
+**実行時にプロジェクトルートの `.sdd-config.json` を確認し、存在する場合は設定値を使用してディレクトリパスを解決します。**
+
+設定ファイルの詳細は `sdd-workflow-ja:sdd-workflow` エージェントの「プロジェクト設定ファイル」セクションを参照してください。
+
+以下のドキュメントでは、デフォルト値（`.sdd`、`requirement`、`specification`、`task`）を使用して説明しますが、設定ファイルが存在する場合はカスタム値に置き換えてください。
+
 ### Tasks フェーズの位置づけ（参照）
 
-| フェーズ      | 目的                   | 成果物          |
-|:----------|:---------------------|:-------------|
-| **Tasks** | 設計を独立してテスト可能な小タスクに分解 | `review/` 配下 |
+| フェーズ      | 目的                   | 成果物        |
+|:----------|:---------------------|:-----------|
+| **Tasks** | 設計を独立してテスト可能な小タスクに分解 | `task/` 配下 |
 
 ## 入力
 
@@ -35,10 +42,29 @@ $ARGUMENTS
 
 ### 1. 関連ドキュメントの読み込み
 
+フラット構造と階層構造の両方をサポートします。
+
+**フラット構造の場合**:
 ```
-.docs/requirement-diagram/{機能名}.md を読み込む（PRD、存在する場合）
-.docs/specification/{機能名}_spec.md を読み込む（存在する場合）
-.docs/specification/{機能名}_design.md を読み込む（必須）
+.sdd/requirement/{機能名}.md を読み込む（PRD、存在する場合）
+.sdd/specification/{機能名}_spec.md を読み込む（存在する場合）
+.sdd/specification/{機能名}_design.md を読み込む（必須）
+```
+
+**階層構造の場合**（引数に `/` が含まれる場合）:
+```
+.sdd/requirement/{親機能名}/index.md を読み込む（親機能のPRD、存在する場合）
+.sdd/requirement/{親機能名}/{機能名}.md を読み込む（子機能のPRD、存在する場合）
+.sdd/specification/{親機能名}/index_spec.md を読み込む（親機能のspec、存在する場合）
+.sdd/specification/{親機能名}/{機能名}_spec.md を読み込む（子機能のspec、存在する場合）
+.sdd/specification/{親機能名}/index_design.md を読み込む（親機能のdesign、存在する場合）
+.sdd/specification/{親機能名}/{機能名}_design.md を読み込む（子機能のdesign、必須）
+```
+
+**入力例（階層構造）**:
+```
+/task_breakdown auth/user-login
+/task_breakdown auth/user-login TICKET-123
 ```
 
 - 設計書が存在しない場合は、先に `/generate_spec` で作成を促す
@@ -109,7 +135,7 @@ graph LR
 |:---|:---|
 | 機能名 | {機能名} |
 | チケット番号 | {チケット番号}（指定がある場合） |
-| 設計書 | `.docs/specification/{機能名}_design.md` |
+| 設計書 | `.sdd/specification/{機能名}_design.md` |
 | 作成日 | YYYY-MM-DD |
 
 ## タスク一覧
@@ -172,12 +198,14 @@ graph TD
 
 ## 参照ドキュメント
 
-- 抽象仕様書: `.docs/specification/{機能名}_spec.md`
-- 技術設計書: `.docs/specification/{機能名}_design.md`
+- 抽象仕様書: `.sdd/specification/[{親機能名}/]{機能名}_spec.md`
+- 技術設計書: `.sdd/specification/[{親機能名}/]{機能名}_design.md`
+
+※ 階層構造の場合、親機能は `index_spec.md`、`index_design.md`
 
 ```
 
-**保存先**: `.docs/review/{チケット番号}/tasks.md` または `.docs/review/{機能名}/tasks.md`
+**保存先**: `.sdd/task/{チケット番号}/tasks.md` または `.sdd/task/{機能名}/tasks.md`
 
 ## 要求カバレッジの確認
 
@@ -213,7 +241,7 @@ PRD/specが存在する場合、生成したタスクリストに対して以下
 ## 生成後のアクション
 
 1. **ファイル保存**:
-    - `.docs/review/{対象}/tasks.md`
+    - `.sdd/task/{対象}/tasks.md`
 
 2. **要求カバレッジ確認**:
     - PRD/specが存在する場合: すべての要求がタスクでカバーされているか確認
@@ -225,7 +253,7 @@ PRD/specが存在する場合、生成したタスクリストに対して以下
 4. **次のステップ**:
     - Phase 1 の基盤タスクから順に実装開始
     - 各タスク完了時にチェックを入れる
-    - 全タスク完了後、`/review_cleanup` で整理
+    - 全タスク完了後、`/task_cleanup` で整理
 
 ## Serena MCP 統合（オプション）
 

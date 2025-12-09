@@ -1,5 +1,4 @@
 ---
-name: generate_spec
 description: "Generate Abstract Specification and Technical Design Document from input content"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
@@ -8,8 +7,8 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 Generates the following documents from input content according to the AI-SDD workflow:
 
-1. `.docs/specification/{feature-name}_spec.md` - Abstract Specification (Specify Phase)
-2. `.docs/specification/{feature-name}_design.md` - Technical Design Document (Plan Phase)
+1. `.sdd/specification/{feature-name}_spec.md` - Abstract Specification (Specify Phase)
+2. `.sdd/specification/{feature-name}_design.md` - Technical Design Document (Plan Phase)
 
 ## Prerequisites
 
@@ -17,24 +16,32 @@ Generates the following documents from input content according to the AI-SDD wor
 
 This command follows the sdd-workflow agent principles for specification and design document generation.
 
+### Configuration File Check
+
+**At runtime, check for `.sdd-config.json` at project root and use configuration values to resolve directory paths if present.**
+
+For configuration file details, refer to the "Project Configuration File" section in the `sdd-workflow:sdd-workflow` agent.
+
+The following documentation uses default values (`.sdd`, `requirement`, `specification`), but replace with custom values if a configuration file exists.
+
 ### Skills Used
 
 This command uses the following skills:
 
 | Skill                        | Purpose                                                                                                        |
 |:-----------------------------|:---------------------------------------------------------------------------------------------------------------|
-| `sdd-workflow:sdd-templates` | Generate `.docs/SPECIFICATION_TEMPLATE.md`, `.docs/DESIGN_DOC_TEMPLATE.md` when project templates do not exist |
+| `sdd-workflow:sdd-templates` | Generate `.sdd/SPECIFICATION_TEMPLATE.md`, `.sdd/DESIGN_DOC_TEMPLATE.md` when project templates do not exist |
 
 **Template Preparation Flow**:
 
-1. Use `.docs/SPECIFICATION_TEMPLATE.md`, `.docs/DESIGN_DOC_TEMPLATE.md` (project templates) if they exist
+1. Use `.sdd/SPECIFICATION_TEMPLATE.md`, `.sdd/DESIGN_DOC_TEMPLATE.md` (project templates) if they exist
 2. If not, use `sdd-templates` skill to generate the templates
 
 ### Pre-Generation Verification
 
 Before generation, verify the following:
 
-1. Does the `.docs/` directory exist in the project?
+1. Does the `.sdd/` directory exist in the project?
 2. If template files exist, use them
 
 ## Input
@@ -104,13 +111,29 @@ If important items cannot be determined from input, **confirm with user before g
 
 ### 4. Existing Document Check
 
-Check the following before generation:
+Check the following before generation. Both flat and hierarchical structures are supported.
 
+**For flat structure**:
 ```
-Does .docs/requirement-diagram/{feature-name}.md exist? (PRD)
-Does .docs/specification/{feature-name}_spec.md already exist?
-Does .docs/specification/{feature-name}_design.md already exist?
+Does .sdd/requirement/{feature-name}.md exist? (PRD)
+Does .sdd/specification/{feature-name}_spec.md already exist?
+Does .sdd/specification/{feature-name}_design.md already exist?
 ```
+
+**For hierarchical structure** (when placing under parent feature):
+```
+Does .sdd/requirement/{parent-feature}/index.md exist? (parent feature PRD)
+Does .sdd/requirement/{parent-feature}/{feature-name}.md exist? (child feature PRD)
+Does .sdd/specification/{parent-feature}/index_spec.md already exist? (parent feature spec)
+Does .sdd/specification/{parent-feature}/{feature-name}_spec.md already exist? (child feature spec)
+Does .sdd/specification/{parent-feature}/index_design.md already exist? (parent feature design)
+Does .sdd/specification/{parent-feature}/{feature-name}_design.md already exist? (child feature design)
+```
+
+**Hierarchical structure usage decision**:
+- Use hierarchical structure when corresponding PRD exists in hierarchical structure
+- Use hierarchical structure when parent feature (category) is specified in input
+- Recommended to confirm with user whether to use hierarchical structure
 
 **If PRD exists**:
 
@@ -128,9 +151,9 @@ Does .docs/specification/{feature-name}_design.md already exist?
 
 Follow these steps to prepare the template:
 
-1. Check if `.docs/SPECIFICATION_TEMPLATE.md` exists
+1. Check if `.sdd/SPECIFICATION_TEMPLATE.md` exists
 2. **If exists**: Use that template
-3. **If not exists**: Use `sdd-workflow:sdd-templates` skill to generate `.docs/SPECIFICATION_TEMPLATE.md`, then use the
+3. **If not exists**: Use `sdd-workflow:sdd-templates` skill to generate `.sdd/SPECIFICATION_TEMPLATE.md`, then use the
    generated template
 
 #### Template Application Notes
@@ -139,7 +162,10 @@ Follow these steps to prepare the template:
 - Sections with `<MUST>` markers are required, `<RECOMMENDED>` are recommended, `<OPTIONAL>` are optional
 - Reference PRD requirement IDs (UR-xxx, FR-xxx, NFR-xxx) in functional requirements
 
-**Save Location**: `.docs/specification/{feature-name}_spec.md`
+**Save Location**:
+- Flat structure: `.sdd/specification/{feature-name}_spec.md`
+- Hierarchical structure (parent feature): `.sdd/specification/{parent-feature}/index_spec.md`
+- Hierarchical structure (child feature): `.sdd/specification/{parent-feature}/{feature-name}_spec.md`
 
 ### Phase 2: Technical Design Document (Plan Phase)
 
@@ -149,9 +175,9 @@ After abstract specification generation is complete, generate the technical desi
 
 Follow these steps to prepare the template:
 
-1. Check if `.docs/DESIGN_DOC_TEMPLATE.md` exists
+1. Check if `.sdd/DESIGN_DOC_TEMPLATE.md` exists
 2. **If exists**: Use that template
-3. **If not exists**: Use `sdd-workflow:sdd-templates` skill to generate `.docs/DESIGN_DOC_TEMPLATE.md`, then use the
+3. **If not exists**: Use `sdd-workflow:sdd-templates` skill to generate `.sdd/DESIGN_DOC_TEMPLATE.md`, then use the
    generated template
 
 #### Template Application Notes
@@ -160,7 +186,10 @@ Follow these steps to prepare the template:
 - Design Goals, Technology Stack, Architecture, and Design Decisions are required sections
 - Ensure consistency with spec
 
-**Save Location**: `.docs/specification/{feature-name}_design.md`
+**Save Location**:
+- Flat structure: `.sdd/specification/{feature-name}_design.md`
+- Hierarchical structure (parent feature): `.sdd/specification/{parent-feature}/index_design.md`
+- Hierarchical structure (child feature): `.sdd/specification/{parent-feature}/{feature-name}_design.md`
 
 ### Skip Design Doc Generation
 
@@ -223,15 +252,18 @@ Add the following to spec's end (if PRD exists):
 ```markdown
 ## PRD Reference
 
-- Corresponding PRD: `.docs/requirement-diagram/{feature-name}.md`
+- Corresponding PRD: `.sdd/requirement/[{parent-feature}/]{feature-name}.md`
 - Covered Requirements: UR-001, FR-001, FR-002, NFR-001, ...
 ```
+
+※ For hierarchical structure, parent feature PRD is `.sdd/requirement/{parent-feature}/index.md`
 
 ## Post-Generation Actions
 
 1. **Save Files**:
-    - `.docs/specification/{feature-name}_spec.md`
-    - `.docs/specification/{feature-name}_design.md` (if generated)
+    - Flat structure: `.sdd/specification/{feature-name}_spec.md`, `.sdd/specification/{feature-name}_design.md`
+    - Hierarchical structure (parent feature): `.sdd/specification/{parent-feature}/index_spec.md`, `.sdd/specification/{parent-feature}/index_design.md`
+    - Hierarchical structure (child feature): `.sdd/specification/{parent-feature}/{feature-name}_spec.md`, `.sdd/specification/{parent-feature}/{feature-name}_design.md`
 
 2. **Consistency Check**:
     - If PRD exists: Verify and reflect PRD ↔ spec consistency

@@ -15,6 +15,12 @@ instructions).
 
 This skill follows the sdd-workflow agent principles for Vibe Coding detection.
 
+### Configuration File Check
+
+**At runtime, check for `.sdd-config.json` at project root and use configuration values if present.**
+
+For configuration file details, refer to the "Project Configuration File" section in the `sdd-workflow:sdd-workflow` agent.
+
 ## Detection Patterns
 
 ### Vague Instructions
@@ -69,7 +75,7 @@ This skill follows the sdd-workflow agent principles for Vibe Coding detection.
    ↓
 5. Explicitly warn of risks
    ↓
-6. Record inferred specs in review/
+6. Record inferred specs in task/
    ↓
 7. Implement with verification points set
 ```
@@ -86,7 +92,7 @@ Even when user refuses specification creation, ensure minimum guardrails:
 
 Use [templates/assumed_spec.md](templates/assumed_spec.md) for creating inferred specification documents.
 
-**Save Location**: `.docs/review/{ticket}/assumed-spec.md`
+**Save Location**: `.sdd/task/{ticket}/assumed-spec.md`
 
 ### 2. Set Verification Points
 

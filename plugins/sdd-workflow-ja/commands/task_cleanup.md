@@ -1,12 +1,11 @@
 ---
-name: review_cleanup
-description: "実装完了後のreview/ディレクトリを整理し、重要な設計判断を*_design.mdに統合してから削除する"
+description: "実装完了後のtask/ディレクトリを整理し、重要な設計判断を*_design.mdに統合してから削除する"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
-# Review Cleanup - レビュードキュメントのクリーンアップ
+# Task Cleanup - タスクログのクリーンアップ
 
-`.docs/review/` 配下のドキュメントを整理し、重要な設計判断を `.docs/specification/*_design.md` に統合してから削除します。
+`.sdd/task/` 配下のドキュメントを整理し、重要な設計判断を `.sdd/specification/*_design.md` に統合してから削除します。
 
 ## 前提条件
 
@@ -14,12 +13,20 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 このコマンドはsdd-workflowエージェントの原則に従ってクリーンアップを行います。
 
+### 設定ファイルの確認
+
+**実行時にプロジェクトルートの `.sdd-config.json` を確認し、存在する場合は設定値を使用してディレクトリパスを解決します。**
+
+設定ファイルの詳細は `sdd-workflow-ja:sdd-workflow` エージェントの「プロジェクト設定ファイル」セクションを参照してください。
+
+以下のドキュメントでは、デフォルト値（`.sdd`、`specification`、`task`）を使用して説明しますが、設定ファイルが存在する場合はカスタム値に置き換えてください。
+
 ### ドキュメント永続性ルール（参照）
 
 | パス                          | 永続性     | 管理ルール                                   |
 |:----------------------------|:--------|:----------------------------------------|
 | `specification/*_design.md` | **永続**  | 技術設計、アーキテクチャ、技術選定の根拠を記述                 |
-| `review/`                   | **一時的** | 実装完了後に**削除**。重要な設計判断は `*_design.md` に統合 |
+| `task/`                     | **一時的** | 実装完了後に**削除**。重要な設計判断は `*_design.md` に統合 |
 
 ## 入力
 
@@ -28,9 +35,9 @@ $ARGUMENTS
 ### 入力例
 
 ```
-/review_cleanup TICKET-123
-/review_cleanup feature/task-management
-/review_cleanup  # 引数なしの場合はreview/全体を対象
+/task_cleanup TICKET-123
+/task_cleanup feature/task-management
+/task_cleanup  # 引数なしの場合はtask/全体を対象
 ```
 
 ## 処理フロー
@@ -38,15 +45,15 @@ $ARGUMENTS
 ### 1. 対象ディレクトリの特定
 
 ```
-引数あり → .docs/review/{引数}/ を対象
-引数なし → .docs/review/ 全体を対象
+引数あり → .sdd/task/{引数}/ を対象
+引数なし → .sdd/task/ 全体を対象
 ```
 
 ### 2. 対象ファイルの確認
 
 ```bash
 # 対象ディレクトリ内のファイル一覧を取得
-ls -la .docs/review/{対象}/
+ls -la .sdd/task/{対象}/
 
 # 各ファイルの最終更新日を確認
 git log -1 --format="%ci" -- <file_path>
@@ -99,30 +106,30 @@ git log -1 --format="%ci" -- <file_path>
 
 ```bash
 # ファイルの削除
-git rm .docs/review/{対象}/{ファイル}
+git rm .sdd/task/{対象}/{ファイル}
 
 # ディレクトリごと削除（全ファイル処理完了後）
-git rm -r .docs/review/{対象}/
+git rm -r .sdd/task/{対象}/
 ```
 
 ### 7. コミット
 
 ```bash
 # 統合と削除をまとめてコミット
-git commit -m "[docs] review/{対象}をクリーンアップ
+git commit -m "[docs] task/{対象}をクリーンアップ
 
 - 設計判断を{design.md}に統合
-- 一時的な作業ログを削除"
+- 一時的なタスクログを削除"
 ```
 
 ## 出力フォーマット
 
 ```markdown
-## review/ クリーンアップ確認
+## task/ クリーンアップ確認
 
 ### 対象ディレクトリ
 
-`.docs/review/{対象}/`
+`.sdd/task/{対象}/`
 
 ### ファイル一覧
 
@@ -133,7 +140,7 @@ git commit -m "[docs] review/{対象}をクリーンアップ
 ### 統合すべき内容（→ `*_design.md` へ）
 
 - [ ] **{設計判断1}**: {概要}
-    - 統合先: `.docs/specification/{name}_design.md`
+    - 統合先: `.sdd/specification/{name}_design.md`
     - 該当セクション: 設計判断 / 技術スタック / その他
 - [ ] **{設計判断2}**: {概要}
     - 統合先: ...
@@ -147,7 +154,7 @@ git commit -m "[docs] review/{対象}をクリーンアップ
 ### 推奨アクション
 
 1. {設計判断} を `{design.md}` の {セクション} に追記
-2. `review/{対象}/` を削除
+2. `task/{対象}/` を削除
 3. コミット
 
 ### 確認事項
@@ -161,7 +168,7 @@ git commit -m "[docs] review/{対象}をクリーンアップ
 
 ### 慎重に判断すべきケース
 
-- **実装が完了していない場合**: review/ は残す
+- **実装が完了していない場合**: task/ は残す
 - **統合先が不明確な場合**: ユーザーに確認
 - **複数の機能にまたがる情報**: 最も関連性の高いドキュメントに統合
 

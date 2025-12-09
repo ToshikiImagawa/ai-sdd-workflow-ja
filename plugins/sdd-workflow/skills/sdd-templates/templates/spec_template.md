@@ -1,11 +1,11 @@
 # Abstract Specification Template
 
-This document is a template for creating abstract specifications under `.docs/specification/`.
+This document is a template for creating abstract specifications under `.sdd/specification/`.
 The filename should be `{feature-name}_spec.md`.
 
 > **Note**: This template is a fallback for the plugin.
 > When using in a project, customize it according to your programming language and project structure,
-> and save it as `.docs/SPECIFICATION_TEMPLATE.md`.
+> and save it as `.sdd/SPECIFICATION_TEMPLATE.md`.
 
 ## Difference from Technical Design Doc
 
@@ -22,7 +22,7 @@ The filename should be `{feature-name}_spec.md`.
 **SDD Phase:** Specify
 **Last Updated:** YYYY-MM-DD
 **Related Design Doc:** [link to xxx_design.md]
-**Related PRD:** [link to requirement-diagram/{feature-name}.md]
+**Related PRD:** [link to requirement/{feature-name}.md]
 
 ---
 

@@ -1,11 +1,11 @@
 # Technical Design Document Template (Design Doc)
 
-This document is a template for creating Technical Design Documents under `.docs/specification/`.
+This document is a template for creating Technical Design Documents under `.sdd/specification/`.
 The filename should be `{feature-name}_design.md`.
 
 > **Note**: This template is a fallback for the plugin.
 > When using in a project, customize it according to your programming language and project structure,
-> and save it as `.docs/DESIGN_DOC_TEMPLATE.md`.
+> and save it as `.sdd/DESIGN_DOC_TEMPLATE.md`.
 
 ## Difference from Abstract Specification
 
@@ -22,7 +22,7 @@ The filename should be `{feature-name}_design.md`.
 **SDD Phase:** Plan (Design)
 **Last Updated:** YYYY-MM-DD
 **Related Spec:** [link to xxx_spec.md]
-**Related PRD:** [link to requirement-diagram/{feature-name}.md]
+**Related PRD:** [link to requirement/{feature-name}.md]
 
 ---
 

@@ -5,22 +5,63 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2025-12-06
+## [2.0.0] - 2025-12-09
+
+### Breaking Changes
+
+#### Directory Structure Changes
+
+- **Documentation root**: `.docs/` → `.sdd/`
+- **Requirement directory**: `requirement-diagram/` → `requirement/`
+- **Task log directory**: `review/` → `task/`
+
+#### Command Rename
+
+- `/review_cleanup` → `/task_cleanup`
+
+#### Migration
+
+Use the `/sdd_migrate` command to migrate from legacy versions (v1.x):
+- **Option A**: Rename directories to migrate to new structure
+- **Option B**: Generate `.sdd-config.json` to maintain legacy structure
 
 ### Added
 
 #### Commands
 
-- `/sdd_init` - Added AI-SDD workflow initialization command
+- `/sdd_init` - AI-SDD workflow initialization command
     - Adds AI-SDD Instructions section to project's `CLAUDE.md`
-    - Creates `.docs/` directory structure (requirement-diagram/, specification/, review/)
+    - Creates `.sdd/` directory structure (requirement/, specification/, task/)
     - Generates template files using `sdd-templates` skill
+- `/sdd_migrate` - Migration command from legacy versions
+    - Detects legacy structure (`.docs/`, `requirement-diagram/`, `review/`)
+    - Choose between migrating to new structure or generating compatibility config
+
+#### Agents
+
+- `requirement-analyzer` - Requirement analysis agent
+    - SysML requirements diagram-based analysis
+    - Requirement tracking and verification
 
 #### Skills
 
-- `sdd-templates` - Added AI-SDD templates skill
+- `sdd-templates` - AI-SDD templates skill
     - Provides fallback templates for PRD, specification, and design documents
     - Clarifies project template priority rules
+
+#### Hooks
+
+- `session-start` - Session start initialization hook
+    - Loads settings from `.sdd-config.json` and sets environment variables
+    - Auto-detects legacy structure and shows migration guidance
+
+#### Configuration File
+
+- `.sdd-config.json` - Project configuration file support
+    - `docsRoot`: Documentation root directory (default: `.sdd`)
+    - `directories.requirement`: Requirement directory (default: `requirement`)
+    - `directories.specification`: Specification directory (default: `specification`)
+    - `directories.task`: Task log directory (default: `task`)
 
 ### Changed
 
@@ -34,6 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `allowed-tools` field to all commands
     - Explicitly specifies available tools for each command
     - Improved security and clarity
+- All commands now support `.sdd-config.json` configuration file
 
 #### Skills
 
@@ -41,6 +83,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Migrated from `skill-name.md` to `skill-name/SKILL.md` + `templates/` structure
     - Applied Progressive Disclosure pattern
     - Externalized template files, simplifying SKILL.md
+
+#### Hooks
+
+- `check-spec-exists` - Migrated to environment variable-based configuration
+    - References environment variables set by SessionStart hook
+- `check-commit-prefix` - Migrated to environment variable-based configuration
+    - References environment variables set by SessionStart hook
 
 ## [1.0.1] - 2025-12-04
 

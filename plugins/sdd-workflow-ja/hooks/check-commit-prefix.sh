@@ -2,9 +2,11 @@
 # check-commit-prefix.sh
 # PostToolUse フック用スクリプト（Bash ツール実行後）
 # コミットメッセージ規約をチェック
+#
+# 前提: SessionStart フックで以下の環境変数が設定されている
+#   - SDD_DOCS_ROOT: ドキュメントルート（デフォルト: .sdd）
 
 # 環境変数から実行されたコマンドを取得
-# jq が利用可能な場合は jq を使用、そうでなければ grep/sed でフォールバック
 if command -v jq &> /dev/null; then
     COMMAND=$(echo "$TOOL_INPUT" | jq -r '.command // empty' 2>/dev/null)
 else
@@ -16,6 +18,9 @@ if [[ ! "$COMMAND" == *"git commit"* ]]; then
     exit 0
 fi
 
+# 環境変数から設定を取得（SessionStartで設定済み）、未設定ならデフォルト値
+DOCS_ROOT="${SDD_DOCS_ROOT:-.sdd}"
+
 # 最新のコミットメッセージを取得
 COMMIT_MSG=$(git log -1 --format="%s" 2>/dev/null)
 
@@ -23,19 +28,16 @@ if [ -z "$COMMIT_MSG" ]; then
     exit 0
 fi
 
-# AI-SDD コミットメッセージ規約のチェック
-# [docs], [spec], [design] プレフィックスの確認
-
 # 変更されたファイルを取得
 CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD 2>/dev/null)
 
-# .docs/ 配下のファイルが含まれているかチェック
+# ドキュメントルート配下のファイルが含まれているかチェック
 HAS_DOCS_FILES=false
 HAS_SPEC_FILES=false
 HAS_DESIGN_FILES=false
 
 for file in $CHANGED_FILES; do
-    if [[ "$file" == ".docs/"* ]] || [[ "$file" == *"_spec.md" ]] || [[ "$file" == *"_design.md" ]]; then
+    if [[ "$file" == "${DOCS_ROOT}/"* ]] || [[ "$file" == *"_spec.md" ]] || [[ "$file" == *"_design.md" ]]; then
         HAS_DOCS_FILES=true
     fi
     if [[ "$file" == *"_spec.md" ]]; then
@@ -69,7 +71,6 @@ if [ "$HAS_DOCS_FILES" = true ]; then
             echo "推奨: [docs] ${COMMIT_MSG}" >&2
         fi
 
-        # 警告のみで終了（ブロックしない）
         exit 0
     fi
 

@@ -19,17 +19,22 @@ ai-sdd-workflow/
 │   │   │   └── plugin.json        # プラグインマニフェスト
 │   │   ├── agents/
 │   │   │   ├── sdd-workflow.md    # AI-SDD開発フローエージェント
-│   │   │   └── spec-reviewer.md   # 仕様書レビューエージェント
+│   │   │   ├── spec-reviewer.md   # 仕様書レビューエージェント
+│   │   │   └── requirement-analyzer.md  # 要求仕様分析エージェント
 │   │   ├── commands/
+│   │   │   ├── sdd_init.md        # AI-SDDワークフロー初期化
+│   │   │   ├── sdd_migrate.md     # 旧バージョンからの移行
 │   │   │   ├── generate_spec.md   # 仕様書・設計書生成
 │   │   │   ├── generate_prd.md    # PRD生成
 │   │   │   ├── check_spec.md      # 整合性チェック
-│   │   │   ├── review_cleanup.md  # レビュークリーンアップ
+│   │   │   ├── task_cleanup.md    # タスククリーンアップ
 │   │   │   └── task_breakdown.md  # タスク分解
 │   │   ├── skills/
-│   │   │   ├── vibe-detector.md   # Vibe Coding検出
-│   │   │   └── doc-consistency-checker.md
+│   │   │   ├── vibe-detector/     # Vibe Coding検出
+│   │   │   ├── doc-consistency-checker/
+│   │   │   └── sdd-templates/     # AI-SDDテンプレート
 │   │   ├── hooks/
+│   │   │   ├── session-start.sh   # セッション開始時の初期化
 │   │   │   ├── check-spec-exists.sh
 │   │   │   ├── check-commit-prefix.sh
 │   │   │   └── settings.example.json
@@ -42,7 +47,6 @@ ai-sdd-workflow/
 │       ├── skills/
 │       ├── hooks/
 │       └── LICENSE
-├── CHANGELOG.md
 ├── CLAUDE.md
 └── README.md
 ```
@@ -55,19 +59,65 @@ Specify（仕様化） → Plan（計画） → Tasks（タスク分解） → I
 
 ### ドキュメント構造
 
+フラット構造と階層構造の両方をサポートします。
+
+#### フラット構造（小〜中規模プロジェクト向け）
+
 ```
-.docs/
-├── requirement-diagram/          # PRD（要求仕様書）- 永続
+.sdd/
+├── requirement/          # PRD（要求仕様書）- 永続
+│   └── {機能名}.md
 ├── specification/                # 永続的な知識資産
 │   ├── {機能名}_spec.md         # 抽象仕様書
 │   └── {機能名}_design.md       # 技術設計書
-└── review/                       # 一時的な作業ログ（実装完了後に削除）
+└── task/                         # 一時的なタスクログ（実装完了後に削除）
+    └── {チケット番号}/
+```
+
+#### 階層構造（中〜大規模プロジェクト向け）
+
+```
+.sdd/
+├── requirement/          # PRD（要求仕様書）- SysML要求図形式
+│   ├── {機能名}.md              # トップレベル機能
+│   └── {親機能名}/              # 親機能ディレクトリ
+│       ├── index.md             # 親機能の概要・要求一覧
+│       └── {子機能名}.md        # 子機能の要求仕様
+├── specification/                # 永続的な知識資産
+│   ├── {機能名}_spec.md         # トップレベル機能
+│   ├── {機能名}_design.md
+│   └── {親機能名}/              # 親機能ディレクトリ
+│       ├── index_spec.md        # 親機能の抽象仕様書
+│       ├── index_design.md      # 親機能の技術設計書
+│       ├── {子機能名}_spec.md   # 子機能の抽象仕様書
+│       └── {子機能名}_design.md # 子機能の技術設計書
+└── task/                         # 一時的なタスクログ（実装完了後に削除）
+    └── {チケット番号}/
+        └── xxx.md
 ```
 
 ### ドキュメント永続性ルール
 
-- `requirement-diagram/`, `specification/*_spec.md`, `specification/*_design.md`: **永続**
-- `review/`: **一時的** - 実装完了後に削除。重要な設計判断は `*_design.md` に統合
+- `requirement/`, `specification/*_spec.md`, `specification/*_design.md`: **永続**
+- `task/`: **一時的** - 実装完了後に削除。重要な設計判断は `*_design.md` に統合
+
+### プロジェクト設定ファイル
+
+プロジェクトルートに `.sdd-config.json` を配置することで、ディレクトリ名をカスタマイズできます。
+
+```json
+{
+  "docsRoot": ".sdd",
+  "directories": {
+    "requirement": "requirement",
+    "specification": "specification",
+    "task": "task"
+  }
+}
+```
+
+- 設定ファイルが存在しない場合はデフォルト値が使用されます
+- 部分的な設定も可能（指定されていない項目はデフォルト値）
 
 ## コミットメッセージ規約
 
@@ -80,7 +130,7 @@ Specify（仕様化） → Plan（計画） → Tasks（タスク分解） → I
 ## Vibe Coding防止
 
 曖昧な指示（「いい感じに」「適当に」「前と同じように」など）を検出した場合、仕様の明確化を促す。仕様書なしでの実装は避け、最低限
-`review/` に推測仕様を記録する。
+`task/` に推測仕様を記録する。
 
 ## 新しいプラグインの追加
 

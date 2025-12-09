@@ -1,5 +1,4 @@
 ---
-name: generate_spec
 description: "入力された内容から抽象仕様書（Specification）と技術設計書（Design Doc）を生成する"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
@@ -8,8 +7,8 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 入力された内容から AI-SDD ワークフローに従って以下のドキュメントを生成します：
 
-1. `.docs/specification/{機能名}_spec.md` - 抽象仕様書（Specify フェーズ）
-2. `.docs/specification/{機能名}_design.md` - 技術設計書（Plan フェーズ）
+1. `.sdd/specification/{機能名}_spec.md` - 抽象仕様書（Specify フェーズ）
+2. `.sdd/specification/{機能名}_design.md` - 技術設計書（Plan フェーズ）
 
 ## 前提条件
 
@@ -17,24 +16,32 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 このコマンドはsdd-workflowエージェントの原則に従って仕様書・設計書を生成します。
 
+### 設定ファイルの確認
+
+**実行時にプロジェクトルートの `.sdd-config.json` を確認し、存在する場合は設定値を使用してディレクトリパスを解決します。**
+
+設定ファイルの詳細は `sdd-workflow-ja:sdd-workflow` エージェントの「プロジェクト設定ファイル」セクションを参照してください。
+
+以下のドキュメントでは、デフォルト値（`.sdd`、`requirement`、`specification`）を使用して説明しますが、設定ファイルが存在する場合はカスタム値に置き換えてください。
+
 ### 使用するスキル
 
 このコマンドは以下のスキルを使用します：
 
 | スキル                             | 用途                                                                                         |
 |:--------------------------------|:-------------------------------------------------------------------------------------------|
-| `sdd-workflow-ja:sdd-templates` | プロジェクトテンプレートが存在しない場合に `.docs/SPECIFICATION_TEMPLATE.md`、`.docs/DESIGN_DOC_TEMPLATE.md` を生成 |
+| `sdd-workflow-ja:sdd-templates` | プロジェクトテンプレートが存在しない場合に `.sdd/SPECIFICATION_TEMPLATE.md`、`.sdd/DESIGN_DOC_TEMPLATE.md` を生成 |
 
 **テンプレート準備フロー**:
 
-1. `.docs/SPECIFICATION_TEMPLATE.md`、`.docs/DESIGN_DOC_TEMPLATE.md`（プロジェクトテンプレート）が存在すれば使用
+1. `.sdd/SPECIFICATION_TEMPLATE.md`、`.sdd/DESIGN_DOC_TEMPLATE.md`（プロジェクトテンプレート）が存在すれば使用
 2. 存在しない場合は `sdd-templates` スキルを使用してテンプレートを生成
 
 ### 生成前確認事項
 
 生成前に以下を確認してください：
 
-1. プロジェクトに `.docs/` ディレクトリが存在するか
+1. プロジェクトに `.sdd/` ディレクトリが存在するか
 2. テンプレートファイルが存在する場合はそれを使用
 
 ## 入力
@@ -104,13 +111,29 @@ $ARGUMENTS
 
 ### 4. 既存ドキュメントの確認
 
-生成前に以下を確認してください：
+生成前に以下を確認してください。フラット構造と階層構造の両方をサポートします。
 
+**フラット構造の場合**:
 ```
-.docs/requirement-diagram/{機能名}.md が存在するか？（PRD）
-.docs/specification/{機能名}_spec.md が既に存在するか？
-.docs/specification/{機能名}_design.md が既に存在するか？
+.sdd/requirement/{機能名}.md が存在するか？（PRD）
+.sdd/specification/{機能名}_spec.md が既に存在するか？
+.sdd/specification/{機能名}_design.md が既に存在するか？
 ```
+
+**階層構造の場合**（親機能配下に配置する場合）:
+```
+.sdd/requirement/{親機能名}/index.md が存在するか？（親機能のPRD）
+.sdd/requirement/{親機能名}/{機能名}.md が存在するか？（子機能のPRD）
+.sdd/specification/{親機能名}/index_spec.md が既に存在するか？（親機能のspec）
+.sdd/specification/{親機能名}/{機能名}_spec.md が既に存在するか？（子機能のspec）
+.sdd/specification/{親機能名}/index_design.md が既に存在するか？（親機能のdesign）
+.sdd/specification/{親機能名}/{機能名}_design.md が既に存在するか？（子機能のdesign）
+```
+
+**階層構造の使用判断**:
+- 対応するPRDが階層構造で存在する場合は、同じ階層構造を使用
+- 入力に親機能（カテゴリ）が指定されている場合は階層構造を使用
+- ユーザーに階層構造で配置するか確認することを推奨
 
 **PRDが存在する場合**:
 
@@ -128,9 +151,9 @@ $ARGUMENTS
 
 以下の手順でテンプレートを準備してください：
 
-1. `.docs/SPECIFICATION_TEMPLATE.md` が存在するか確認
+1. `.sdd/SPECIFICATION_TEMPLATE.md` が存在するか確認
 2. **存在する場合**: そのテンプレートを使用
-3. **存在しない場合**: `sdd-workflow-ja:sdd-templates` スキルを使用して `.docs/SPECIFICATION_TEMPLATE.md`
+3. **存在しない場合**: `sdd-workflow-ja:sdd-templates` スキルを使用して `.sdd/SPECIFICATION_TEMPLATE.md`
    を生成し、生成されたテンプレートを使用
 
 #### テンプレート適用時の注意
@@ -139,7 +162,10 @@ $ARGUMENTS
 - `<MUST>` マーカーのセクションは必須、`<RECOMMENDED>` は推奨、`<OPTIONAL>` は任意
 - PRDの要求ID（UR-xxx, FR-xxx, NFR-xxx）を機能要件で参照
 
-**保存先**: `.docs/specification/{機能名}_spec.md`
+**保存先**:
+- フラット構造: `.sdd/specification/{機能名}_spec.md`
+- 階層構造（親機能）: `.sdd/specification/{親機能名}/index_spec.md`
+- 階層構造（子機能）: `.sdd/specification/{親機能名}/{機能名}_spec.md`
 
 ### Phase 2: 技術設計書（Plan フェーズ）
 
@@ -149,9 +175,9 @@ $ARGUMENTS
 
 以下の手順でテンプレートを準備してください：
 
-1. `.docs/DESIGN_DOC_TEMPLATE.md` が存在するか確認
+1. `.sdd/DESIGN_DOC_TEMPLATE.md` が存在するか確認
 2. **存在する場合**: そのテンプレートを使用
-3. **存在しない場合**: `sdd-workflow-ja:sdd-templates` スキルを使用して `.docs/DESIGN_DOC_TEMPLATE.md`
+3. **存在しない場合**: `sdd-workflow-ja:sdd-templates` スキルを使用して `.sdd/DESIGN_DOC_TEMPLATE.md`
    を生成し、生成されたテンプレートを使用
 
 #### テンプレート適用時の注意
@@ -160,7 +186,10 @@ $ARGUMENTS
 - 設計目標、技術スタック、アーキテクチャ、設計判断は必須セクション
 - specとの整合性を確保
 
-**保存先**: `.docs/specification/{機能名}_design.md`
+**保存先**:
+- フラット構造: `.sdd/specification/{機能名}_design.md`
+- 階層構造（親機能）: `.sdd/specification/{親機能名}/index_design.md`
+- 階層構造（子機能）: `.sdd/specification/{親機能名}/{機能名}_design.md`
 
 ### Design Doc 生成をスキップする場合
 
@@ -223,15 +252,18 @@ specの末尾に以下を追記（PRDが存在する場合）：
 ```markdown
 ## PRD参照
 
-- 対応PRD: `.docs/requirement-diagram/{機能名}.md`
+- 対応PRD: `.sdd/requirement/[{親機能名}/]{機能名}.md`
 - カバーする要求: UR-001, FR-001, FR-002, NFR-001, ...
 ```
+
+※ 階層構造の場合、親機能のPRDは `.sdd/requirement/{親機能名}/index.md` を参照
 
 ## 生成後のアクション
 
 1. **ファイル保存**:
-    - `.docs/specification/{機能名}_spec.md`
-    - `.docs/specification/{機能名}_design.md`（生成した場合）
+    - フラット構造: `.sdd/specification/{機能名}_spec.md`、`.sdd/specification/{機能名}_design.md`
+    - 階層構造（親機能）: `.sdd/specification/{親機能名}/index_spec.md`、`.sdd/specification/{親機能名}/index_design.md`
+    - 階層構造（子機能）: `.sdd/specification/{親機能名}/{機能名}_spec.md`、`.sdd/specification/{親機能名}/{機能名}_design.md`
 
 2. **整合性チェック**:
     - PRDが存在する場合: PRD ↔ spec の整合性を確認・反映

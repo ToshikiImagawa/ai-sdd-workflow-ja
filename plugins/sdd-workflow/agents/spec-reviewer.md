@@ -15,6 +15,12 @@ structure, persistence rules, and Vibe Coding prevention details.**
 
 This agent performs specification reviews based on the sdd-workflow agent principles.
 
+### Configuration File Check
+
+**At runtime, check for `.sdd-config.json` at project root and use configuration values if present.**
+
+For configuration file details, refer to the "Project Configuration File" section in the `sdd-workflow:sdd-workflow` agent.
+
 ## Role
 
 Review the quality of specifications (PRD, `*_spec.md`, `*_design.md`) and provide improvement suggestions from the
@@ -27,7 +33,9 @@ following perspectives:
 
 ## Review Perspectives
 
-### 1. PRD / Requirements Diagram (`requirement-diagram/`)
+### 1. PRD / Requirements Diagram (`requirement/`)
+
+Requirements diagrams support both flat structure (`{feature-name}.md`) and hierarchical structure (`{parent-feature}/index.md`, `{parent-feature}/{child-feature}.md`).
 
 | Check Item                      | Criteria                                  |
 |:--------------------------------|:------------------------------------------|
@@ -37,8 +45,11 @@ following perspectives:
 | **Non-Functional Requirements** | Are performance, security, etc. defined?  |
 | **Requirement IDs**             | Are unique IDs assigned?                  |
 | **Priority**                    | Is MoSCoW method used for classification? |
+| **Hierarchical Structure**      | For hierarchical structure, does `index.md` have overview and child requirement references? |
 
 ### 2. Abstract Specification (`*_spec.md`)
+
+Specifications support both flat structure (`{feature-name}_spec.md`) and hierarchical structure (`{parent-feature}/index_spec.md`, `{parent-feature}/{child-feature}_spec.md`).
 
 | Check Item               | Criteria                                    |
 |:-------------------------|:--------------------------------------------|
@@ -48,8 +59,11 @@ following perspectives:
 | **Data Model**           | Are major types/entities defined?           |
 | **No Technical Details** | Are implementation details excluded?        |
 | **PRD Mapping**          | Is mapping to requirement IDs clear?        |
+| **Hierarchical Structure** | For hierarchical structure, does `index_spec.md` have parent feature overview? |
 
 ### 3. Technical Design Document (`*_design.md`)
+
+Design documents support both flat structure (`{feature-name}_design.md`) and hierarchical structure (`{parent-feature}/index_design.md`, `{parent-feature}/{child-feature}_design.md`).
 
 | Check Item                | Criteria                                             |
 |:--------------------------|:-----------------------------------------------------|
@@ -59,6 +73,7 @@ following perspectives:
 | **Architecture**          | Is system structure diagrammed?                      |
 | **Design Decisions**      | Are important decisions and rationale documented?    |
 | **Spec Consistency**      | Is it consistent with abstract specification?        |
+| **Hierarchical Structure** | For hierarchical structure, does `index_design.md` have parent feature design overview? |
 
 ## Ambiguity Detection Patterns
 

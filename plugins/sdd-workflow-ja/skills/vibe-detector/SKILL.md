@@ -14,6 +14,12 @@ allowed-tools: Read, Glob, Grep, AskUserQuestion
 
 このスキルはsdd-workflowエージェントの原則に従ってVibe Codingを検出します。
 
+### 設定ファイルの確認
+
+**実行時にプロジェクトルートの `.sdd-config.json` を確認し、存在する場合は設定値を使用してディレクトリパスを解決します。**
+
+設定ファイルの詳細は `sdd-workflow-ja:sdd-workflow` エージェントの「プロジェクト設定ファイル」セクションを参照してください。
+
 ## 検出パターン
 
 ### 曖昧な指示
@@ -68,7 +74,7 @@ allowed-tools: Read, Glob, Grep, AskUserQuestion
    ↓
 5. リスクを明示的に警告
    ↓
-6. 推測した仕様を review/ に記録
+6. 推測した仕様を task/ に記録
    ↓
 7. 検証ポイントを設定して実装
 ```
@@ -85,7 +91,7 @@ allowed-tools: Read, Glob, Grep, AskUserQuestion
 
 推測仕様書の作成には [templates/assumed_spec.md](templates/assumed_spec.md) を使用してください。
 
-**保存先**: `.docs/review/{ticket}/assumed-spec.md`
+**保存先**: `.sdd/task/{ticket}/assumed-spec.md`
 
 ### 2. 検証ポイントの設定
 

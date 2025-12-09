@@ -14,20 +14,61 @@ AI-SDD ドキュメント間（PRD、`*_spec.md`、`*_design.md`）の整合性�
 
 このスキルはsdd-workflowエージェントの原則に従ってドキュメント整合性をチェックします。
 
+### 設定ファイルの確認
+
+**実行時にプロジェクトルートの `.sdd-config.json` を確認し、存在する場合は設定値を使用してディレクトリパスを解決します。**
+
+設定ファイルの詳細は `sdd-workflow-ja:sdd-workflow` エージェントの「プロジェクト設定ファイル」セクションを参照してください。
+
+以下のドキュメントでは、デフォルト値（`.sdd`、`requirement`、`specification`）を使用して説明しますが、設定ファイルが存在する場合はカスタム値に置き換えてください。
+
 ## ドキュメント間の依存関係
 
 ```mermaid
 graph RL
     IMPL[実装] --> DESIGN["*_design.md<br/>(技術設計)"]
     DESIGN --> SPEC["*_spec.md<br/>(抽象仕様)"]
-    SPEC --> PRD["requirement-diagram/<br/>(PRD/要求図)"]
+    SPEC --> PRD["requirement/<br/>(PRD/要求図)"]
 ```
 
 **依存方向の意味**:
 
 - `実装` は `*_design.md` を参照して作成される
 - `*_design.md` は `*_spec.md` を参照して作成される
-- `*_spec.md` は `requirement-diagram` を参照して作成される
+- `*_spec.md` は `requirement` を参照して作成される
+
+## ディレクトリ構造のサポート
+
+フラット構造と階層構造の両方をサポートします。
+
+**フラット構造**:
+```
+.sdd/
+├── requirement/{機能名}.md
+└── specification/
+    ├── {機能名}_spec.md
+    └── {機能名}_design.md
+```
+
+**階層構造**:
+```
+.sdd/
+├── requirement/
+│   ├── {機能名}.md                    # トップレベル機能
+│   └── {親機能名}/
+│       ├── index.md                   # 親機能の概要・要求一覧
+│       └── {子機能名}.md              # 子機能の要求仕様
+└── specification/
+    ├── {機能名}_spec.md               # トップレベル機能
+    ├── {機能名}_design.md
+    └── {親機能名}/
+        ├── index_spec.md              # 親機能の抽象仕様書
+        ├── index_design.md            # 親機能の技術設計書
+        ├── {子機能名}_spec.md         # 子機能の抽象仕様書
+        └── {子機能名}_design.md       # 子機能の技術設計書
+```
+
+整合性チェックでは、階層構造の場合も親子関係を考慮してチェックを行います。
 
 ## チェック項目
 

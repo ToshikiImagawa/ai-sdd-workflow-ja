@@ -1,6 +1,6 @@
 ---
 name: sdd-templates
-description: "AI-SDDドキュメントのフォールバックテンプレートを提供します。プロジェクトに .docs/ 配下のテンプレートが存在しない場合のみ使用してください。"
+description: "AI-SDDドキュメントのフォールバックテンプレートを提供します。プロジェクトに .sdd/ 配下のテンプレートが存在しない場合のみ使用してください。"
 allowed-tools: Read, Glob
 ---
 
@@ -18,9 +18,9 @@ AI-SDD ワークフローで使用する各種ドキュメントのテンプレ�
 
 ```
 1. プロジェクトテンプレートを確認（最優先）
-   ├─ .docs/PRD_TEMPLATE.md が存在するか？
-   ├─ .docs/SPECIFICATION_TEMPLATE.md が存在するか？
-   └─ .docs/DESIGN_DOC_TEMPLATE.md が存在するか？
+   ├─ .sdd/PRD_TEMPLATE.md が存在するか？
+   ├─ .sdd/SPECIFICATION_TEMPLATE.md が存在するか？
+   └─ .sdd/DESIGN_DOC_TEMPLATE.md が存在するか？
    ↓
 2. プロジェクトテンプレートが存在する場合
    → そのテンプレートを使用（このスキルのテンプレートは使用しない）
@@ -33,7 +33,7 @@ AI-SDD ワークフローで使用する各種ドキュメントのテンプレ�
 
 | 優先度            | テンプレート       | パス                  | 使用条件                   |
 |:---------------|:-------------|:--------------------|:-----------------------|
-| **1（最優先）**     | プロジェクトテンプレート | `.docs/*.md`        | 存在すれば必ず使用              |
+| **1（最優先）**     | プロジェクトテンプレート | `.sdd/*.md`        | 存在すれば必ず使用              |
 | **2（フォールバック）** | プラグインテンプレート  | このスキルの `templates/` | プロジェクトテンプレートが存在しない場合のみ |
 
 ## 前提条件
@@ -42,15 +42,23 @@ AI-SDD ワークフローで使用する各種ドキュメントのテンプレ�
 
 このスキルはsdd-workflowエージェントの原則に従ったテンプレートを提供します。
 
+### 設定ファイルの確認
+
+**実行時にプロジェクトルートの `.sdd-config.json` を確認し、存在する場合は設定値を使用してディレクトリパスを解決します。**
+
+テンプレート生成時、設定ファイルのディレクトリ名に基づいてテンプレート内のパスを調整してください。
+
+設定ファイルの詳細は `sdd-workflow-ja:sdd-workflow` エージェントの「プロジェクト設定ファイル」セクションを参照してください。
+
 ## フォールバックテンプレート一覧
 
 プロジェクトにテンプレートが存在しない場合に使用：
 
 | テンプレート         | ファイル                                                         | 対応するプロジェクトテンプレート                  |
 |:---------------|:-------------------------------------------------------------|:----------------------------------|
-| **PRD（要求仕様書）** | [templates/prd_template.md](templates/prd_template.md)       | `.docs/PRD_TEMPLATE.md`           |
-| **抽象仕様書**      | [templates/spec_template.md](templates/spec_template.md)     | `.docs/SPECIFICATION_TEMPLATE.md` |
-| **技術設計書**      | [templates/design_template.md](templates/design_template.md) | `.docs/DESIGN_DOC_TEMPLATE.md`    |
+| **PRD（要求仕様書）** | [templates/prd_template.md](templates/prd_template.md)       | `.sdd/PRD_TEMPLATE.md`           |
+| **抽象仕様書**      | [templates/spec_template.md](templates/spec_template.md)     | `.sdd/SPECIFICATION_TEMPLATE.md` |
+| **技術設計書**      | [templates/design_template.md](templates/design_template.md) | `.sdd/DESIGN_DOC_TEMPLATE.md`    |
 
 ## 使用方法
 
@@ -59,7 +67,7 @@ AI-SDD ワークフローで使用する各種ドキュメントのテンプレ�
 ```
 /generate_spec {仕様内容}
 
-1. .docs/SPECIFICATION_TEMPLATE.md を確認
+1. .sdd/SPECIFICATION_TEMPLATE.md を確認
 2. 存在する → そのテンプレートを使用
 3. このスキルのテンプレートは参照しない
 ```
@@ -69,17 +77,17 @@ AI-SDD ワークフローで使用する各種ドキュメントのテンプレ�
 ```
 /generate_spec {仕様内容}
 
-1. .docs/SPECIFICATION_TEMPLATE.md を確認
+1. .sdd/SPECIFICATION_TEMPLATE.md を確認
 2. 存在しない → このスキルのテンプレートを使用
 3. プロジェクトの言語・構成に合わせてカスタマイズして生成
-4. 生成後、.docs/ にプロジェクト用テンプレートとして保存を推奨
+4. 生成後、.sdd/ にプロジェクト用テンプレートとして保存を推奨
 ```
 
 ### プロジェクトテンプレートの初期化
 
 プロジェクトにテンプレートがない場合、以下の手順で初期化できます：
 
-1. このスキルのテンプレートを `.docs/` にコピー
+1. このスキルのテンプレートを `.sdd/` にコピー
 2. プロジェクトのプログラミング言語に合わせて型定義の記法を修正
 3. プロジェクトのディレクトリ構成に合わせてパスを修正
 4. 以後、プロジェクトテンプレートが優先される
@@ -123,7 +131,7 @@ SysML要求図形式で以下を定義：
 graph RL
     IMPL[実装] --> DESIGN["*_design.md<br/>(技術設計)"]
     DESIGN --> SPEC["*_spec.md<br/>(抽象仕様)"]
-    SPEC --> PRD["requirement-diagram/<br/>(PRD/要求図)"]
+    SPEC --> PRD["requirement/<br/>(PRD/要求図)"]
 ```
 
 各テンプレートは、この依存関係に基づいてトレーサビリティを確保するよう設計されています。

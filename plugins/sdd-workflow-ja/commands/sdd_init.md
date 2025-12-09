@@ -1,5 +1,4 @@
 ---
-name: sdd_init
 description: "現在のプロジェクトにAI-SDDワークフローを初期化する。CLAUDE.mdの設定とドキュメントテンプレートの生成を行う。"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
@@ -11,13 +10,21 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ## このコマンドの機能
 
 1. **CLAUDE.md設定**: プロジェクトの `CLAUDE.md` にAI-SDD指示を追加
-2. **テンプレート生成**: `.docs/` ディレクトリにドキュメントテンプレートを作成（存在しない場合）
+2. **テンプレート生成**: `.sdd/` ディレクトリにドキュメントテンプレートを作成（存在しない場合）
 
 ## 前提条件
 
 **実行前に必ず `sdd-workflow-ja:sdd-workflow` エージェントの内容を読み込み、AI-SDDの原則を理解してください。**
 
 このコマンドはsdd-workflowエージェントの原則に従ってプロジェクトを初期化します。
+
+### 設定ファイル（オプション）
+
+プロジェクトルートに `.sdd-config.json` を作成することで、ディレクトリ名をカスタマイズできます。
+
+設定ファイルの詳細は `sdd-workflow-ja:sdd-workflow` エージェントの「プロジェクト設定ファイル」セクションを参照してください。
+
+**注意**: 初期化時にカスタムディレクトリ名を使用する場合は、先に `.sdd-config.json` を作成してください。初期化後にディレクトリ構造とCLAUDE.mdの記載が設定値に基づいて生成されます。
 
 ### 使用するスキル
 
@@ -32,21 +39,21 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ```
 1. 現在のプロジェクト状態を確認
    ├─ CLAUDE.md が存在するか？
-   └─ .docs/ ディレクトリが存在するか？
+   └─ .sdd/ ディレクトリが存在するか？
    ↓
 2. CLAUDE.md を設定
    ├─ CLAUDE.md が存在する場合: AI-SDD Instructionsセクションを追加
    └─ 存在しない場合: AI-SDD Instructionsを含む新規CLAUDE.mdを作成
    ↓
-3. .docs/ ディレクトリ構造を作成
-   ├─ .docs/requirement-diagram/
-   ├─ .docs/specification/
-   └─ .docs/review/
+3. .sdd/ ディレクトリ構造を作成
+   ├─ .sdd/requirement/
+   ├─ .sdd/specification/
+   └─ .sdd/task/
    ↓
 4. 既存テンプレートを確認
-   ├─ .docs/PRD_TEMPLATE.md
-   ├─ .docs/SPECIFICATION_TEMPLATE.md
-   └─ .docs/DESIGN_DOC_TEMPLATE.md
+   ├─ .sdd/PRD_TEMPLATE.md
+   ├─ .sdd/SPECIFICATION_TEMPLATE.md
+   └─ .sdd/DESIGN_DOC_TEMPLATE.md
    ↓
 5. 不足しているテンプレートを生成
    └─ sdd-workflow-ja:sdd-templates スキルを使用して生成
@@ -67,27 +74,53 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 ### ドキュメント操作
 
-`.docs/` ディレクトリ配下のファイルを操作する際は、必ず `sdd-workflow-ja:sdd-workflow`
+`.sdd/` ディレクトリ配下のファイルを操作する際は、必ず `sdd-workflow-ja:sdd-workflow`
 エージェントを使用して、適切なAI-SDDワークフローへの準拠を確保してください。
 
 **トリガー条件**:
 
-- `.docs/` 配下のファイルの読み込みまたは変更
+- `.sdd/` 配下のファイルの読み込みまたは変更
 - 新しい仕様書、設計書、要求仕様書の作成
-- `.docs/` のドキュメントを参照する機能の実装
+- `.sdd/` のドキュメントを参照する機能の実装
 
 ### ディレクトリ構造
 
-    .docs/
+フラット構造と階層構造の両方をサポートします。
+
+**フラット構造（小〜中規模プロジェクト向け）**:
+
+    .sdd/
     ├── PRD_TEMPLATE.md               # このプロジェクト用のPRDテンプレート
     ├── SPECIFICATION_TEMPLATE.md     # 抽象仕様書テンプレート
     ├── DESIGN_DOC_TEMPLATE.md        # 技術設計書テンプレート
-    ├── requirement-diagram/          # PRD（要求仕様書）
+    ├── requirement/          # PRD（要求仕様書）
     │   └── {機能名}.md
     ├── specification/                # 仕様書と設計書
     │   ├── {機能名}_spec.md          # 抽象仕様書
     │   └── {機能名}_design.md        # 技術設計書
-    └── review/                       # 一時的な作業ログ
+    └── task/                         # 一時的なタスクログ
+        └── {チケット番号}/
+
+**階層構造（中〜大規模プロジェクト向け）**:
+
+    .sdd/
+    ├── PRD_TEMPLATE.md               # このプロジェクト用のPRDテンプレート
+    ├── SPECIFICATION_TEMPLATE.md     # 抽象仕様書テンプレート
+    ├── DESIGN_DOC_TEMPLATE.md        # 技術設計書テンプレート
+    ├── requirement/          # PRD（要求仕様書）
+    │   ├── {機能名}.md               # トップレベル機能
+    │   └── {親機能名}/               # 親機能ディレクトリ
+    │       ├── index.md              # 親機能の概要・要求一覧
+    │       └── {子機能名}.md         # 子機能の要求仕様
+    ├── specification/                # 仕様書と設計書
+    │   ├── {機能名}_spec.md          # トップレベル機能
+    │   ├── {機能名}_design.md
+    │   └── {親機能名}/               # 親機能ディレクトリ
+    │       ├── index_spec.md         # 親機能の抽象仕様書
+    │       ├── index_design.md       # 親機能の技術設計書
+    │       ├── {子機能名}_spec.md    # 子機能の抽象仕様書
+    │       └── {子機能名}_design.md  # 子機能の技術設計書
+    └── task/                         # 一時的なタスクログ
         └── {チケット番号}/
 
 ### コミットメッセージ規約
@@ -111,9 +144,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 | テンプレート        | パス                                | 用途            |
 |:--------------|:----------------------------------|:--------------|
-| **PRDテンプレート** | `.docs/PRD_TEMPLATE.md`           | SysML形式の要求仕様書 |
-| **仕様書テンプレート** | `.docs/SPECIFICATION_TEMPLATE.md` | 抽象的なシステム仕様    |
-| **設計書テンプレート** | `.docs/DESIGN_DOC_TEMPLATE.md`    | 技術設計書         |
+| **PRDテンプレート** | `.sdd/PRD_TEMPLATE.md`           | SysML形式の要求仕様書 |
+| **仕様書テンプレート** | `.sdd/SPECIFICATION_TEMPLATE.md` | 抽象的なシステム仕様    |
+| **設計書テンプレート** | `.sdd/DESIGN_DOC_TEMPLATE.md`    | 技術設計書         |
 
 ### 生成プロセス
 
@@ -143,10 +176,10 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 1. **CLAUDE.md**: AI-SDD Instructionsセクションが含まれている
 2. **ディレクトリ構造**:
-    - `.docs/requirement-diagram/` が存在する
-    - `.docs/specification/` が存在する
-    - `.docs/review/` が存在する
-3. **テンプレート**: 3つのテンプレートファイルすべてが `.docs/` に存在する
+    - `.sdd/requirement/` が存在する
+    - `.sdd/specification/` が存在する
+    - `.sdd/task/` が存在する
+3. **テンプレート**: 3つのテンプレートファイルすべてが `.sdd/` に存在する
 
 ## 出力
 
@@ -161,15 +194,15 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 ### ディレクトリ構造
 
-- [x] .docs/requirement-diagram/ を作成
-- [x] .docs/specification/ を作成
-- [x] .docs/review/ を作成
+- [x] .sdd/requirement/ を作成
+- [x] .sdd/specification/ を作成
+- [x] .sdd/task/ を作成
 
 ### 生成されたテンプレート
 
-- [x] .docs/PRD_TEMPLATE.md
-- [x] .docs/SPECIFICATION_TEMPLATE.md
-- [x] .docs/DESIGN_DOC_TEMPLATE.md
+- [x] .sdd/PRD_TEMPLATE.md
+- [x] .sdd/SPECIFICATION_TEMPLATE.md
+- [x] .sdd/DESIGN_DOC_TEMPLATE.md
 
 ### 次のステップ
 
@@ -187,6 +220,6 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 [docs] AI-SDDワークフローを初期化
 
 - CLAUDE.mdにAI-SDD Instructionsを追加
-- .docs/ディレクトリ構造を作成
+- .sdd/ディレクトリ構造を作成
 - ドキュメントテンプレートを生成
 ```

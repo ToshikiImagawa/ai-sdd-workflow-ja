@@ -45,56 +45,158 @@ Specify → Plan → Tasks → Implement & Review
 |:-----------------------|:-----------------------------------------------------------------------------|:-----------------|
 | **Specify**            | Clarify "what to build" and "why to build it." **Exclude technical details** | PRD, `*_spec.md` |
 | **Plan**               | Consider "how to implement." Architecture design and technology selection    | `*_design.md`    |
-| **Tasks**              | Break down design into independently testable small tasks                    | Under `review/`  |
+| **Tasks**              | Break down design into independently testable small tasks                    | Under `task/`    |
 | **Implement & Review** | AI executes each task, continuously verifying specification compliance       | Source code      |
+
+## Project Configuration File
+
+### Configuration File Specification
+
+AI-SDD workflow supports customizing directory names via a `.sdd-config.json` file.
+
+**Configuration File Path**: `.sdd-config.json` at project root
+
+```json
+{
+  "docsRoot": ".sdd",
+  "directories": {
+    "requirement": "requirement",
+    "specification": "specification",
+    "task": "task"
+  }
+}
+```
+
+### Configuration Items
+
+| Item                          | Default Value          | Description                           |
+|:------------------------------|:-----------------------|:--------------------------------------|
+| `docsRoot`                    | `.sdd`                | Documentation root directory          |
+| `directories.requirement`     | `requirement`  | PRD/Requirements specification directory |
+| `directories.specification`   | `specification`        | Abstract specification/design document directory |
+| `directories.task`            | `task`                 | Task log/temporary work log directory |
+
+### Configuration File Loading Rules
+
+1. Check if `.sdd-config.json` exists at project root
+2. If exists: Load configuration values and use for path resolution
+3. If not exists: Use default values
+4. Partial configuration is supported (unspecified items use default values)
+
+### Custom Configuration Example
+
+```json
+{
+  "docsRoot": "docs",
+  "directories": {
+    "requirement": "requirements",
+    "specification": "specs",
+    "task": "wip"
+  }
+}
+```
+
+With this configuration, the directory structure becomes:
+
+```
+docs/
+├── requirements/          # PRD (Requirements Specification)
+├── specs/                 # Specifications and Design Documents
+└── wip/                   # Temporary task logs
+```
 
 ## Document Structure and Management Rules
 
 ### Recommended Directory Structure
 
+Both flat and hierarchical structures are supported. Choose based on project scale.
+
+#### Flat Structure (for small to medium projects)
+
 ```
-.docs/
+.sdd/
 ├── SPECIFICATION_TEMPLATE.md     # Abstract specification template
 ├── DESIGN_DOC_TEMPLATE.md        # Technical design document template
-├── requirement-diagram/          # PRD (Requirements Specification) - SysML requirements diagram format
+├── requirement/          # PRD (Requirements Specification) - SysML requirements diagram format
 │   └── {feature-name}.md         # High-level requirements, business value
 ├── specification/                # Persistent knowledge assets
 │   ├── {feature-name}_spec.md    # Abstract specification (SysML model)
 │   └── {feature-name}_design.md  # Technical design document (Design Doc)
-└── review/                       # Temporary work logs (deleted after implementation)
+└── task/                         # Temporary task logs (deleted after implementation)
     └── {ticket-number}/
         └── xxx.md
 ```
+
+#### Hierarchical Structure (for medium to large projects)
+
+```
+.sdd/
+├── SPECIFICATION_TEMPLATE.md     # Abstract specification template
+├── DESIGN_DOC_TEMPLATE.md        # Technical design document template
+├── requirement/          # PRD (Requirements Specification) - SysML requirements diagram format
+│   ├── {feature-name}.md         # Top-level feature (backward compatible with flat structure)
+│   └── {parent-feature}/         # Parent feature directory
+│       ├── index.md              # Parent feature overview and requirements list
+│       └── {child-feature}.md    # Child feature requirements
+├── specification/                # Persistent knowledge assets
+│   ├── {feature-name}_spec.md    # Top-level feature (backward compatible with flat structure)
+│   ├── {feature-name}_design.md
+│   └── {parent-feature}/         # Parent feature directory
+│       ├── index_spec.md         # Parent feature abstract specification
+│       ├── index_design.md       # Parent feature technical design document
+│       ├── {child-feature}_spec.md   # Child feature abstract specification
+│       └── {child-feature}_design.md # Child feature technical design document
+└── task/                         # Temporary task logs (deleted after implementation)
+    └── {ticket-number}/
+        └── xxx.md
+```
+
+#### Hierarchical Structure Guidelines
+
+| Condition | Recommended Structure |
+|:--|:--|
+| Less than 10 features | Flat structure |
+| 10 or more features | Hierarchical structure |
+| Features spanning multiple domains | Hierarchical structure |
+| Features with parent-child relationships | Hierarchical structure |
+
+**Hierarchical path examples**:
+- `requirement/auth/index.md` → Auth domain overview and requirements list
+- `requirement/auth/user-login.md` → User login requirements under auth domain
+- `specification/auth/index_spec.md` → Auth domain abstract specification
+- `specification/auth/index_design.md` → Auth domain technical design document
+- `specification/auth/user-login_spec.md` → User login specification under auth domain
+- `specification/payment/checkout_design.md` → Checkout design under payment domain
 
 ### Document Persistence Rules
 
 | Path                        | Persistence    | Management Rules                                                                                                  |
 |:----------------------------|:---------------|:------------------------------------------------------------------------------------------------------------------|
-| `requirement-diagram/`      | **Persistent** | Define high-level requirements (business requirements). Foundation for SysML requirements diagrams                |
+| `requirement/`      | **Persistent** | Define high-level requirements (business requirements). Foundation for SysML requirements diagrams                |
 | `specification/*_spec.md`   | **Persistent** | Define the **abstract structure and behavior** of the system. No technical details                                |
 | `specification/*_design.md` | **Persistent** | Describe **specific technical design**, architecture, and rationale for technology selection                      |
-| `review/`                   | **Temporary**  | **Delete** after implementation complete. Integrate important design decisions into `*_design.md` before deletion |
+| `task/`                     | **Temporary**  | **Delete** after implementation complete. Integrate important design decisions into `*_design.md` before deletion |
 
 ### Document Dependencies
 
 ```mermaid
 graph RL
     IMPL[Implementation] --> DESIGN["*_design.md<br/>(Technical Design)"]
-    REVIEW["review/<br/>(Temp Logs)"] --> DESIGN
+    TASK["task/<br/>(Task Logs)"] --> DESIGN
     DESIGN --> SPEC["*_spec.md<br/>(Abstract Spec)"]
-    SPEC --> PRD["requirement-diagram/<br/>(PRD/Requirements)"]
+    SPEC --> PRD["requirement/<br/>(PRD/Requirements)"]
 ```
 
 **Meaning of Dependency Direction**:
 
 - `Implementation` is created referencing `*_design.md` (technical "how")
 - `*_design.md` is created referencing `*_spec.md` (concretizing abstract "what")
-- `*_spec.md` is created referencing `requirement-diagram` (converting business requirements to technical
+- `*_spec.md` is created referencing `requirement` (converting business requirements to technical
   specifications)
 
 ## Role of Each Document and Abstraction Level
 
-### 1. PRD / Requirements Diagram (`requirement-diagram/`)
+### 1. PRD / Requirements Diagram (`requirement/`)
 
 **Abstraction Level: Highest** | **Focus: What to build, why to build it**
 
@@ -135,7 +237,7 @@ graph RL
 **Required Sections**: Implementation Status, Design Goals, Technology Stack, Architecture, Design Decisions
 **Optional Sections**: Data Models, Interface Definitions, Testing Strategy, Change History
 
-### 4. Review Logs (`review/{ticket-number}/`)
+### 4. Task Logs (`task/{ticket-number}/`)
 
 **Persistence: Temporary** | **Focus: Task breakdown and execution logs**
 
@@ -152,13 +254,13 @@ graph RL
 
 Determine required phases and documents based on task nature:
 
-| Task Type               | Required Phases                    | Deliverables                        |
-|:------------------------|:-----------------------------------|:------------------------------------|
-| New Feature (Large)     | Specify → Plan → Tasks → Implement | PRD → spec → design → review        |
-| New Feature (Small)     | Specify → Plan → Tasks → Implement | spec → design → review              |
-| Bug Fix                 | Tasks → Implement                  | review (investigation log) only     |
-| Refactoring             | Plan → Tasks → Implement           | design (change plan) → review       |
-| Technical Investigation | Tasks                              | review (investigation results) only |
+| Task Type               | Required Phases                    | Deliverables                      |
+|:------------------------|:-----------------------------------|:----------------------------------|
+| New Feature (Large)     | Specify → Plan → Tasks → Implement | PRD → spec → design → task        |
+| New Feature (Small)     | Specify → Plan → Tasks → Implement | spec → design → task              |
+| Bug Fix                 | Tasks → Implement                  | task (investigation log) only     |
+| Refactoring             | Plan → Tasks → Implement           | design (change plan) → task       |
+| Technical Investigation | Tasks                              | task (investigation results) only |
 
 **Task Scale Criteria**:
 
@@ -199,7 +301,7 @@ Detect vague instructions and prompt specification clarification:
    ↓
 3. If user declines:
    - Explicitly warn of risks
-   - Record inferred specifications in review/
+   - Record inferred specifications in task/
    ↓
 4. Establish guardrail specifications
 ```
@@ -208,22 +310,22 @@ Detect vague instructions and prompt specification clarification:
 
 Even when user refuses specification creation, ensure minimum guardrails:
 
-1. **Document Inferred Specifications**: Record inferred specs in `review/{ticket}/assumed-spec.md`
+1. **Document Inferred Specifications**: Record inferred specs in `task/{ticket}/assumed-spec.md`
 2. **Set Verification Points**: List items to confirm with user upon implementation completion
 3. **Visualize Risks**: Warn of potential issues due to specification gaps
 
 ### 3. Knowledge Asset Persistence Management
 
-Manage lifecycle of files under `review/`:
+Manage lifecycle of files under `task/`:
 
 **Flow at Implementation Completion**:
 
 ```
-1. Review contents under review/
+1. Review contents under task/
    ↓
 2. Integrate important design decisions into *_design.md
    ↓
-3. Delete files under review/
+3. Delete files under task/
    ↓
 4. Commit
 ```
@@ -310,9 +412,9 @@ Criteria for when to update each document:
 ```
 1. Verify consistency with specifications (Review)
    ↓
-2. Integrate important review/ content into design
+2. Integrate important task/ content into design
    ↓
-3. Delete review/
+3. Delete task/
    ↓
 4. Commit
 ```
@@ -338,10 +440,12 @@ Criteria for when to update each document:
 
 | Phase | Document | Status |
 |:--|:--|:--|
-| Specify | .docs/requirement-diagram/{name}.md | Exists / Needs Update / Needs Creation |
-| Specify | .docs/specification/{name}_spec.md | Exists / Needs Update / Needs Creation |
-| Plan | .docs/specification/{name}_design.md | Exists / Needs Update / Needs Creation |
-| Tasks | .docs/review/{ticket}/ | Needs Creation |
+| Specify | .sdd/requirement/[{path}/]{name}.md | Exists / Needs Update / Needs Creation |
+| Specify | .sdd/specification/[{path}/]{name}_spec.md | Exists / Needs Update / Needs Creation |
+| Plan | .sdd/specification/[{path}/]{name}_design.md | Exists / Needs Update / Needs Creation |
+| Tasks | .sdd/task/{ticket}/ | Needs Creation |
+
+※ `[{path}/]` is only specified for hierarchical structure (e.g., `auth/`). For parent features, `{name}` becomes `index`
 
 ### Recommended Workflow
 
@@ -350,14 +454,14 @@ Criteria for when to update each document:
    ...
 ```
 
-### Review File Deletion Confirmation
+### Task Log Cleanup Confirmation
 
 ```markdown
-## review/ Cleanup Confirmation
+## task/ Cleanup Confirmation
 
 ### Target Directory
 
-.docs/review/{ticket-number}/
+.sdd/task/{ticket-number}/
 
 ### Content to Integrate (→ *_design.md)
 
@@ -372,7 +476,7 @@ Criteria for when to update each document:
 ### Recommended Actions
 
 1. Add {design decision} to {design.md}
-2. Delete review/{ticket-number}/
+2. Delete task/{ticket-number}/
 ```
 
 ## Commit Message Convention

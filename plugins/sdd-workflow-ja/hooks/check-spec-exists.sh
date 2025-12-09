@@ -2,10 +2,14 @@
 # check-spec-exists.sh
 # PreToolUse フック用スクリプト
 # Edit/Write ツール使用前に対応する仕様書の存在を確認
+#
+# 前提: SessionStart フックで以下の環境変数が設定されている
+#   - SDD_DOCS_ROOT: ドキュメントルート（デフォルト: .sdd）
+#   - SDD_SPECIFICATION_DIR: 仕様書ディレクトリ名（デフォルト: specification）
+#   - SDD_SPECIFICATION_PATH: 仕様書フルパス（デフォルト: .sdd/specification）
 
 # 環境変数から対象ファイルパスを取得
 # Claude Code は TOOL_INPUT を JSON で渡す
-# jq が利用可能な場合は jq を使用、そうでなければ grep/sed でフォールバック
 if command -v jq &> /dev/null; then
     FILE_PATH=$(echo "$TOOL_INPUT" | jq -r '.file_path // empty' 2>/dev/null)
 else
@@ -17,16 +21,16 @@ if [ -z "$FILE_PATH" ]; then
     exit 0
 fi
 
-# リポジトリルートを取得（git管理下の場合）
-REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
-if [ -z "$REPO_ROOT" ]; then
-    # gitリポジトリでない場合はカレントディレクトリを使用
-    REPO_ROOT="$(pwd)"
-fi
+# リポジトリルートを取得
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+
+# 環境変数から設定を取得（SessionStartで設定済み）、未設定ならデフォルト値
+DOCS_ROOT="${SDD_DOCS_ROOT:-.sdd}"
+SPEC_DIR_NAME="${SDD_SPECIFICATION_DIR:-specification}"
 
 # ソースコードファイルかどうかを判定
-# .docs/ 配下のファイルは対象外
-if [[ "$FILE_PATH" == *".docs/"* ]] || [[ "$FILE_PATH" == *"/.docs/"* ]]; then
+# ドキュメントルート配下のファイルは対象外
+if [[ "$FILE_PATH" == *"${DOCS_ROOT}/"* ]] || [[ "$FILE_PATH" == *"/${DOCS_ROOT}/"* ]]; then
     exit 0
 fi
 
@@ -36,10 +40,6 @@ if [[ "$FILE_PATH" == *".json" ]] || [[ "$FILE_PATH" == *".md" ]] || [[ "$FILE_P
 fi
 
 # テストファイルは対象外（一般的なテストファイルパターン）
-# Jest: __tests__/, __mocks__/, *.test.*, *.spec.*
-# Python: test_*, *_test.py, /tests/
-# Storybook: *.stories.*
-# E2E: /e2e/, /cypress/
 if [[ "$FILE_PATH" == *".test."* ]] || [[ "$FILE_PATH" == *".spec."* ]] || \
    [[ "$FILE_PATH" == *"_test."* ]] || [[ "$FILE_PATH" == *"test_"* ]] || \
    [[ "$FILE_PATH" == *"/test/"* ]] || [[ "$FILE_PATH" == *"/tests/"* ]] || \
@@ -49,11 +49,10 @@ if [[ "$FILE_PATH" == *".test."* ]] || [[ "$FILE_PATH" == *".spec."* ]] || \
     exit 0
 fi
 
-# .docs/specification/ ディレクトリの存在確認（リポジトリルートからの相対パス）
-SPEC_DIR="${REPO_ROOT}/.docs/specification"
+# 仕様書ディレクトリの存在確認
+SPEC_DIR="${REPO_ROOT}/${DOCS_ROOT}/${SPEC_DIR_NAME}"
 if [ ! -d "$SPEC_DIR" ]; then
-    # 仕様書ディレクトリが存在しない場合は警告のみ
-    echo "[AI-SDD Warning] .docs/specification/ ディレクトリが存在しません。" >&2
+    echo "[AI-SDD Warning] ${DOCS_ROOT}/${SPEC_DIR_NAME}/ ディレクトリが存在しません。" >&2
     echo "仕様書なしでの実装はVibe Codingのリスクがあります。" >&2
     echo "/generate_spec コマンドで仕様書を作成することを推奨します。" >&2
     exit 0
