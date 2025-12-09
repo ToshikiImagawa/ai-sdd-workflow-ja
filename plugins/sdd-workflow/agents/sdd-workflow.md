@@ -83,6 +83,27 @@ AI-SDD workflow supports customizing directory names via a `.sdd-config.json` fi
 3. If not exists: Use default values
 4. Partial configuration is supported (unspecified items use default values)
 
+### Environment Variable Path Resolution
+
+At session start, the `session-start` hook reads `.sdd-config.json` and sets the following environment variables.
+
+| Environment Variable       | Default Value          | Description                      |
+|:---------------------------|:-----------------------|:---------------------------------|
+| `SDD_DOCS_ROOT`            | `.sdd`                 | Documentation root               |
+| `SDD_REQUIREMENT_DIR`      | `requirement`          | Requirements directory name      |
+| `SDD_SPECIFICATION_DIR`    | `specification`        | Specification directory name     |
+| `SDD_TASK_DIR`             | `task`                 | Task log directory name          |
+| `SDD_REQUIREMENT_PATH`     | `.sdd/requirement`     | Requirements full path           |
+| `SDD_SPECIFICATION_PATH`   | `.sdd/specification`   | Specification full path          |
+| `SDD_TASK_PATH`            | `.sdd/task`            | Task log full path               |
+
+**Path Resolution Priority:**
+1. Use `SDD_*` environment variables if set
+2. Check `.sdd-config.json` if environment variables are not set
+3. Use default values if neither exists
+
+Agents, commands, and skills use these environment variables when referencing document paths.
+
 ### Custom Configuration Example
 
 ```json

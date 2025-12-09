@@ -82,6 +82,27 @@ AI-SDDワークフローでは、`.sdd-config.json` ファイルによるディ�
 3. 存在しない場合: デフォルト値を使用
 4. 部分的な設定も可能（指定されていない項目はデフォルト値を使用）
 
+### 環境変数によるパス解決
+
+セッション開始時に `session-start` フックが `.sdd-config.json` を読み込み、以下の環境変数を設定します。
+
+| 環境変数                     | デフォルト値               | 説明                |
+|:-------------------------|:---------------------|:------------------|
+| `SDD_DOCS_ROOT`          | `.sdd`               | ドキュメントルート         |
+| `SDD_REQUIREMENT_DIR`    | `requirement`        | 要求仕様書ディレクトリ名      |
+| `SDD_SPECIFICATION_DIR`  | `specification`      | 仕様書・設計書ディレクトリ名    |
+| `SDD_TASK_DIR`           | `task`               | タスクログディレクトリ名      |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`   | 要求仕様書フルパス         |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification` | 仕様書・設計書フルパス       |
+| `SDD_TASK_PATH`          | `.sdd/task`          | タスクログフルパス         |
+
+**パス解決の優先順位:**
+1. 環境変数 `SDD_*` が設定されている場合はそれを使用
+2. 環境変数がない場合は `.sdd-config.json` を確認
+3. どちらもない場合はデフォルト値を使用
+
+エージェント・コマンド・スキルは、ドキュメントパスを参照する際にこれらの環境変数を使用します。
+
 ### カスタム設定の例
 
 ```json
