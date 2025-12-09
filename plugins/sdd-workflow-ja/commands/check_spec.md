@@ -1,5 +1,4 @@
 ---
-name: check_spec
 description: "実装コードと仕様書の整合性をチェックし、差異を検出する"
 allowed-tools: Read, Glob, Grep, AskUserQuestion
 ---
@@ -14,10 +13,28 @@ allowed-tools: Read, Glob, Grep, AskUserQuestion
 
 このコマンドはsdd-workflowエージェントの原則に従って整合性チェックを行います。
 
+### ディレクトリパスの解決
+
+**環境変数 `SDD_*` を使用してディレクトリパスを解決します。**
+
+| 環境変数                   | デフォルト値              | 説明                 |
+|:-----------------------|:--------------------|:-------------------|
+| `SDD_DOCS_ROOT`        | `.sdd`              | ドキュメントルート          |
+| `SDD_REQUIREMENT_PATH` | `.sdd/requirement`  | PRD/要求仕様書ディレクトリ    |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification` | 仕様書・設計書ディレクトリ      |
+| `SDD_TASK_PATH`        | `.sdd/task`         | タスクログディレクトリ        |
+
+**パス解決の優先順位:**
+1. 環境変数 `SDD_*` が設定されている場合はそれを使用
+2. 環境変数がない場合は `.sdd-config.json` を確認
+3. どちらもない場合はデフォルト値を使用
+
+以下のドキュメントでは、デフォルト値を使用して説明しますが、環境変数または設定ファイルが存在する場合はカスタム値に置き換えてください。
+
 ### ドキュメント間の依存関係（参照）
 
 ```
-実装 → *_design.md → *_spec.md → requirement-diagram/
+実装 → *_design.md → *_spec.md → requirement/
 ```
 
 ## 入力
@@ -36,19 +53,47 @@ $ARGUMENTS
 
 ### 1. 対象ドキュメントの特定
 
+フラット構造と階層構造の両方をサポートします。
+
+**フラット構造の場合**:
+
 ```
 引数あり → 以下のファイルを対象:
-  - .docs/requirement-diagram/{引数}.md（PRD、存在する場合）
-  - .docs/specification/{引数}_spec.md
-  - .docs/specification/{引数}_design.md
-引数なし → .docs/specification/ 配下の全ファイルを対象
+  - .sdd/requirement/{引数}.md（PRD、存在する場合）
+  - .sdd/specification/{引数}_spec.md
+  - .sdd/specification/{引数}_design.md
+引数なし → .sdd/specification/ 配下の全ファイルを対象（再帰的に検索）
+```
+
+**階層構造の場合**（引数に `/` が含まれる場合、または階層パスを指定）:
+
+```
+引数が "{親機能名}/{機能名}" の形式 → 以下のファイルを対象:
+  - .sdd/requirement/{親機能名}/{機能名}.md（PRD）
+  - .sdd/specification/{親機能名}/{機能名}_spec.md
+  - .sdd/specification/{親機能名}/{機能名}_design.md
+
+引数が "{親機能名}" のみの場合 → 以下のファイルを対象:
+  - .sdd/requirement/{親機能名}/index.md（親機能のPRD）
+  - .sdd/requirement/{親機能名}/*.md（子機能のPRD）
+  - .sdd/specification/{親機能名}/index_spec.md（親機能のspec）
+  - .sdd/specification/{親機能名}/*_spec.md（子機能のspec）
+  - .sdd/specification/{親機能名}/index_design.md（親機能のdesign）
+  - .sdd/specification/{親機能名}/*_design.md（子機能のdesign）
+```
+
+**入力例（階層構造）**:
+
+```
+/check_spec auth/user-login     # 認証ドメイン配下のユーザーログイン機能をチェック
+/check_spec auth                # 認証ドメイン全体をチェック
 ```
 
 ### 2. ドキュメントの読み込み
 
 対象のドキュメントから以下の情報を抽出：
 
-**PRD（`requirement-diagram/*.md`）から抽出**（存在する場合）:
+**PRD（`requirement/*.md`）から抽出**（存在する場合）:
 
 | 項目        | 説明                      |
 |:----------|:------------------------|
@@ -138,9 +183,11 @@ $ARGUMENTS
 
 ### 対象ドキュメント
 
-- `.docs/requirement-diagram/{機能名}.md`（PRD、存在する場合）
-- `.docs/specification/{機能名}_spec.md`
-- `.docs/specification/{機能名}_design.md`
+- `.sdd/requirement/[{親機能名}/]{機能名}.md`（PRD、存在する場合）
+- `.sdd/specification/[{親機能名}/]{機能名}_spec.md`
+- `.sdd/specification/[{親機能名}/]{機能名}_design.md`
+
+※ 階層構造の場合、親機能は `index.md`、`index_spec.md`、`index_design.md`
 
 ### チェック結果サマリー
 

@@ -1,5 +1,4 @@
 ---
-name: check_spec
 description: "Check consistency between implementation code and specifications, detecting discrepancies"
 allowed-tools: Read, Glob, Grep, AskUserQuestion
 ---
@@ -15,10 +14,28 @@ discrepancies.
 
 This command follows the sdd-workflow agent principles for consistency checking.
 
+### Directory Path Resolution
+
+**Use `SDD_*` environment variables to resolve directory paths.**
+
+| Environment Variable     | Default Value         | Description                  |
+|:-------------------------|:----------------------|:-----------------------------|
+| `SDD_DOCS_ROOT`          | `.sdd`                | Documentation root           |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`    | PRD/Requirements directory   |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification`  | Specification/Design directory |
+| `SDD_TASK_PATH`          | `.sdd/task`           | Task log directory           |
+
+**Path Resolution Priority:**
+1. Use `SDD_*` environment variables if set
+2. Check `.sdd-config.json` if environment variables are not set
+3. Use default values if neither exists
+
+The following documentation uses default values, but replace with custom values if environment variables or configuration file exists.
+
 ### Document Dependencies (Reference)
 
 ```
-Implementation → *_design.md → *_spec.md → requirement-diagram/
+Implementation → *_design.md → *_spec.md → requirement/
 ```
 
 ## Input
@@ -37,19 +54,47 @@ $ARGUMENTS
 
 ### 1. Identify Target Documents
 
+Both flat and hierarchical structures are supported.
+
+**For flat structure**:
+
 ```
 With argument → Target the following files:
-  - .docs/requirement-diagram/{argument}.md (PRD, if exists)
-  - .docs/specification/{argument}_spec.md
-  - .docs/specification/{argument}_design.md
-Without argument → Target all files under .docs/specification/
+  - .sdd/requirement/{argument}.md (PRD, if exists)
+  - .sdd/specification/{argument}_spec.md
+  - .sdd/specification/{argument}_design.md
+Without argument → Target all files under .sdd/specification/ (recursively)
+```
+
+**For hierarchical structure** (when argument contains `/`, or when specifying hierarchical path):
+
+```
+Argument in "{parent-feature}/{feature-name}" format → Target the following files:
+  - .sdd/requirement/{parent-feature}/{feature-name}.md (PRD)
+  - .sdd/specification/{parent-feature}/{feature-name}_spec.md
+  - .sdd/specification/{parent-feature}/{feature-name}_design.md
+
+Argument is "{parent-feature}" only → Target the following files:
+  - .sdd/requirement/{parent-feature}/index.md (parent feature PRD)
+  - .sdd/requirement/{parent-feature}/*.md (child feature PRDs)
+  - .sdd/specification/{parent-feature}/index_spec.md (parent feature spec)
+  - .sdd/specification/{parent-feature}/*_spec.md (child feature specs)
+  - .sdd/specification/{parent-feature}/index_design.md (parent feature design)
+  - .sdd/specification/{parent-feature}/*_design.md (child feature designs)
+```
+
+**Hierarchical structure input examples**:
+
+```
+/check_spec auth/user-login     # Check user-login feature under auth domain
+/check_spec auth                # Check entire auth domain
 ```
 
 ### 2. Load Documents
 
 Extract the following information from target documents:
 
-**From PRD (`requirement-diagram/*.md`)** (if exists):
+**From PRD (`requirement/*.md`)** (if exists):
 
 | Item                            | Description                         |
 |:--------------------------------|:------------------------------------|
@@ -139,9 +184,11 @@ Classify detected discrepancies as follows:
 
 ### Target Documents
 
-- `.docs/requirement-diagram/{feature-name}.md` (PRD, if exists)
-- `.docs/specification/{feature-name}_spec.md`
-- `.docs/specification/{feature-name}_design.md`
+- `.sdd/requirement/[{parent-feature}/]{feature-name}.md` (PRD, if exists)
+- `.sdd/specification/[{parent-feature}/]{feature-name}_spec.md`
+- `.sdd/specification/[{parent-feature}/]{feature-name}_design.md`
+
+※ For hierarchical structure, parent feature uses `index.md`, `index_spec.md`, `index_design.md`
 
 ### Check Results Summary
 

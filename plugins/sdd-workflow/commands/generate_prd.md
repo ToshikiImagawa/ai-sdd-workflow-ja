@@ -1,5 +1,4 @@
 ---
-name: generate_prd
 description: "Generate PRD (Requirements Specification) in SysML requirements diagram format from business requirements"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
@@ -14,17 +13,35 @@ Generates PRD (Requirements Specification) from input business requirements acco
 
 This command follows the sdd-workflow agent principles for PRD generation.
 
+### Directory Path Resolution
+
+**Use `SDD_*` environment variables to resolve directory paths.**
+
+| Environment Variable     | Default Value         | Description                  |
+|:-------------------------|:----------------------|:-----------------------------|
+| `SDD_DOCS_ROOT`          | `.sdd`                | Documentation root           |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`    | PRD/Requirements directory   |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification`  | Specification/Design directory |
+| `SDD_TASK_PATH`          | `.sdd/task`           | Task log directory           |
+
+**Path Resolution Priority:**
+1. Use `SDD_*` environment variables if set
+2. Check `.sdd-config.json` if environment variables are not set
+3. Use default values if neither exists
+
+The following documentation uses default values, but replace with custom values if environment variables or configuration file exists.
+
 ### Skills Used
 
 This command uses the following skills:
 
-| Skill                        | Purpose                                                               |
-|:-----------------------------|:----------------------------------------------------------------------|
-| `sdd-workflow:sdd-templates` | Generate `.docs/PRD_TEMPLATE.md` when project template does not exist |
+| Skill                        | Purpose                                                              |
+|:-----------------------------|:---------------------------------------------------------------------|
+| `sdd-workflow:sdd-templates` | Generate `.sdd/PRD_TEMPLATE.md` when project template does not exist |
 
 **Template Preparation Flow**:
 
-1. Use `.docs/PRD_TEMPLATE.md` (project template) if it exists
+1. Use `.sdd/PRD_TEMPLATE.md` (project template) if it exists
 2. If not, use `sdd-templates` skill to generate the template
 
 ### PRD / Requirements Diagram Positioning (Reference)
@@ -102,13 +119,30 @@ If important items cannot be determined from input, **confirm with user before g
 
 ### 4. Existing Document Check
 
-Check the following before generation:
+Check the following before generation. Both flat and hierarchical structures are supported.
+
+**For flat structure**:
 
 ```
-Does .docs/requirement-diagram/{feature-name}.md already exist? (PRD)
-Does .docs/specification/{feature-name}_spec.md already exist? (spec)
-Does .docs/specification/{feature-name}_design.md already exist? (design)
+Does .sdd/requirement/{feature-name}.md already exist? (PRD)
+Does .sdd/specification/{feature-name}_spec.md already exist? (spec)
+Does .sdd/specification/{feature-name}_design.md already exist? (design)
 ```
+
+**For hierarchical structure** (when placing under parent feature):
+
+```
+Does .sdd/requirement/{parent-feature}/index.md already exist? (parent feature PRD)
+Does .sdd/requirement/{parent-feature}/{feature-name}.md already exist? (child feature PRD)
+Does .sdd/specification/{parent-feature}/index_spec.md already exist? (parent feature spec)
+Does .sdd/specification/{parent-feature}/{feature-name}_spec.md already exist? (child feature spec)
+Does .sdd/specification/{parent-feature}/index_design.md already exist? (parent feature design)
+Does .sdd/specification/{parent-feature}/{feature-name}_design.md already exist? (child feature design)
+```
+
+**Hierarchical structure usage decision**:
+- Use hierarchical structure when parent feature (category) is specified in input, or when existing hierarchical structure exists
+- Recommended to confirm with user whether to use hierarchical structure
 
 **If PRD exists**: Confirm with user whether to overwrite.
 
@@ -123,9 +157,9 @@ Does .docs/specification/{feature-name}_design.md already exist? (design)
 
 Follow these steps to prepare the template:
 
-1. Check if `.docs/PRD_TEMPLATE.md` exists
+1. Check if `.sdd/PRD_TEMPLATE.md` exists
 2. **If exists**: Use that template
-3. **If not exists**: Use `sdd-workflow:sdd-templates` skill to generate `.docs/PRD_TEMPLATE.md`, then use the generated
+3. **If not exists**: Use `sdd-workflow:sdd-templates` skill to generate `.sdd/PRD_TEMPLATE.md`, then use the generated
    template
 
 ### Template Application Notes
@@ -135,7 +169,11 @@ Follow these steps to prepare the template:
 - Use SysML requirementDiagram syntax for requirements diagrams
 - Manage requirement IDs (UR-xxx, FR-xxx, NFR-xxx) uniquely
 
-**Save Location**: `.docs/requirement-diagram/{feature-name}.md`
+**Save Location**:
+
+- Flat structure: `.sdd/requirement/{feature-name}.md`
+- Hierarchical structure (parent feature): `.sdd/requirement/{parent-feature}/index.md`
+- Hierarchical structure (child feature): `.sdd/requirement/{parent-feature}/{feature-name}.md`
 
 ## Generation Flow
 
@@ -186,7 +224,8 @@ If existing spec/design exists, verify the following after PRD generation:
 ## Post-Generation Actions
 
 1. **Save File**:
-    - `.docs/requirement-diagram/{feature-name}.md`
+    - Flat structure: `.sdd/requirement/{feature-name}.md`
+    - Hierarchical structure: `.sdd/requirement/{parent-feature}/index.md` or `.sdd/requirement/{parent-feature}/{feature-name}.md`
 
 2. **Consistency Check**:
     - If existing spec/design exists: Verify impact and notify if updates needed

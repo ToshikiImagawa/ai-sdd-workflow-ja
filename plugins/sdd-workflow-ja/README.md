@@ -41,7 +41,36 @@ Claude Codeで `/plugin` コマンドを実行し、`sdd-workflow-ja` が表示�
 
 ## クイックスタート
 
-**初めてこのプラグインを使用するプロジェクトでは、まず `/sdd_init` を実行することをお勧めします。**
+### 1. フックの設定（推奨）
+
+プラグインの機能を最大限に活用するため、プロジェクトの `.claude/settings.json` にフック設定を追加してください：
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+フックスクリプトに実行権限を付与：
+
+```bash
+chmod +x hooks/*.sh
+```
+
+### 2. プロジェクトの初期化
+
+**初めてこのプラグインを使用するプロジェクトでは、`/sdd_init` を実行してください。**
 
 ```
 /sdd_init
@@ -50,27 +79,30 @@ Claude Codeで `/plugin` コマンドを実行し、`sdd-workflow-ja` が表示�
 このコマンドは以下を自動的に設定します：
 
 - プロジェクトの `CLAUDE.md` にAI-SDD Instructionsセクションを追加
-- `.docs/` ディレクトリ構造を作成（requirement-diagram/, specification/, review/）
+- `.sdd/` ディレクトリ構造を作成（requirement/, specification/, task/）
 - PRD、仕様書、設計書のテンプレートファイルを生成
 
 ## 含まれるコンポーネント
 
 ### エージェント
 
-| エージェント          | 説明                                                |
-|:----------------|:--------------------------------------------------|
-| `sdd-workflow`  | AI-SDD開発フローの管理。フェーズ判定、Vibe Coding防止、ドキュメント整合性チェック |
-| `spec-reviewer` | 仕様書の品質レビューと改善提案。曖昧な記述の検出、不足セクションの指摘               |
+| エージェント                 | 説明                                                |
+|:-----------------------|:--------------------------------------------------|
+| `sdd-workflow`         | AI-SDD開発フローの管理。フェーズ判定、Vibe Coding防止、ドキュメント整合性チェック |
+| `spec-reviewer`        | 仕様書の品質レビューと改善提案。曖昧な記述の検出、不足セクションの指摘               |
+| `requirement-analyzer` | SysML要求図に基づく要求分析、トラッキング、検証                        |
 
 ### コマンド
 
-| コマンド              | 説明                               |
-|:------------------|:---------------------------------|
-| `/generate_spec`  | 入力から抽象仕様書と技術設計書を生成               |
-| `/generate_prd`   | ビジネス要求からPRD（要求仕様書）をSysML要求図形式で生成 |
-| `/check_spec`     | 実装コードと仕様書の整合性をチェックし、差異を検出        |
-| `/review_cleanup` | 実装完了後のreview/ディレクトリを整理し、設計判断を統合  |
-| `/task_breakdown` | 技術設計書からタスクを分解し、小タスクのリストを生成       |
+| コマンド              | 説明                                    |
+|:------------------|:--------------------------------------|
+| `/sdd_init`       | AI-SDDワークフローの初期化。CLAUDE.md設定とテンプレート生成 |
+| `/sdd_migrate`    | 旧バージョン（v1.x）からの移行。新構成への移行または互換性設定の生成  |
+| `/generate_spec`  | 入力から抽象仕様書と技術設計書を生成                    |
+| `/generate_prd`   | ビジネス要求からPRD（要求仕様書）をSysML要求図形式で生成      |
+| `/check_spec`     | 実装コードと仕様書の整合性をチェックし、差異を検出             |
+| `/task_cleanup`   | 実装完了後のtask/ディレクトリを整理し、設計判断を統合         |
+| `/task_breakdown` | 技術設計書からタスクを分解し、小タスクのリストを生成            |
 
 ### スキル
 
@@ -78,13 +110,13 @@ Claude Codeで `/plugin` コマンドを実行し、`sdd-workflow-ja` が表示�
 |:--------------------------|:------------------------------------|
 | `vibe-detector`           | ユーザー入力を分析し、Vibe Coding（曖昧な指示）を自動検出  |
 | `doc-consistency-checker` | ドキュメント間（PRD、spec、design）の整合性を自動チェック |
+| `sdd-templates`           | PRD、仕様書、設計書テンプレートのフォールバック提供         |
 
 ### フック
 
-| フック                   | トリガー                   | 説明                   |
-|:----------------------|:-----------------------|:---------------------|
-| `check-spec-exists`   | PreToolUse（Edit/Write） | 実装前に仕様書の存在を確認し、警告を表示 |
-| `check-commit-prefix` | PostToolUse（Bash）      | コミットメッセージ規約をチェック     |
+| フック             | トリガー         | 説明                                  |
+|:----------------|:-------------|:------------------------------------|
+| `session-start` | SessionStart | `.sdd-config.json`から設定を読み込み、環境変数を設定 |
 
 ## 使用方法
 
@@ -123,10 +155,10 @@ Claude Codeで `/plugin` コマンドを実行し、`sdd-workflow-ja` が表示�
 /task_breakdown task-management TICKET-123
 ```
 
-#### レビュークリーンアップ
+#### タスククリーンアップ
 
 ```
-/review_cleanup TICKET-123
+/task_cleanup TICKET-123
 ```
 
 ## フックの設定
@@ -136,30 +168,24 @@ Claude Codeで `/plugin` コマンドを実行し、`sdd-workflow-ja` が表示�
 ```json
 {
   "hooks": {
-    "PreToolUse": [
+    "SessionStart": [
       {
-        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "hooks/check-spec-exists.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "hooks/check-commit-prefix.sh"
+            "command": "hooks/session-start.sh"
           }
         ]
       }
     ]
   }
 }
+```
+
+**注意**: フックスクリプトには実行権限が必要です：
+
+```bash
+chmod +x hooks/*.sh
 ```
 
 設定例は `hooks/settings.example.json` を参照してください。
@@ -219,17 +245,100 @@ Specify（仕様化） → Plan（計画） → Tasks（タスク分解） → I
 
 ### 推奨ディレクトリ構造
 
+フラット構造と階層構造の両方をサポートします。
+
+#### フラット構造（小〜中規模プロジェクト向け）
+
 ```
-.docs/
+.sdd/
 ├── SPECIFICATION_TEMPLATE.md     # 抽象仕様書テンプレート（任意）
 ├── DESIGN_DOC_TEMPLATE.md        # 技術設計書テンプレート（任意）
-├── requirement-diagram/          # PRD（要求仕様書）
+├── requirement/          # PRD（要求仕様書）
 │   └── {機能名}.md
 ├── specification/                # 永続的な知識資産
 │   ├── {機能名}_spec.md         # 抽象仕様書
 │   └── {機能名}_design.md       # 技術設計書
-└── review/                       # 一時的な作業ログ（実装完了後に削除）
+└── task/                         # 一時的なタスクログ（実装完了後に削除）
     └── {チケット番号}/
+```
+
+#### 階層構造（中〜大規模プロジェクト向け）
+
+```
+.sdd/
+├── SPECIFICATION_TEMPLATE.md     # 抽象仕様書テンプレート（任意）
+├── DESIGN_DOC_TEMPLATE.md        # 技術設計書テンプレート（任意）
+├── requirement/          # PRD（要求仕様書）
+│   ├── {機能名}.md              # トップレベル機能（フラット構造との互換性）
+│   └── {親機能名}/              # 親機能ディレクトリ
+│       ├── index.md             # 親機能の概要・要求一覧
+│       └── {子機能名}.md        # 子機能の要求仕様
+├── specification/                # 永続的な知識資産
+│   ├── {機能名}_spec.md         # トップレベル機能（フラット構造との互換性）
+│   ├── {機能名}_design.md
+│   └── {親機能名}/              # 親機能ディレクトリ
+│       ├── index_spec.md        # 親機能の抽象仕様書
+│       ├── index_design.md      # 親機能の技術設計書
+│       ├── {子機能名}_spec.md   # 子機能の抽象仕様書
+│       └── {子機能名}_design.md # 子機能の技術設計書
+└── task/                         # 一時的なタスクログ（実装完了後に削除）
+    └── {チケット番号}/
+```
+
+**階層構造の使用例**:
+
+```
+/generate_prd auth/user-login   # 認証ドメイン配下にユーザーログイン機能のPRDを生成
+/generate_spec auth/user-login  # 認証ドメイン配下に仕様書を生成
+/check_spec auth                # 認証ドメイン全体の整合性をチェック
+```
+
+### プロジェクト設定ファイル
+
+プロジェクトルートに `.sdd-config.json` を配置することで、ディレクトリ名をカスタマイズできます。
+
+```json
+{
+  "docsRoot": ".sdd",
+  "directories": {
+    "requirement": "requirement",
+    "specification": "specification",
+    "task": "task"
+  }
+}
+```
+
+| 設定項目                        | デフォルト値          | 説明                |
+|:----------------------------|:----------------|:------------------|
+| `docsRoot`                  | `.sdd`          | ドキュメントルートディレクトリ   |
+| `directories.requirement`   | `requirement`   | PRD（要求仕様書）ディレクトリ名 |
+| `directories.specification` | `specification` | 仕様書・設計書ディレクトリ名    |
+| `directories.task`          | `task`          | 一時的なタスクログディレクトリ名  |
+
+**注意**:
+
+- 設定ファイルが存在しない場合、デフォルト値が使用されます
+- 部分的な設定も可能です（指定されていない項目はデフォルト値を使用）
+
+**カスタム設定の例**:
+
+```json
+{
+  "docsRoot": "docs",
+  "directories": {
+    "requirement": "requirements",
+    "specification": "specs"
+  }
+}
+```
+
+この設定では以下のディレクトリ構造になります：
+
+```
+docs/
+├── requirements/       # PRD（要求仕様書）
+├── specs/              # 仕様書・設計書
+└── task/               # 一時的なタスクログ（デフォルト値）
 ```
 
 ## プラグイン構造
@@ -240,31 +349,32 @@ sdd-workflow-ja/
 │   └── plugin.json              # プラグインマニフェスト
 ├── agents/
 │   ├── sdd-workflow.md          # AI-SDD開発フローエージェント
-│   └── spec-reviewer.md         # 仕様書レビューエージェント
+│   ├── spec-reviewer.md         # 仕様書レビューエージェント
+│   └── requirement-analyzer.md  # 要求仕様分析エージェント
 ├── commands/
+│   ├── sdd_init.md              # AI-SDDワークフロー初期化
+│   ├── sdd_migrate.md           # 旧バージョンからの移行
 │   ├── generate_spec.md         # 仕様書・設計書生成
 │   ├── generate_prd.md          # PRD生成
 │   ├── check_spec.md            # 整合性チェック
-│   ├── review_cleanup.md        # レビュークリーンアップ
+│   ├── task_cleanup.md          # タスククリーンアップ
 │   └── task_breakdown.md        # タスク分解
 ├── skills/
-│   ├── vibe-detector.md         # Vibe Coding検出スキル
-│   └── doc-consistency-checker.md
+│   ├── vibe-detector/           # Vibe Coding検出スキル
+│   │   ├── SKILL.md
+│   │   └── templates/
+│   ├── doc-consistency-checker/ # ドキュメント整合性チェック
+│   │   ├── SKILL.md
+│   │   └── templates/
+│   └── sdd-templates/           # AI-SDDテンプレート
+│       ├── SKILL.md
+│       └── templates/
 ├── hooks/
-│   ├── check-spec-exists.sh
-│   ├── check-commit-prefix.sh
-│   └── settings.example.json
+│   ├── session-start.sh         # セッション開始時の初期化
+│   └── settings.example.json    # hooks設定例
 ├── LICENSE
 └── README.md
 ```
-
-## コミットメッセージ規約
-
-| プレフィックス    | 用途                       |
-|:-----------|:-------------------------|
-| `[docs]`   | ドキュメントの追加・更新             |
-| `[spec]`   | 仕様書の追加・更新（`*_spec.md`）   |
-| `[design]` | 設計書の追加・更新（`*_design.md`） |
 
 ## ライセンス
 

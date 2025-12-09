@@ -5,6 +5,64 @@
 形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に基づき、
 [Semantic Versioning](https://semver.org/lang/ja/) に準拠しています。
 
+## [2.0.0] - 2025-12-09
+
+### Breaking Changes
+
+#### ディレクトリ構造の変更
+
+- **ドキュメントルート**: `.docs/` → `.sdd/` に変更
+- **要求仕様ディレクトリ**: `requirement-diagram/` → `requirement/` に変更
+- **タスクログディレクトリ**: `review/` → `task/` に変更
+
+#### コマンド名の変更
+
+- `/review_cleanup` → `/task_cleanup` に変更
+
+#### マイグレーション
+
+旧バージョン（v1.x）からの移行は `/sdd_migrate` コマンドを使用してください:
+
+- **オプションA**: ディレクトリをリネームして新構成に移行
+- **オプションB**: `.sdd-config.json` を生成して旧構成を維持
+
+### Added
+
+#### コマンド
+
+- `/sdd_migrate` - 旧バージョンからのマイグレーションコマンド
+    - 旧構成（`.docs/`, `requirement-diagram/`, `review/`）を検出
+    - 新構成への移行または互換性設定の生成を選択可能
+
+#### エージェント
+
+- `requirement-analyzer` - 要求仕様分析エージェント
+    - SysML要求図に基づく要求分析
+    - 要求のトラッキングと検証
+
+#### フック
+
+- `session-start` - セッション開始時の初期化フック
+    - `.sdd-config.json` から設定を読み込み環境変数を設定
+    - 旧構成を自動検出し、マイグレーション案内を表示
+
+#### 設定ファイル
+
+- `.sdd-config.json` - プロジェクト設定ファイルのサポート
+    - `docsRoot`: ドキュメントルートディレクトリ（デフォルト: `.sdd`）
+    - `directories.requirement`: 要求仕様ディレクトリ（デフォルト: `requirement`）
+    - `directories.specification`: 仕様書ディレクトリ（デフォルト: `specification`）
+    - `directories.task`: タスクログディレクトリ（デフォルト: `task`）
+
+### Removed
+
+#### フック
+
+- `check-spec-exists` - 削除
+    - 仕様書作成はオプショナルなため、存在しないケースが正常系として多い
+- `check-commit-prefix` - 削除
+    - コミットメッセージ規約がプラグインの機能で使用されていないため削除
+
 ## [1.1.0] - 2025-12-06
 
 ### Added
@@ -114,11 +172,6 @@
 
 - `vibe-detector` - Vibe Coding（曖昧な指示）の自動検出
 - `doc-consistency-checker` - ドキュメント間整合性の自動チェック
-
-#### フック
-
-- `check-spec-exists` - 実装前に仕様書の存在を確認
-- `check-commit-prefix` - コミットメッセージ規約（[docs], [spec], [design]）のチェック
 
 #### 統合
 

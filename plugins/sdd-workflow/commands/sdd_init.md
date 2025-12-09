@@ -1,5 +1,4 @@
 ---
-name: sdd_init
 description: "Initialize AI-SDD workflow in the current project. Sets up CLAUDE.md and generates document templates."
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
@@ -11,13 +10,21 @@ Initializes the AI-SDD (AI-driven Specification-Driven Development) workflow in 
 ## What This Command Does
 
 1. **CLAUDE.md Configuration**: Adds AI-SDD instructions to the project's `CLAUDE.md` file
-2. **Template Generation**: Creates document templates in `.docs/` directory (if not exist)
+2. **Template Generation**: Creates document templates in `.sdd/` directory (if not exist)
 
 ## Prerequisites
 
 **Before execution, you must read `sdd-workflow:sdd-workflow` agent content to understand AI-SDD principles.**
 
 This command follows the sdd-workflow agent principles for project initialization.
+
+### Configuration File (Optional)
+
+You can customize directory names by creating `.sdd-config.json` at project root.
+
+For configuration file details, refer to the "Project Configuration File" section in the `sdd-workflow:sdd-workflow` agent.
+
+**Note**: If you want to use custom directory names during initialization, create `.sdd-config.json` first. The directory structure and CLAUDE.md content will be generated based on the configuration values.
 
 ### Skills Used
 
@@ -32,21 +39,21 @@ This command uses the following skills:
 ```
 1. Check current project state
    ├─ Does CLAUDE.md exist?
-   └─ Does .docs/ directory exist?
+   └─ Does .sdd/ directory exist?
    ↓
 2. Configure CLAUDE.md
    ├─ If CLAUDE.md exists: Add AI-SDD Instructions section
    └─ If not exists: Create new CLAUDE.md with AI-SDD Instructions
    ↓
-3. Create .docs/ directory structure
-   ├─ .docs/requirement-diagram/
-   ├─ .docs/specification/
-   └─ .docs/review/
+3. Create .sdd/ directory structure
+   ├─ .sdd/requirement/
+   ├─ .sdd/specification/
+   └─ .sdd/task/
    ↓
 4. Check for existing templates
-   ├─ .docs/PRD_TEMPLATE.md
-   ├─ .docs/SPECIFICATION_TEMPLATE.md
-   └─ .docs/DESIGN_DOC_TEMPLATE.md
+   ├─ .sdd/PRD_TEMPLATE.md
+   ├─ .sdd/SPECIFICATION_TEMPLATE.md
+   └─ .sdd/DESIGN_DOC_TEMPLATE.md
    ↓
 5. Generate missing templates
    └─ Use sdd-workflow:sdd-templates skill to generate
@@ -67,27 +74,53 @@ This project follows the AI-SDD (AI-driven Specification-Driven Development) wor
 
 ### Document Operations
 
-When working with files under `.docs/` directory, you MUST use the `sdd-workflow:sdd-workflow` agent to ensure proper
+When working with files under `.sdd/` directory, you MUST use the `sdd-workflow:sdd-workflow` agent to ensure proper
 AI-SDD workflow compliance.
 
 **Trigger Conditions**:
 
-- Reading or modifying any file under `.docs/`
+- Reading or modifying any file under `.sdd/`
 - Creating new specifications, designs, or requirements documents
-- Implementing features that reference documents in `.docs/`
+- Implementing features that reference documents in `.sdd/`
 
 ### Directory Structure
 
-    .docs/
+Both flat and hierarchical structures are supported.
+
+**Flat Structure (for small to medium projects)**:
+
+    .sdd/
     ├── PRD_TEMPLATE.md               # PRD template for this project
     ├── SPECIFICATION_TEMPLATE.md     # Abstract specification template
     ├── DESIGN_DOC_TEMPLATE.md        # Technical design document template
-    ├── requirement-diagram/          # PRD (Requirements Specification)
+    ├── requirement/          # PRD (Requirements Specification)
     │   └── {feature-name}.md
     ├── specification/                # Specifications and Design Documents
     │   ├── {feature-name}_spec.md    # Abstract specification
     │   └── {feature-name}_design.md  # Technical design document
-    └── review/                       # Temporary work logs
+    └── task/                         # Temporary task logs
+        └── {ticket-number}/
+
+**Hierarchical Structure (for medium to large projects)**:
+
+    .sdd/
+    ├── PRD_TEMPLATE.md               # PRD template for this project
+    ├── SPECIFICATION_TEMPLATE.md     # Abstract specification template
+    ├── DESIGN_DOC_TEMPLATE.md        # Technical design document template
+    ├── requirement/          # PRD (Requirements Specification)
+    │   ├── {feature-name}.md         # Top-level feature
+    │   └── {parent-feature}/         # Parent feature directory
+    │       ├── index.md              # Parent feature overview and requirements list
+    │       └── {child-feature}.md    # Child feature requirements
+    ├── specification/                # Specifications and Design Documents
+    │   ├── {feature-name}_spec.md    # Top-level feature
+    │   ├── {feature-name}_design.md
+    │   └── {parent-feature}/         # Parent feature directory
+    │       ├── index_spec.md         # Parent feature abstract specification
+    │       ├── index_design.md       # Parent feature technical design document
+    │       ├── {child-feature}_spec.md   # Child feature abstract specification
+    │       └── {child-feature}_design.md # Child feature technical design document
+    └── task/                         # Temporary task logs
         └── {ticket-number}/
 
 ### Commit Message Convention
@@ -109,11 +142,11 @@ AI-SDD workflow compliance.
 
 ### Template Files to Generate
 
-| Template                   | Path                              | Purpose                                    |
-|:---------------------------|:----------------------------------|:-------------------------------------------|
-| **PRD Template**           | `.docs/PRD_TEMPLATE.md`           | Requirements specification in SysML format |
-| **Specification Template** | `.docs/SPECIFICATION_TEMPLATE.md` | Abstract system specification              |
-| **Design Doc Template**    | `.docs/DESIGN_DOC_TEMPLATE.md`    | Technical design document                  |
+| Template                   | Path                             | Purpose                                    |
+|:---------------------------|:---------------------------------|:-------------------------------------------|
+| **PRD Template**           | `.sdd/PRD_TEMPLATE.md`           | Requirements specification in SysML format |
+| **Specification Template** | `.sdd/SPECIFICATION_TEMPLATE.md` | Abstract system specification              |
+| **Design Doc Template**    | `.sdd/DESIGN_DOC_TEMPLATE.md`    | Technical design document                  |
 
 ### Generation Process
 
@@ -143,10 +176,10 @@ After initialization, verify:
 
 1. **CLAUDE.md**: Contains AI-SDD Instructions section
 2. **Directory Structure**:
-    - `.docs/requirement-diagram/` exists
-    - `.docs/specification/` exists
-    - `.docs/review/` exists
-3. **Templates**: All three template files exist in `.docs/`
+    - `.sdd/requirement/` exists
+    - `.sdd/specification/` exists
+    - `.sdd/task/` exists
+3. **Templates**: All three template files exist in `.sdd/`
 
 ## Output
 
@@ -161,15 +194,15 @@ Upon successful initialization, display:
 
 ### Directory Structure
 
-- [x] .docs/requirement-diagram/ created
-- [x] .docs/specification/ created
-- [x] .docs/review/ created
+- [x] .sdd/requirement/ created
+- [x] .sdd/specification/ created
+- [x] .sdd/task/ created
 
 ### Templates Generated
 
-- [x] .docs/PRD_TEMPLATE.md
-- [x] .docs/SPECIFICATION_TEMPLATE.md
-- [x] .docs/DESIGN_DOC_TEMPLATE.md
+- [x] .sdd/PRD_TEMPLATE.md
+- [x] .sdd/SPECIFICATION_TEMPLATE.md
+- [x] .sdd/DESIGN_DOC_TEMPLATE.md
 
 ### Next Steps
 
@@ -187,6 +220,6 @@ After successful initialization:
 [docs] Initialize AI-SDD workflow
 
 - Add AI-SDD Instructions to CLAUDE.md
-- Create .docs/ directory structure
+- Create .sdd/ directory structure
 - Generate document templates
 ```

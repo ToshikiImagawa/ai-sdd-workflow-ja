@@ -14,6 +14,24 @@ allowed-tools: Read, Glob, Grep, AskUserQuestion
 
 このスキルはsdd-workflowエージェントの原則に従ってVibe Codingを検出します。
 
+### ディレクトリパスの解決
+
+**環境変数 `SDD_*` を使用してディレクトリパスを解決します。**
+
+| 環境変数                     | デフォルト値               | 説明               |
+|:-------------------------|:---------------------|:-----------------|
+| `SDD_DOCS_ROOT`          | `.sdd`               | ドキュメントルート        |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`   | PRD/要求仕様書ディレクトリ  |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification` | 仕様書・設計書ディレクトリ    |
+| `SDD_TASK_PATH`          | `.sdd/task`          | タスクログディレクトリ      |
+
+**パス解決の優先順位:**
+1. 環境変数 `SDD_*` が設定されている場合はそれを使用
+2. 環境変数がない場合は `.sdd-config.json` を確認
+3. どちらもない場合はデフォルト値を使用
+
+以下のドキュメントではデフォルト値を使用しますが、環境変数または設定ファイルが存在する場合はカスタム値に置き換えてください。
+
 ## 検出パターン
 
 ### 曖昧な指示
@@ -68,7 +86,7 @@ allowed-tools: Read, Glob, Grep, AskUserQuestion
    ↓
 5. リスクを明示的に警告
    ↓
-6. 推測した仕様を review/ に記録
+6. 推測した仕様を task/ に記録
    ↓
 7. 検証ポイントを設定して実装
 ```
@@ -85,7 +103,7 @@ allowed-tools: Read, Glob, Grep, AskUserQuestion
 
 推測仕様書の作成には [templates/assumed_spec.md](templates/assumed_spec.md) を使用してください。
 
-**保存先**: `.docs/review/{ticket}/assumed-spec.md`
+**保存先**: `.sdd/task/{ticket}/assumed-spec.md`
 
 ### 2. 検証ポイントの設定
 

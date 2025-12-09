@@ -8,11 +8,11 @@ This template is the output format for document consistency check results.
 
 ### Target Documents
 
-| Document | Path                                           | Last Updated |
-|:---------|:-----------------------------------------------|:-------------|
-| PRD      | `.docs/requirement-diagram/{feature-name}.md`  | YYYY-MM-DD   |
-| spec     | `.docs/specification/{feature-name}_spec.md`   | YYYY-MM-DD   |
-| design   | `.docs/specification/{feature-name}_design.md` | YYYY-MM-DD   |
+| Document | Path                                          | Last Updated |
+|:---------|:----------------------------------------------|:-------------|
+| PRD      | `.sdd/requirement/{feature-name}.md`          | YYYY-MM-DD   |
+| spec     | `.sdd/specification/{feature-name}_spec.md`   | YYYY-MM-DD   |
+| design   | `.sdd/specification/{feature-name}_design.md` | YYYY-MM-DD   |
 
 ### Check Results Summary
 

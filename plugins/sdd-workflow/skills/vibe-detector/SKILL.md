@@ -15,6 +15,24 @@ instructions).
 
 This skill follows the sdd-workflow agent principles for Vibe Coding detection.
 
+### Directory Path Resolution
+
+**Use `SDD_*` environment variables to resolve directory paths.**
+
+| Environment Variable     | Default Value         | Description                  |
+|:-------------------------|:----------------------|:-----------------------------|
+| `SDD_DOCS_ROOT`          | `.sdd`                | Documentation root           |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`    | PRD/Requirements directory   |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification`  | Specification/Design directory |
+| `SDD_TASK_PATH`          | `.sdd/task`           | Task log directory           |
+
+**Path Resolution Priority:**
+1. Use `SDD_*` environment variables if set
+2. Check `.sdd-config.json` if environment variables are not set
+3. Use default values if neither exists
+
+The following documentation uses default values, but replace with custom values if environment variables or configuration file exists.
+
 ## Detection Patterns
 
 ### Vague Instructions
@@ -69,7 +87,7 @@ This skill follows the sdd-workflow agent principles for Vibe Coding detection.
    ↓
 5. Explicitly warn of risks
    ↓
-6. Record inferred specs in review/
+6. Record inferred specs in task/
    ↓
 7. Implement with verification points set
 ```
@@ -86,7 +104,7 @@ Even when user refuses specification creation, ensure minimum guardrails:
 
 Use [templates/assumed_spec.md](templates/assumed_spec.md) for creating inferred specification documents.
 
-**Save Location**: `.docs/review/{ticket}/assumed-spec.md`
+**Save Location**: `.sdd/task/{ticket}/assumed-spec.md`
 
 ### 2. Set Verification Points
 

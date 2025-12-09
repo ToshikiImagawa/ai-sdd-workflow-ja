@@ -10,28 +10,26 @@
     "   chmod +x /path/to/your/project/hooks/*.sh",
     "4. パスをプロジェクトに合わせて調整（必要な場合）",
     "",
+    "環境変数（SessionStartで設定）:",
+    "  - SDD_DOCS_ROOT: ドキュメントルート（デフォルト: .sdd）",
+    "  - SDD_REQUIREMENT_DIR: 要求仕様書ディレクトリ（デフォルト: requirement）",
+    "  - SDD_SPECIFICATION_DIR: 仕様書ディレクトリ（デフォルト: specification）",
+    "  - SDD_TASK_DIR: タスクログディレクトリ（デフォルト: task）",
+    "  - SDD_REQUIREMENT_PATH: 要求仕様書フルパス（デフォルト: .sdd/requirement）",
+    "  - SDD_SPECIFICATION_PATH: 仕様書フルパス（デフォルト: .sdd/specification）",
+    "  - SDD_TASK_PATH: タスクログフルパス（デフォルト: .sdd/task）",
+    "",
     "注意: $comment フィールドはJSONの慣習的なコメントです。",
     "      Claude Codeはこのフィールドを無視します。"
   ],
   "hooks": {
-    "PreToolUse": [
+    "SessionStart": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "./hooks/check-spec-exists.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./hooks/check-commit-prefix.sh"
+            "command": "./hooks/session-start.sh"
           }
         ]
       }

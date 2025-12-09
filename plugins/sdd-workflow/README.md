@@ -42,7 +42,36 @@ Run the `/plugin` command in Claude Code and verify that `sdd-workflow` is displ
 
 ## Quick Start
 
-**For projects using this plugin for the first time, we recommend running `/sdd_init` first.**
+### 1. Hook Configuration (Recommended)
+
+To fully utilize the plugin features, add hook settings to your project's `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Grant execute permission to hook scripts:
+
+```bash
+chmod +x hooks/*.sh
+```
+
+### 2. Project Initialization
+
+**For projects using this plugin for the first time, run `/sdd_init`.**
 
 ```
 /sdd_init
@@ -51,26 +80,29 @@ Run the `/plugin` command in Claude Code and verify that `sdd-workflow` is displ
 This command automatically:
 
 - Adds the AI-SDD Instructions section to your project's `CLAUDE.md`
-- Creates the `.docs/` directory structure (requirement-diagram/, specification/, review/)
+- Creates the `.sdd/` directory structure (requirement/, specification/, task/)
 - Generates PRD, specification, and design document template files
 
 ## Included Components
 
 ### Agents
 
-| Agent           | Description                                                                                                             |
-|:----------------|:------------------------------------------------------------------------------------------------------------------------|
-| `sdd-workflow`  | Manages AI-SDD development flow. Phase determination, Vibe Coding prevention, document consistency checks               |
-| `spec-reviewer` | Reviews specification quality and provides improvement suggestions. Detects ambiguous descriptions and missing sections |
+| Agent                  | Description                                                                                                             |
+|:-----------------------|:------------------------------------------------------------------------------------------------------------------------|
+| `sdd-workflow`         | Manages AI-SDD development flow. Phase determination, Vibe Coding prevention, document consistency checks               |
+| `spec-reviewer`        | Reviews specification quality and provides improvement suggestions. Detects ambiguous descriptions and missing sections |
+| `requirement-analyzer` | SysML requirements diagram-based analysis, requirement tracking and verification                                        |
 
 ### Commands
 
 | Command           | Description                                                                                                  |
 |:------------------|:-------------------------------------------------------------------------------------------------------------|
+| `/sdd_init`       | AI-SDD workflow initialization. CLAUDE.md setup and template generation                                      |
+| `/sdd_migrate`    | Migration from legacy version (v1.x). Migrate to new structure or generate compatibility config              |
 | `/generate_spec`  | Generates an abstract specification and technical design document from input                                 |
 | `/generate_prd`   | Generates a PRD (Requirements Specification) in SysML requirements diagram format from business requirements |
 | `/check_spec`     | Checks consistency between implementation code and specifications, detecting discrepancies                   |
-| `/review_cleanup` | Cleans up the review/ directory after implementation, integrating design decisions                           |
+| `/task_cleanup`   | Cleans up the task/ directory after implementation, integrating design decisions                             |
 | `/task_breakdown` | Breaks down tasks from the technical design document into a list of small tasks                              |
 
 ### Skills
@@ -79,13 +111,13 @@ This command automatically:
 |:--------------------------|:-----------------------------------------------------------------------------|
 | `vibe-detector`           | Analyzes user input to automatically detect Vibe Coding (vague instructions) |
 | `doc-consistency-checker` | Automatically checks consistency between documents (PRD, spec, design)       |
+| `sdd-templates`           | Provides fallback templates for PRD, specification, and design documents     |
 
 ### Hooks
 
-| Hook                  | Trigger                 | Description                                                           |
-|:----------------------|:------------------------|:----------------------------------------------------------------------|
-| `check-spec-exists`   | PreToolUse (Edit/Write) | Verifies specification existence before implementation, shows warning |
-| `check-commit-prefix` | PostToolUse (Bash)      | Checks commit message conventions                                     |
+| Hook            | Trigger      | Description                                                           |
+|:----------------|:-------------|:----------------------------------------------------------------------|
+| `session-start` | SessionStart | Loads settings from `.sdd-config.json` and sets environment variables |
 
 ## Usage
 
@@ -124,10 +156,10 @@ Available only to logged-in users.
 /task_breakdown task-management TICKET-123
 ```
 
-#### Review Cleanup
+#### Task Cleanup
 
 ```
-/review_cleanup TICKET-123
+/task_cleanup TICKET-123
 ```
 
 ## Hook Configuration
@@ -137,30 +169,24 @@ To enable hooks, add the following to your project's `.claude/settings.json`:
 ```json
 {
   "hooks": {
-    "PreToolUse": [
+    "SessionStart": [
       {
-        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "hooks/check-spec-exists.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "hooks/check-commit-prefix.sh"
+            "command": "hooks/session-start.sh"
           }
         ]
       }
     ]
   }
 }
+```
+
+**Note**: Hook scripts require execute permission:
+
+```bash
+chmod +x hooks/*.sh
 ```
 
 See `hooks/settings.example.json` for a configuration example.
@@ -222,17 +248,100 @@ Specify → Plan → Tasks → Implement & Review
 
 ### Recommended Directory Structure
 
+Both flat and hierarchical structures are supported.
+
+#### Flat Structure (for small to medium projects)
+
 ```
-.docs/
+.sdd/
 ├── SPECIFICATION_TEMPLATE.md     # Abstract specification template (optional)
 ├── DESIGN_DOC_TEMPLATE.md        # Technical design document template (optional)
-├── requirement-diagram/          # PRD (Requirements Specification)
+├── requirement/          # PRD (Requirements Specification)
 │   └── {feature-name}.md
 ├── specification/                # Persistent knowledge assets
 │   ├── {feature-name}_spec.md    # Abstract specification
 │   └── {feature-name}_design.md  # Technical design document
-└── review/                       # Temporary work logs (deleted after implementation)
+└── task/                         # Temporary task logs (deleted after implementation)
     └── {ticket-number}/
+```
+
+#### Hierarchical Structure (for medium to large projects)
+
+```
+.sdd/
+├── SPECIFICATION_TEMPLATE.md     # Abstract specification template (optional)
+├── DESIGN_DOC_TEMPLATE.md        # Technical design document template (optional)
+├── requirement/          # PRD (Requirements Specification)
+│   ├── {feature-name}.md         # Top-level feature (backward compatible with flat structure)
+│   └── {parent-feature}/         # Parent feature directory
+│       ├── index.md              # Parent feature overview and requirements list
+│       └── {child-feature}.md    # Child feature requirements
+├── specification/                # Persistent knowledge assets
+│   ├── {feature-name}_spec.md    # Top-level feature (backward compatible with flat structure)
+│   ├── {feature-name}_design.md
+│   └── {parent-feature}/         # Parent feature directory
+│       ├── index_spec.md         # Parent feature abstract specification
+│       ├── index_design.md       # Parent feature technical design document
+│       ├── {child-feature}_spec.md   # Child feature abstract specification
+│       └── {child-feature}_design.md # Child feature technical design document
+└── task/                         # Temporary task logs (deleted after implementation)
+    └── {ticket-number}/
+```
+
+**Hierarchical structure usage examples**:
+
+```
+/generate_prd auth/user-login   # Generate user-login PRD under auth domain
+/generate_spec auth/user-login  # Generate specification under auth domain
+/check_spec auth                # Check consistency for entire auth domain
+```
+
+### Project Configuration File
+
+Place a `.sdd-config.json` file in your project root to customize directory names.
+
+```json
+{
+  "docsRoot": ".sdd",
+  "directories": {
+    "requirement": "requirement",
+    "specification": "specification",
+    "task": "task"
+  }
+}
+```
+
+| Setting                     | Default         | Description                                |
+|:----------------------------|:----------------|:-------------------------------------------|
+| `docsRoot`                  | `.sdd`          | Documentation root directory               |
+| `directories.requirement`   | `requirement`   | PRD (Requirements Specification) directory |
+| `directories.specification` | `specification` | Specification/design document directory    |
+| `directories.task`          | `task`          | Temporary task logs directory              |
+
+**Notes**:
+
+- If the configuration file doesn't exist, default values are used
+- Partial configuration is supported (unspecified items use defaults)
+
+**Custom configuration example**:
+
+```json
+{
+  "docsRoot": "docs",
+  "directories": {
+    "requirement": "requirements",
+    "specification": "specs"
+  }
+}
+```
+
+This configuration results in the following directory structure:
+
+```
+docs/
+├── requirements/       # PRD (Requirements Specification)
+├── specs/              # Specification/design documents
+└── task/               # Temporary task logs (default value)
 ```
 
 ## Plugin Structure
@@ -243,31 +352,32 @@ sdd-workflow/
 │   └── plugin.json              # Plugin manifest
 ├── agents/
 │   ├── sdd-workflow.md          # AI-SDD development flow agent
-│   └── spec-reviewer.md         # Specification review agent
+│   ├── spec-reviewer.md         # Specification review agent
+│   └── requirement-analyzer.md  # Requirement analysis agent
 ├── commands/
+│   ├── sdd_init.md              # AI-SDD workflow initialization
+│   ├── sdd_migrate.md           # Migration from legacy version
 │   ├── generate_spec.md         # Specification/design document generation
 │   ├── generate_prd.md          # PRD generation
 │   ├── check_spec.md            # Consistency check
-│   ├── review_cleanup.md        # Review cleanup
+│   ├── task_cleanup.md          # Task cleanup
 │   └── task_breakdown.md        # Task breakdown
 ├── skills/
-│   ├── vibe-detector.md         # Vibe Coding detection skill
-│   └── doc-consistency-checker.md
+│   ├── vibe-detector/           # Vibe Coding detection skill
+│   │   ├── SKILL.md
+│   │   └── templates/
+│   ├── doc-consistency-checker/ # Document consistency checker
+│   │   ├── SKILL.md
+│   │   └── templates/
+│   └── sdd-templates/           # AI-SDD templates
+│       ├── SKILL.md
+│       └── templates/
 ├── hooks/
-│   ├── check-spec-exists.sh
-│   ├── check-commit-prefix.sh
-│   └── settings.example.json
+│   ├── session-start.sh         # Session start initialization
+│   └── settings.example.json    # Hooks configuration example
 ├── LICENSE
 └── README.md
 ```
-
-## Commit Message Convention
-
-| Prefix     | Usage                                       |
-|:-----------|:--------------------------------------------|
-| `[docs]`   | Add/update documentation                    |
-| `[spec]`   | Add/update specifications (`*_spec.md`)     |
-| `[design]` | Add/update design documents (`*_design.md`) |
 
 ## License
 

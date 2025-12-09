@@ -1,11 +1,11 @@
 # 技術設計書テンプレート (Design Doc)
 
-このドキュメントは `.docs/specification/` 配下の技術設計書（Design Doc）を作成する際のテンプレートです。
+このドキュメントは `.sdd/specification/` 配下の技術設計書（Design Doc）を作成する際のテンプレートです。
 ファイル名は `{機能名}_design.md` となります。
 
 > **注意**: このテンプレートはプラグインのフォールバック用です。
 > プロジェクトで使用する際は、プログラミング言語やプロジェクト構成に合わせてカスタマイズし、
-> `.docs/DESIGN_DOC_TEMPLATE.md` として保存してください。
+> `.sdd/DESIGN_DOC_TEMPLATE.md` として保存してください。
 
 ## 抽象仕様書との違い
 
@@ -22,7 +22,7 @@
 **SDDフェーズ:** Plan (計画/設計)
 **最終更新日:** YYYY-MM-DD
 **関連 Spec:** [xxx_spec.md へのリンク]
-**関連 PRD:** [requirement-diagram/{機能名}.md へのリンク]
+**関連 PRD:** [requirement/{機能名}.md へのリンク]
 
 ---
 

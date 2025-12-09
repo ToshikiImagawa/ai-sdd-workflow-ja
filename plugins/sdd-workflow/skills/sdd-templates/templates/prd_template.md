@@ -1,19 +1,19 @@
 # PRD (Product Requirements Document) Template
 
-This document is a template for creating PRD (Product Requirements Document) under `.docs/requirement-diagram/`.
+This document is a template for creating PRD (Product Requirements Document) under `.sdd/requirement/`.
 The filename should be `{feature-name}.md`.
 
 > **Note**: This template is a fallback for the plugin.
 > When using in a project, customize it according to your project structure and
-> save it as `.docs/PRD_TEMPLATE.md`.
+> save it as `.sdd/PRD_TEMPLATE.md`.
 
 ## Difference from Spec / Design Doc
 
-| Document                   | SDD Phase         | Role and Focus                                                                           | Abstraction           |
-|----------------------------|-------------------|------------------------------------------------------------------------------------------|-----------------------|
-| `requirement-diagram/*.md` | **Specify**       | **"What to build" "Why to build"** - Defines business requirements. No technical details | Highest (Abstract)    |
-| `xxx_spec.md`              | **Specify**       | **"What to build"** - Defines abstract structure and behavior. No technical details      | High (Abstract)       |
-| `xxx_design.md`            | **Plan (Design)** | **"How to implement"** - Concrete technical design. Ensures design decision transparency | Medium-Low (Concrete) |
+| Document           | SDD Phase         | Role and Focus                                                                           | Abstraction           |
+|--------------------|-------------------|------------------------------------------------------------------------------------------|-----------------------|
+| `requirement/*.md` | **Specify**       | **"What to build" "Why to build"** - Defines business requirements. No technical details | Highest (Abstract)    |
+| `xxx_spec.md`      | **Specify**       | **"What to build"** - Defines abstract structure and behavior. No technical details      | High (Abstract)       |
+| `xxx_design.md`    | **Plan (Design)** | **"How to implement"** - Concrete technical design. Ensures design decision transparency | Medium-Low (Concrete) |
 
 ---
 

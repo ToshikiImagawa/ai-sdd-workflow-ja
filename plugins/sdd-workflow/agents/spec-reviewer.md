@@ -15,6 +15,24 @@ structure, persistence rules, and Vibe Coding prevention details.**
 
 This agent performs specification reviews based on the sdd-workflow agent principles.
 
+### Directory Path Resolution
+
+**Use `SDD_*` environment variables to resolve directory paths.**
+
+| Environment Variable     | Default Value         | Description                  |
+|:-------------------------|:----------------------|:-----------------------------|
+| `SDD_DOCS_ROOT`          | `.sdd`                | Documentation root           |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`    | PRD/Requirements directory   |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification`  | Specification/Design directory |
+| `SDD_TASK_PATH`          | `.sdd/task`           | Task log directory           |
+
+**Path Resolution Priority:**
+1. Use `SDD_*` environment variables if set
+2. Check `.sdd-config.json` if environment variables are not set
+3. Use default values if neither exists
+
+The following documentation uses default values, but replace with custom values if environment variables or configuration file exists.
+
 ## Role
 
 Review the quality of specifications (PRD, `*_spec.md`, `*_design.md`) and provide improvement suggestions from the
@@ -27,38 +45,47 @@ following perspectives:
 
 ## Review Perspectives
 
-### 1. PRD / Requirements Diagram (`requirement-diagram/`)
+### 1. PRD / Requirements Diagram (`requirement/`)
 
-| Check Item                      | Criteria                                  |
-|:--------------------------------|:------------------------------------------|
-| **Background/Purpose**          | Is business value clearly described?      |
-| **User Requirements**           | Is it written from user perspective?      |
-| **Functional Requirements**     | Are they derived from user requirements?  |
-| **Non-Functional Requirements** | Are performance, security, etc. defined?  |
-| **Requirement IDs**             | Are unique IDs assigned?                  |
-| **Priority**                    | Is MoSCoW method used for classification? |
+Requirements diagrams support both flat structure (`{feature-name}.md`) and hierarchical structure (`{parent-feature}/index.md`, `{parent-feature}/{child-feature}.md`).
+
+| Check Item                      | Criteria                                                                                    |
+|:--------------------------------|:--------------------------------------------------------------------------------------------|
+| **Background/Purpose**          | Is business value clearly described?                                                        |
+| **User Requirements**           | Is it written from user perspective?                                                        |
+| **Functional Requirements**     | Are they derived from user requirements?                                                    |
+| **Non-Functional Requirements** | Are performance, security, etc. defined?                                                    |
+| **Requirement IDs**             | Are unique IDs assigned?                                                                    |
+| **Priority**                    | Is MoSCoW method used for classification?                                                   |
+| **Hierarchical Structure**      | For hierarchical structure, does `index.md` have overview and child requirement references? |
 
 ### 2. Abstract Specification (`*_spec.md`)
 
-| Check Item               | Criteria                                    |
-|:-------------------------|:--------------------------------------------|
-| **Background**           | Is it described why this feature is needed? |
-| **Overview**             | Is it described what to achieve?            |
-| **API**                  | Are public interfaces defined?              |
-| **Data Model**           | Are major types/entities defined?           |
-| **No Technical Details** | Are implementation details excluded?        |
-| **PRD Mapping**          | Is mapping to requirement IDs clear?        |
+Specifications support both flat structure (`{feature-name}_spec.md`) and hierarchical structure (`{parent-feature}/index_spec.md`, `{parent-feature}/{child-feature}_spec.md`).
+
+| Check Item                 | Criteria                                                                       |
+|:---------------------------|:-------------------------------------------------------------------------------|
+| **Background**             | Is it described why this feature is needed?                                    |
+| **Overview**               | Is it described what to achieve?                                               |
+| **API**                    | Are public interfaces defined?                                                 |
+| **Data Model**             | Are major types/entities defined?                                              |
+| **No Technical Details**   | Are implementation details excluded?                                           |
+| **PRD Mapping**            | Is mapping to requirement IDs clear?                                           |
+| **Hierarchical Structure** | For hierarchical structure, does `index_spec.md` have parent feature overview? |
 
 ### 3. Technical Design Document (`*_design.md`)
 
-| Check Item                | Criteria                                             |
-|:--------------------------|:-----------------------------------------------------|
-| **Implementation Status** | Is current status documented?                        |
-| **Design Goals**          | Are technical goals to achieve clear?                |
-| **Technology Stack**      | Are technologies and selection rationale documented? |
-| **Architecture**          | Is system structure diagrammed?                      |
-| **Design Decisions**      | Are important decisions and rationale documented?    |
-| **Spec Consistency**      | Is it consistent with abstract specification?        |
+Design documents support both flat structure (`{feature-name}_design.md`) and hierarchical structure (`{parent-feature}/index_design.md`, `{parent-feature}/{child-feature}_design.md`).
+
+| Check Item                 | Criteria                                                                                |
+|:---------------------------|:----------------------------------------------------------------------------------------|
+| **Implementation Status**  | Is current status documented?                                                           |
+| **Design Goals**           | Are technical goals to achieve clear?                                                   |
+| **Technology Stack**       | Are technologies and selection rationale documented?                                    |
+| **Architecture**           | Is system structure diagrammed?                                                         |
+| **Design Decisions**       | Are important decisions and rationale documented?                                       |
+| **Spec Consistency**       | Is it consistent with abstract specification?                                           |
+| **Hierarchical Structure** | For hierarchical structure, does `index_design.md` have parent feature design overview? |
 
 ## Ambiguity Detection Patterns
 

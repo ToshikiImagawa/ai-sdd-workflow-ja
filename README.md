@@ -77,7 +77,6 @@ ai-sdd-workflow/
 │       ├── hooks/
 │       ├── LICENSE
 │       └── README.md
-├── CHANGELOG.md
 ├── CLAUDE.md
 └── README.md
 ```

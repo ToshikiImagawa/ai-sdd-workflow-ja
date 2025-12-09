@@ -1,5 +1,4 @@
 ---
-name: task_breakdown
 description: "Break down tasks from technical design document, generating a list of independently testable small tasks"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
@@ -14,11 +13,29 @@ Loads technical design document (`*_design.md`) and breaks it down into independ
 
 This command follows the sdd-workflow agent principles for task breakdown.
 
+### Directory Path Resolution
+
+**Use `SDD_*` environment variables to resolve directory paths.**
+
+| Environment Variable     | Default Value         | Description                  |
+|:-------------------------|:----------------------|:-----------------------------|
+| `SDD_DOCS_ROOT`          | `.sdd`                | Documentation root           |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`    | PRD/Requirements directory   |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification`  | Specification/Design directory |
+| `SDD_TASK_PATH`          | `.sdd/task`           | Task log directory           |
+
+**Path Resolution Priority:**
+1. Use `SDD_*` environment variables if set
+2. Check `.sdd-config.json` if environment variables are not set
+3. Use default values if neither exists
+
+The following documentation uses default values, but replace with custom values if environment variables or configuration file exists.
+
 ### Tasks Phase Positioning (Reference)
 
-| Phase     | Purpose                                                   | Deliverables    |
-|:----------|:----------------------------------------------------------|:----------------|
-| **Tasks** | Break down design into independently testable small tasks | Under `review/` |
+| Phase     | Purpose                                                   | Deliverables  |
+|:----------|:----------------------------------------------------------|:--------------|
+| **Tasks** | Break down design into independently testable small tasks | Under `task/` |
 
 ## Input
 
@@ -35,10 +52,32 @@ $ARGUMENTS
 
 ### 1. Load Related Documents
 
+Both flat and hierarchical structures are supported.
+
+**For flat structure**:
+
 ```
-Load .docs/requirement-diagram/{feature-name}.md (PRD, if exists)
-Load .docs/specification/{feature-name}_spec.md (if exists)
-Load .docs/specification/{feature-name}_design.md (required)
+Load .sdd/requirement/{feature-name}.md (PRD, if exists)
+Load .sdd/specification/{feature-name}_spec.md (if exists)
+Load .sdd/specification/{feature-name}_design.md (required)
+```
+
+**For hierarchical structure** (when argument contains `/`):
+
+```
+Load .sdd/requirement/{parent-feature}/index.md (parent feature PRD, if exists)
+Load .sdd/requirement/{parent-feature}/{feature-name}.md (child feature PRD, if exists)
+Load .sdd/specification/{parent-feature}/index_spec.md (parent feature spec, if exists)
+Load .sdd/specification/{parent-feature}/{feature-name}_spec.md (child feature spec, if exists)
+Load .sdd/specification/{parent-feature}/index_design.md (parent feature design, if exists)
+Load .sdd/specification/{parent-feature}/{feature-name}_design.md (child feature design, required)
+```
+
+**Hierarchical structure input examples**:
+
+```
+/task_breakdown auth/user-login
+/task_breakdown auth/user-login TICKET-123
 ```
 
 - If design document doesn't exist, prompt creation with `/generate_spec` first
@@ -109,7 +148,7 @@ graph LR
 |:---|:---|
 | Feature Name | {Feature Name} |
 | Ticket Number | {Ticket Number} (if specified) |
-| Design Document | `.docs/specification/{feature-name}_design.md` |
+| Design Document | `.sdd/specification/{feature-name}_design.md` |
 | Created Date | YYYY-MM-DD |
 
 ## Task List
@@ -172,12 +211,14 @@ graph TD
 
 ## Reference Documents
 
-- Abstract Specification: `.docs/specification/{feature-name}_spec.md`
-- Technical Design Document: `.docs/specification/{feature-name}_design.md`
+- Abstract Specification: `.sdd/specification/[{parent-feature}/]{feature-name}_spec.md`
+- Technical Design Document: `.sdd/specification/[{parent-feature}/]{feature-name}_design.md`
+
+※ For hierarchical structure, parent feature uses `index_spec.md`, `index_design.md`
 
 ```
 
-**Save Location**: `.docs/review/{ticket-number}/tasks.md` or `.docs/review/{feature-name}/tasks.md`
+**Save Location**: `.sdd/task/{ticket-number}/tasks.md` or `.sdd/task/{feature-name}/tasks.md`
 
 ## Requirement Coverage Verification
 
@@ -213,7 +254,7 @@ Add the following to task list end (if PRD/spec exists):
 ## Post-Generation Actions
 
 1. **Save File**:
-    - `.docs/review/{target}/tasks.md`
+    - `.sdd/task/{target}/tasks.md`
 
 2. **Requirement Coverage Verification**:
     - If PRD/spec exists: Verify all requirements are covered by tasks
@@ -225,7 +266,7 @@ Add the following to task list end (if PRD/spec exists):
 4. **Next Steps**:
     - Start implementation from Phase 1 foundation tasks in order
     - Check off each task upon completion
-    - After all tasks complete, clean up with `/review_cleanup`
+    - After all tasks complete, clean up with `/task_cleanup`
 
 ## Serena MCP Integration (Optional)
 

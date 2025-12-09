@@ -5,20 +5,109 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-12-09
+
+### Breaking Changes
+
+#### Directory Structure Changes
+
+- **Documentation root**: `.docs/` → `.sdd/`
+- **Requirement directory**: `requirement-diagram/` → `requirement/`
+- **Task log directory**: `review/` → `task/`
+
+#### Command Rename
+
+- `/review_cleanup` → `/task_cleanup`
+
+#### Migration
+
+Use the `/sdd_migrate` command to migrate from legacy versions (v1.x):
+
+- **Option A**: Rename directories to migrate to new structure
+- **Option B**: Generate `.sdd-config.json` to maintain legacy structure
+
+### Added
+
+#### Commands
+
+- `/sdd_init` - AI-SDD workflow initialization command
+    - Adds AI-SDD Instructions section to project's `CLAUDE.md`
+    - Creates `.sdd/` directory structure (requirement/, specification/, task/)
+    - Generates template files using `sdd-templates` skill
+- `/sdd_migrate` - Migration command from legacy versions
+    - Detects legacy structure (`.docs/`, `requirement-diagram/`, `review/`)
+    - Choose between migrating to new structure or generating compatibility config
+
+#### Agents
+
+- `requirement-analyzer` - Requirement analysis agent
+    - SysML requirements diagram-based analysis
+    - Requirement tracking and verification
+
+#### Skills
+
+- `sdd-templates` - AI-SDD templates skill
+    - Provides fallback templates for PRD, specification, and design documents
+    - Clarifies project template priority rules
+
+#### Hooks
+
+- `session-start` - Session start initialization hook
+    - Loads settings from `.sdd-config.json` and sets environment variables
+    - Auto-detects legacy structure and shows migration guidance
+
+#### Configuration File
+
+- `.sdd-config.json` - Project configuration file support
+    - `docsRoot`: Documentation root directory (default: `.sdd`)
+    - `directories.requirement`: Requirement directory (default: `requirement`)
+    - `directories.specification`: Specification directory (default: `specification`)
+    - `directories.task`: Task log directory (default: `task`)
+
+### Changed
+
+#### Plugin Configuration
+
+- `plugin.json` - Enhanced author field
+    - Added `author.url` field
+
+#### Commands
+
+- Added `allowed-tools` field to all commands
+    - Explicitly specifies available tools for each command
+    - Improved security and clarity
+- All commands now support `.sdd-config.json` configuration file
+
+#### Skills
+
+- Improved skill directory structure
+    - Migrated from `skill-name.md` to `skill-name/SKILL.md` + `templates/` structure
+    - Applied Progressive Disclosure pattern
+    - Externalized template files, simplifying SKILL.md
+
+### Removed
+
+#### Hooks
+
+- `check-spec-exists` - Removed
+    - Specification creation is optional, and non-existence is a common valid case
+- `check-commit-prefix` - Removed
+    - Removed because commit message conventions are not used by plugin functionality
+
 ## [1.1.0] - 2025-12-06
 
 ### Added
 
 #### Commands
 
-- `/sdd_init` - Added AI-SDD workflow initialization command
+- `/sdd_init` - AI-SDD workflow initialization command
     - Adds AI-SDD Instructions section to project's `CLAUDE.md`
     - Creates `.docs/` directory structure (requirement-diagram/, specification/, review/)
     - Generates template files using `sdd-templates` skill
 
 #### Skills
 
-- `sdd-templates` - Added AI-SDD templates skill
+- `sdd-templates` - AI-SDD templates skill
     - Provides fallback templates for PRD, specification, and design documents
     - Clarifies project template priority rules
 
@@ -115,11 +204,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `vibe-detector` - Automatic detection of Vibe Coding (vague instructions)
 - `doc-consistency-checker` - Automatic consistency check between documents
-
-#### Hooks
-
-- `check-spec-exists` - Verify specification existence before implementation
-- `check-commit-prefix` - Check commit message convention ([docs], [spec], [design])
 
 #### Integration
 

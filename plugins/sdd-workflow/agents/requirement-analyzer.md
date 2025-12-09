@@ -15,6 +15,24 @@ structure, persistence rules, and Vibe Coding prevention details.**
 
 This agent performs requirement analysis based on the sdd-workflow agent principles.
 
+### Directory Path Resolution
+
+**Use `SDD_*` environment variables to resolve directory paths.**
+
+| Environment Variable     | Default Value         | Description                  |
+|:-------------------------|:----------------------|:-----------------------------|
+| `SDD_DOCS_ROOT`          | `.sdd`                | Documentation root           |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`    | PRD/Requirements directory   |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification`  | Specification/Design directory |
+| `SDD_TASK_PATH`          | `.sdd/task`           | Task log directory           |
+
+**Path Resolution Priority:**
+1. Use `SDD_*` environment variables if set
+2. Check `.sdd-config.json` if environment variables are not set
+3. Use default values if neither exists
+
+The following documentation uses default values, but replace with custom values if environment variables or configuration file exists.
+
 ## SysML Requirements Diagram Theory
 
 ### Position of Requirements Diagrams
@@ -302,8 +320,30 @@ requirementDiagram
 
 ## Reference Documents
 
-Project requirement diagrams are typically located in the `.docs/requirement-diagram/` directory. Refer to appropriate
-documents according to the project being analyzed.
+Project requirement diagrams are located in the `.sdd/requirement/` directory.
+
+### Directory Structure
+
+Requirement diagrams support both flat and hierarchical structures:
+
+**Flat Structure**:
+
+```
+.sdd/requirement/
+└── {feature-name}.md
+```
+
+**Hierarchical Structure**:
+
+```
+.sdd/requirement/
+├── {feature-name}.md              # Top-level feature
+└── {parent-feature}/              # Parent feature directory
+    ├── index.md                   # Parent feature overview and requirements list
+    └── {child-feature}.md         # Child feature requirements
+```
+
+Refer to appropriate documents according to the project being analyzed. For hierarchical structures, `index.md` contains the parent feature's overall requirements overview and references to child requirements.
 
 ---
 

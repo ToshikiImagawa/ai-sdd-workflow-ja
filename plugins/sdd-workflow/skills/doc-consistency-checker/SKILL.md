@@ -14,20 +14,73 @@ Automatically checks consistency between AI-SDD documents (PRD, `*_spec.md`, `*_
 
 This skill follows the sdd-workflow agent principles for document consistency checking.
 
+### Directory Path Resolution
+
+**Use `SDD_*` environment variables to resolve directory paths.**
+
+| Environment Variable     | Default Value         | Description                  |
+|:-------------------------|:----------------------|:-----------------------------|
+| `SDD_DOCS_ROOT`          | `.sdd`                | Documentation root           |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`    | PRD/Requirements directory   |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification`  | Specification/Design directory |
+| `SDD_TASK_PATH`          | `.sdd/task`           | Task log directory           |
+
+**Path Resolution Priority:**
+1. Use `SDD_*` environment variables if set
+2. Check `.sdd-config.json` if environment variables are not set
+3. Use default values if neither exists
+
+The following documentation uses default values, but replace with custom values if environment variables or configuration file exists.
+
 ## Document Dependencies
 
 ```mermaid
 graph RL
     IMPL[Implementation] --> DESIGN["*_design.md<br/>(Technical Design)"]
     DESIGN --> SPEC["*_spec.md<br/>(Abstract Spec)"]
-    SPEC --> PRD["requirement-diagram/<br/>(PRD/Requirements)"]
+    SPEC --> PRD["requirement/<br/>(PRD/Requirements)"]
 ```
 
 **Meaning of Dependency Direction**:
 
 - `Implementation` is created referencing `*_design.md`
 - `*_design.md` is created referencing `*_spec.md`
-- `*_spec.md` is created referencing `requirement-diagram`
+- `*_spec.md` is created referencing `requirement`
+
+## Directory Structure Support
+
+Both flat and hierarchical structures are supported.
+
+**Flat Structure**:
+
+```
+.sdd/
+├── requirement/{feature-name}.md
+└── specification/
+    ├── {feature-name}_spec.md
+    └── {feature-name}_design.md
+```
+
+**Hierarchical Structure**:
+
+```
+.sdd/
+├── requirement/
+│   ├── {feature-name}.md                  # Top-level feature
+│   └── {parent-feature}/
+│       ├── index.md                       # Parent feature overview and requirements list
+│       └── {child-feature}.md             # Child feature requirements
+└── specification/
+    ├── {feature-name}_spec.md             # Top-level feature
+    ├── {feature-name}_design.md
+    └── {parent-feature}/
+        ├── index_spec.md                  # Parent feature abstract specification
+        ├── index_design.md                # Parent feature technical design document
+        ├── {child-feature}_spec.md        # Child feature abstract specification
+        └── {child-feature}_design.md      # Child feature technical design document
+```
+
+Consistency checks also consider parent-child relationships for hierarchical structures.
 
 ## Check Items
 

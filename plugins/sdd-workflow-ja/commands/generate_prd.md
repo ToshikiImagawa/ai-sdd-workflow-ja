@@ -1,5 +1,4 @@
 ---
-name: generate_prd
 description: "ビジネス要求からPRD（要求仕様書）をSysML要求図形式で生成する"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
@@ -14,17 +13,35 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 このコマンドはsdd-workflowエージェントの原則に従ってPRDを生成します。
 
+### ディレクトリパスの解決
+
+**環境変数 `SDD_*` を使用してディレクトリパスを解決します。**
+
+| 環境変数                   | デフォルト値              | 説明                 |
+|:-----------------------|:--------------------|:-------------------|
+| `SDD_DOCS_ROOT`        | `.sdd`              | ドキュメントルート          |
+| `SDD_REQUIREMENT_PATH` | `.sdd/requirement`  | PRD/要求仕様書ディレクトリ    |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification` | 仕様書・設計書ディレクトリ      |
+| `SDD_TASK_PATH`        | `.sdd/task`         | タスクログディレクトリ        |
+
+**パス解決の優先順位:**
+1. 環境変数 `SDD_*` が設定されている場合はそれを使用
+2. 環境変数がない場合は `.sdd-config.json` を確認
+3. どちらもない場合はデフォルト値を使用
+
+以下のドキュメントでは、デフォルト値を使用して説明しますが、環境変数または設定ファイルが存在する場合はカスタム値に置き換えてください。
+
 ### 使用するスキル
 
 このコマンドは以下のスキルを使用します：
 
-| スキル                             | 用途                                                |
-|:--------------------------------|:--------------------------------------------------|
-| `sdd-workflow-ja:sdd-templates` | プロジェクトテンプレートが存在しない場合に `.docs/PRD_TEMPLATE.md` を生成 |
+| スキル                             | 用途                                               |
+|:--------------------------------|:-------------------------------------------------|
+| `sdd-workflow-ja:sdd-templates` | プロジェクトテンプレートが存在しない場合に `.sdd/PRD_TEMPLATE.md` を生成 |
 
 **テンプレート準備フロー**:
 
-1. `.docs/PRD_TEMPLATE.md`（プロジェクトテンプレート）が存在すれば使用
+1. `.sdd/PRD_TEMPLATE.md`（プロジェクトテンプレート）が存在すれば使用
 2. 存在しない場合は `sdd-templates` スキルを使用してテンプレートを生成
 
 ### PRD / 要求図の位置づけ（参照）
@@ -102,13 +119,31 @@ $ARGUMENTS
 
 ### 4. 既存ドキュメントの確認
 
-生成前に以下を確認してください：
+生成前に以下を確認してください。フラット構造と階層構造の両方をサポートします。
+
+**フラット構造の場合**:
 
 ```
-.docs/requirement-diagram/{機能名}.md が既に存在するか？（PRD）
-.docs/specification/{機能名}_spec.md が既に存在するか？（spec）
-.docs/specification/{機能名}_design.md が既に存在するか？（design）
+.sdd/requirement/{機能名}.md が既に存在するか？（PRD）
+.sdd/specification/{機能名}_spec.md が既に存在するか？（spec）
+.sdd/specification/{機能名}_design.md が既に存在するか？（design）
 ```
+
+**階層構造の場合**（親機能配下に配置する場合）:
+
+```
+.sdd/requirement/{親機能名}/index.md が既に存在するか？（親機能のPRD）
+.sdd/requirement/{親機能名}/{機能名}.md が既に存在するか？（子機能のPRD）
+.sdd/specification/{親機能名}/index_spec.md が既に存在するか？（親機能のspec）
+.sdd/specification/{親機能名}/{機能名}_spec.md が既に存在するか？（子機能のspec）
+.sdd/specification/{親機能名}/index_design.md が既に存在するか？（親機能のdesign）
+.sdd/specification/{親機能名}/{機能名}_design.md が既に存在するか？（子機能のdesign）
+```
+
+**階層構造の使用判断**:
+
+- 入力に親機能（カテゴリ）が指定されている場合、または既存の階層構造がある場合は階層構造を使用
+- ユーザーに階層構造で配置するか確認することを推奨
 
 **PRDが存在する場合**: ユーザーに上書きするか確認してください。
 
@@ -123,9 +158,9 @@ $ARGUMENTS
 
 以下の手順でテンプレートを準備してください：
 
-1. `.docs/PRD_TEMPLATE.md` が存在するか確認
+1. `.sdd/PRD_TEMPLATE.md` が存在するか確認
 2. **存在する場合**: そのテンプレートを使用
-3. **存在しない場合**: `sdd-workflow-ja:sdd-templates` スキルを使用して `.docs/PRD_TEMPLATE.md` を生成し、生成されたテンプレートを使用
+3. **存在しない場合**: `sdd-workflow-ja:sdd-templates` スキルを使用して `.sdd/PRD_TEMPLATE.md` を生成し、生成されたテンプレートを使用
 
 ### テンプレート適用時の注意
 
@@ -134,7 +169,11 @@ $ARGUMENTS
 - SysML requirementDiagram 構文を使用して要求図を作成
 - 要求ID（UR-xxx, FR-xxx, NFR-xxx）は一意に管理
 
-**保存先**: `.docs/requirement-diagram/{機能名}.md`
+**保存先**:
+
+- フラット構造: `.sdd/requirement/{機能名}.md`
+- 階層構造（親機能）: `.sdd/requirement/{親機能名}/index.md`
+- 階層構造（子機能）: `.sdd/requirement/{親機能名}/{機能名}.md`
 
 ## 生成フロー
 
@@ -183,7 +222,8 @@ $ARGUMENTS
 ## 生成後のアクション
 
 1. **ファイル保存**:
-    - `.docs/requirement-diagram/{機能名}.md`
+    - フラット構造: `.sdd/requirement/{機能名}.md`
+    - 階層構造: `.sdd/requirement/{親機能名}/index.md` または `.sdd/requirement/{親機能名}/{機能名}.md`
 
 2. **整合性チェック**:
     - 既存spec/designがある場合: 影響を確認し、更新が必要なら通知
