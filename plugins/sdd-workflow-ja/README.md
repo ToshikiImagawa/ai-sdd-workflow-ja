@@ -114,10 +114,9 @@ chmod +x hooks/*.sh
 
 ### フック
 
-| フック                 | トリガー                   | 説明                                   |
-|:--------------------|:-----------------------|:-------------------------------------|
-| `session-start`     | SessionStart           | `.sdd-config.json`から設定を読み込み、環境変数を設定 |
-| `check-spec-exists` | PreToolUse（Edit/Write） | 実装前に仕様書の存在を確認し、警告を表示                 |
+| フック             | トリガー         | 説明                                   |
+|:----------------|:-------------|:-------------------------------------|
+| `session-start` | SessionStart | `.sdd-config.json`から設定を読み込み、環境変数を設定 |
 
 ## 使用方法
 
@@ -175,17 +174,6 @@ chmod +x hooks/*.sh
           {
             "type": "command",
             "command": "hooks/session-start.sh"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "hooks/check-spec-exists.sh"
           }
         ]
       }
@@ -384,7 +372,6 @@ sdd-workflow-ja/
 │       └── templates/
 ├── hooks/
 │   ├── session-start.sh         # セッション開始時の初期化
-│   ├── check-spec-exists.sh     # 仕様書存在チェック
 │   └── settings.example.json    # hooks設定例
 ├── LICENSE
 └── README.md

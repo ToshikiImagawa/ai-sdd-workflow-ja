@@ -115,10 +115,9 @@ This command automatically:
 
 ### Hooks
 
-| Hook                | Trigger                 | Description                                                            |
-|:--------------------|:------------------------|:-----------------------------------------------------------------------|
-| `session-start`     | SessionStart            | Loads settings from `.sdd-config.json` and sets environment variables  |
-| `check-spec-exists` | PreToolUse (Edit/Write) | Verifies specification existence before implementation, shows warning  |
+| Hook            | Trigger      | Description                                                           |
+|:----------------|:-------------|:----------------------------------------------------------------------|
+| `session-start` | SessionStart | Loads settings from `.sdd-config.json` and sets environment variables |
 
 ## Usage
 
@@ -176,17 +175,6 @@ To enable hooks, add the following to your project's `.claude/settings.json`:
           {
             "type": "command",
             "command": "hooks/session-start.sh"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "hooks/check-spec-exists.sh"
           }
         ]
       }
@@ -383,7 +371,6 @@ sdd-workflow/
 │       └── templates/
 ├── hooks/
 │   ├── session-start.sh         # Session start initialization
-│   ├── check-spec-exists.sh     # Specification existence check
 │   └── settings.example.json    # Hooks configuration example
 ├── LICENSE
 └── README.md

@@ -33,17 +33,6 @@
           }
         ]
       }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./hooks/check-spec-exists.sh"
-          }
-        ]
-      }
     ]
   }
 }

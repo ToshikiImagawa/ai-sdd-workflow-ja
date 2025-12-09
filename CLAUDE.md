@@ -35,7 +35,6 @@ ai-sdd-workflow/
 │   │   │   └── sdd-templates/     # AI-SDDテンプレート
 │   │   ├── hooks/
 │   │   │   ├── session-start.sh   # セッション開始時の初期化
-│   │   │   ├── check-spec-exists.sh
 │   │   │   └── settings.example.json
 │   │   ├── LICENSE
 │   │   ├── README.md

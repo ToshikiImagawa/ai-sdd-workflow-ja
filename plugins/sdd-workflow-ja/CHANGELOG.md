@@ -53,17 +53,12 @@
     - `directories.specification`: 仕様書ディレクトリ（デフォルト: `specification`）
     - `directories.task`: タスクログディレクトリ（デフォルト: `task`）
 
-### Changed
-
-#### フック
-
-- `check-spec-exists` - 環境変数ベースの設定に移行
-    - SessionStartフックで設定された環境変数を参照
-
 ### Removed
 
 #### フック
 
+- `check-spec-exists` - 削除
+    - 仕様書作成はオプショナルなため、存在しないケースが正常系として多い
 - `check-commit-prefix` - 削除
     - コミットメッセージ規約がプラグインの機能で使用されていないため削除
 
@@ -176,10 +171,6 @@
 
 - `vibe-detector` - Vibe Coding（曖昧な指示）の自動検出
 - `doc-consistency-checker` - ドキュメント間整合性の自動チェック
-
-#### フック
-
-- `check-spec-exists` - 実装前に仕様書の存在を確認
 
 #### 統合
 

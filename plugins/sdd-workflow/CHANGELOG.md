@@ -84,15 +84,12 @@ Use the `/sdd_migrate` command to migrate from legacy versions (v1.x):
     - Applied Progressive Disclosure pattern
     - Externalized template files, simplifying SKILL.md
 
-#### Hooks
-
-- `check-spec-exists` - Migrated to environment variable-based configuration
-    - References environment variables set by SessionStart hook
-
 ### Removed
 
 #### Hooks
 
+- `check-spec-exists` - Removed
+    - Specification creation is optional, and non-existence is a common valid case
 - `check-commit-prefix` - Removed
     - Removed because commit message conventions are not used by plugin functionality
 
@@ -206,10 +203,6 @@ Use the `/sdd_migrate` command to migrate from legacy versions (v1.x):
 
 - `vibe-detector` - Automatic detection of Vibe Coding (vague instructions)
 - `doc-consistency-checker` - Automatic consistency check between documents
-
-#### Hooks
-
-- `check-spec-exists` - Verify specification existence before implementation
 
 #### Integration
 
