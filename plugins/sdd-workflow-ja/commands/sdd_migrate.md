@@ -1,11 +1,11 @@
 ---
-description: "旧バージョン（v1.0.x）のAI-SDDディレクトリ構成を新バージョン（v1.1.0以降）に移行する。"
+description: "旧バージョン（v1.x）のAI-SDDディレクトリ構成を新バージョン（v2.0.0）に移行する。"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # SDD Migrate - AI-SDDマイグレーション
 
-旧バージョン（v1.0.x）のAI-SDDディレクトリ構成を新バージョン（v1.1.0以降）に移行するためのコマンドです。
+旧バージョン（v1.x）のAI-SDDディレクトリ構成を新バージョン（v2.0.0）に移行するためのコマンドです。
 
 ## このコマンドの機能
 
@@ -13,9 +13,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 2. **移行オプション提示**: 新構成への移行または互換性設定の生成を選択
 3. **安全な移行**: Git管理下でのリネームまたは設定ファイル生成
 
-## 破壊的変更の概要（v1.0.x → v1.1.0）
+## 破壊的変更の概要（v1.x → v2.0.0）
 
-| 旧構成（v1.0.x） | 新構成（v1.1.0） | 説明 |
+| 旧構成（v1.x） | 新構成（v2.0.0） | 説明 |
 |:---|:---|:---|
 | `.docs/` | `.sdd/` | ドキュメントルートディレクトリ |
 | `requirement-diagram/` | `requirement/` | 要求仕様書格納ディレクトリ |
@@ -149,7 +149,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 1. 既存のスクリプトや参照を確認し、必要に応じて更新
 2. `git status` で変更を確認
-3. 変更をコミット（推奨メッセージ: `[docs] AI-SDD v1.1.0 構成に移行`）
+3. 変更をコミット（推奨メッセージ: `[docs] AI-SDD v2.0.0 構成に移行`）
 ```
 
 ### 移行完了後（オプションB選択時）
@@ -227,7 +227,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ### オプションAの場合
 
 ```
-[docs] AI-SDD v1.1.0 構成に移行
+[docs] AI-SDD v2.0.0 構成に移行
 
 - .docs/ → .sdd/ にリネーム
 - requirement-diagram/ → requirement/ にリネーム

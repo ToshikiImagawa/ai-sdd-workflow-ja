@@ -1,11 +1,11 @@
 ---
-description: "Migrate legacy AI-SDD directory structure (v1.0.x) to new structure (v1.1.0+)."
+description: "Migrate legacy AI-SDD directory structure (v1.x) to new structure (v2.0.0)."
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # SDD Migrate - AI-SDD Migration
 
-A command to migrate legacy AI-SDD directory structure (v1.0.x) to the new version (v1.1.0+).
+A command to migrate legacy AI-SDD directory structure (v1.x) to the new version (v2.0.0).
 
 ## Command Features
 
@@ -13,9 +13,9 @@ A command to migrate legacy AI-SDD directory structure (v1.0.x) to the new versi
 2. **Migration Options**: Choose between migrating to new structure or generating compatibility config
 3. **Safe Migration**: Rename via Git or generate configuration file
 
-## Breaking Changes Overview (v1.0.x → v1.1.0)
+## Breaking Changes Overview (v1.x → v2.0.0)
 
-| Legacy (v1.0.x) | New (v1.1.0) | Description |
+| Legacy (v1.x) | New (v2.0.0) | Description |
 |:---|:---|:---|
 | `.docs/` | `.sdd/` | Documentation root directory |
 | `requirement-diagram/` | `requirement/` | Requirement documents directory |
@@ -149,7 +149,7 @@ Which option would you like to choose?
 
 1. Review existing scripts and references, update as needed
 2. Check changes with `git status`
-3. Commit changes (recommended message: `[docs] Migrate to AI-SDD v1.1.0 structure`)
+3. Commit changes (recommended message: `[docs] Migrate to AI-SDD v2.0.0 structure`)
 ```
 
 ### After Migration Complete (Option B)
@@ -227,7 +227,7 @@ After migration complete:
 ### For Option A
 
 ```
-[docs] Migrate to AI-SDD v1.1.0 structure
+[docs] Migrate to AI-SDD v2.0.0 structure
 
 - Renamed .docs/ → .sdd/
 - Renamed requirement-diagram/ → requirement/

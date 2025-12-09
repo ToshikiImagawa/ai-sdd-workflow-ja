@@ -38,7 +38,9 @@ ai-sdd-workflow/
 │   │   │   ├── check-spec-exists.sh
 │   │   │   ├── check-commit-prefix.sh
 │   │   │   └── settings.example.json
-│   │   └── LICENSE
+│   │   ├── LICENSE
+│   │   ├── README.md
+│   │   └── CHANGELOG.md
 │   └── sdd-workflow/              # 英語プラグイン
 │       ├── .claude-plugin/
 │       │   └── plugin.json
@@ -46,7 +48,9 @@ ai-sdd-workflow/
 │       ├── commands/
 │       ├── skills/
 │       ├── hooks/
-│       └── LICENSE
+│       ├── LICENSE
+│       ├── README.md
+│       └── CHANGELOG.md
 ├── CLAUDE.md
 └── README.md
 ```

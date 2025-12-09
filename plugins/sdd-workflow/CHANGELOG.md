@@ -91,6 +91,43 @@ Use the `/sdd_migrate` command to migrate from legacy versions (v1.x):
 - `check-commit-prefix` - Migrated to environment variable-based configuration
     - References environment variables set by SessionStart hook
 
+## [1.1.0] - 2025-12-06
+
+### Added
+
+#### Commands
+
+- `/sdd_init` - AI-SDD workflow initialization command
+    - Adds AI-SDD Instructions section to project's `CLAUDE.md`
+    - Creates `.docs/` directory structure (requirement-diagram/, specification/, review/)
+    - Generates template files using `sdd-templates` skill
+
+#### Skills
+
+- `sdd-templates` - AI-SDD templates skill
+    - Provides fallback templates for PRD, specification, and design documents
+    - Clarifies project template priority rules
+
+### Changed
+
+#### Plugin Configuration
+
+- `plugin.json` - Enhanced author field
+    - Added `author.url` field
+
+#### Commands
+
+- Added `allowed-tools` field to all commands
+    - Explicitly specifies available tools for each command
+    - Improved security and clarity
+
+#### Skills
+
+- Improved skill directory structure
+    - Migrated from `skill-name.md` to `skill-name/SKILL.md` + `templates/` structure
+    - Applied Progressive Disclosure pattern
+    - Externalized template files, simplifying SKILL.md
+
 ## [1.0.1] - 2025-12-04
 
 ### Changed
