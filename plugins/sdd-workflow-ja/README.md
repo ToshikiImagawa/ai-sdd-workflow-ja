@@ -41,7 +41,36 @@ Claude Codeで `/plugin` コマンドを実行し、`sdd-workflow-ja` が表示�
 
 ## クイックスタート
 
-**初めてこのプラグインを使用するプロジェクトでは、まず `/sdd_init` を実行することをお勧めします。**
+### 1. フックの設定（推奨）
+
+プラグインの機能を最大限に活用するため、プロジェクトの `.claude/settings.json` にフック設定を追加してください：
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+フックスクリプトに実行権限を付与：
+
+```bash
+chmod +x hooks/*.sh
+```
+
+### 2. プロジェクトの初期化
+
+**初めてこのプラグインを使用するプロジェクトでは、`/sdd_init` を実行してください。**
 
 ```
 /sdd_init

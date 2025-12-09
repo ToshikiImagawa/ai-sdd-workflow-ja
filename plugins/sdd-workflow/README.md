@@ -42,7 +42,36 @@ Run the `/plugin` command in Claude Code and verify that `sdd-workflow` is displ
 
 ## Quick Start
 
-**For projects using this plugin for the first time, we recommend running `/sdd_init` first.**
+### 1. Hook Configuration (Recommended)
+
+To fully utilize the plugin features, add hook settings to your project's `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Grant execute permission to hook scripts:
+
+```bash
+chmod +x hooks/*.sh
+```
+
+### 2. Project Initialization
+
+**For projects using this plugin for the first time, run `/sdd_init`.**
 
 ```
 /sdd_init
