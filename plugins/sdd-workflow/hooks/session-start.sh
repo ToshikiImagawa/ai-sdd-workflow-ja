@@ -1,7 +1,7 @@
 #!/bin/bash
 # session-start.sh
 # SessionStart hook script
-# Loads .sdd-config.json at session start and initializes environment variables
+# Loads .sdd-config.json at session start (generates if not exists) and initializes environment variables
 
 # Get project root
 if [ -n "$CLAUDE_PROJECT_DIR" ]; then
@@ -60,21 +60,41 @@ if [ ! -f "$CONFIG_FILE" ]; then
         echo "Your current structure will continue to work, but you can migrate with:" >&2
         echo "  /sdd_migrate - Migrate to new structure or generate compatibility config" >&2
         echo "" >&2
+    else
+        # No legacy structure detected and no .sdd-config.json exists, auto-generate default config
+        cat > "$CONFIG_FILE" << 'EOF'
+{
+  "docsRoot": ".sdd",
+  "directories": {
+    "requirement": "requirement",
+    "specification": "specification",
+    "task": "task"
+  }
+}
+EOF
+        echo "[AI-SDD] .sdd-config.json auto-generated." >&2
     fi
 fi
 
-# Load configuration if file exists and jq is available
-if [ -f "$CONFIG_FILE" ] && command -v jq &> /dev/null; then
-    CONFIGURED_DOCS_ROOT=$(jq -r '.docsRoot // empty' "$CONFIG_FILE" 2>/dev/null)
-    CONFIGURED_REQUIREMENT=$(jq -r '.directories.requirement // empty' "$CONFIG_FILE" 2>/dev/null)
-    CONFIGURED_SPECIFICATION=$(jq -r '.directories.specification // empty' "$CONFIG_FILE" 2>/dev/null)
-    CONFIGURED_TASK=$(jq -r '.directories.task // empty' "$CONFIG_FILE" 2>/dev/null)
+# Load configuration if file exists
+if [ -f "$CONFIG_FILE" ]; then
+    if command -v jq &> /dev/null; then
+        # jq is available
+        CONFIGURED_DOCS_ROOT=$(jq -r '.docsRoot // empty' "$CONFIG_FILE" 2>/dev/null)
+        CONFIGURED_REQUIREMENT=$(jq -r '.directories.requirement // empty' "$CONFIG_FILE" 2>/dev/null)
+        CONFIGURED_SPECIFICATION=$(jq -r '.directories.specification // empty' "$CONFIG_FILE" 2>/dev/null)
+        CONFIGURED_TASK=$(jq -r '.directories.task // empty' "$CONFIG_FILE" 2>/dev/null)
 
-    # Override with configured values if present
-    [ -n "$CONFIGURED_DOCS_ROOT" ] && DOCS_ROOT="$CONFIGURED_DOCS_ROOT"
-    [ -n "$CONFIGURED_REQUIREMENT" ] && REQUIREMENT_DIR="$CONFIGURED_REQUIREMENT"
-    [ -n "$CONFIGURED_SPECIFICATION" ] && SPECIFICATION_DIR="$CONFIGURED_SPECIFICATION"
-    [ -n "$CONFIGURED_TASK" ] && TASK_DIR="$CONFIGURED_TASK"
+        # Override with configured values if present
+        [ -n "$CONFIGURED_DOCS_ROOT" ] && DOCS_ROOT="$CONFIGURED_DOCS_ROOT"
+        [ -n "$CONFIGURED_REQUIREMENT" ] && REQUIREMENT_DIR="$CONFIGURED_REQUIREMENT"
+        [ -n "$CONFIGURED_SPECIFICATION" ] && SPECIFICATION_DIR="$CONFIGURED_SPECIFICATION"
+        [ -n "$CONFIGURED_TASK" ] && TASK_DIR="$CONFIGURED_TASK"
+    else
+        # jq not available, use grep for basic parsing
+        CONFIGURED_DOCS_ROOT=$(grep -o '"docsRoot"[[:space:]]*:[[:space:]]*"[^"]*"' "$CONFIG_FILE" 2>/dev/null | sed 's/.*"\([^"]*\)"$/\1/')
+        [ -n "$CONFIGURED_DOCS_ROOT" ] && DOCS_ROOT="$CONFIGURED_DOCS_ROOT"
+    fi
 fi
 
 # Write to environment file (if provided by Claude Code)

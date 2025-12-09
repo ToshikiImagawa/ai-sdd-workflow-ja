@@ -42,13 +42,23 @@ When generating documents, **always search for templates in this order**:
 
 This skill provides templates that follow the sdd-workflow agent principles.
 
-### Configuration File Check
+### Directory Path Resolution
 
-**At runtime, check for `.sdd-config.json` at project root and use configuration values if present.**
+**Use `SDD_*` environment variables to resolve directory paths.**
 
-When generating templates, adjust paths within templates based on the configuration file's directory names.
+| Environment Variable     | Default Value         | Description                  |
+|:-------------------------|:----------------------|:-----------------------------|
+| `SDD_DOCS_ROOT`          | `.sdd`                | Documentation root           |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`    | PRD/Requirements directory   |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification`  | Specification/Design directory |
+| `SDD_TASK_PATH`          | `.sdd/task`           | Task log directory           |
 
-For configuration file details, refer to the "Project Configuration File" section in the `sdd-workflow:sdd-workflow` agent.
+**Path Resolution Priority:**
+1. Use `SDD_*` environment variables if set
+2. Check `.sdd-config.json` if environment variables are not set
+3. Use default values if neither exists
+
+When generating templates, adjust paths within templates based on the environment variables or configuration file's directory names.
 
 ## Fallback Templates
 

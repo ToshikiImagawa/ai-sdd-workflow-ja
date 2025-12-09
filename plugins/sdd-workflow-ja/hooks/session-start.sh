@@ -1,7 +1,7 @@
 #!/bin/bash
 # session-start.sh
 # SessionStart フック用スクリプト
-# セッション開始時に .sdd-config.json を読み込み、環境変数を初期化する
+# セッション開始時に .sdd-config.json を読み込み（存在しなければ生成）、環境変数を初期化する
 
 # プロジェクトルートを取得
 if [ -n "$CLAUDE_PROJECT_DIR" ]; then
@@ -60,21 +60,41 @@ if [ ! -f "$CONFIG_FILE" ]; then
         echo "現在の構成でそのまま動作しますが、以下のコマンドでマイグレーションできます:" >&2
         echo "  /sdd_migrate - 新構成への移行または互換性設定の生成" >&2
         echo "" >&2
+    else
+        # 旧構成が検出されず、.sdd-config.json も存在しない場合、デフォルトの設定ファイルを自動生成
+        cat > "$CONFIG_FILE" << 'EOF'
+{
+  "docsRoot": ".sdd",
+  "directories": {
+    "requirement": "requirement",
+    "specification": "specification",
+    "task": "task"
+  }
+}
+EOF
+        echo "[AI-SDD] .sdd-config.json を自動生成しました。" >&2
     fi
 fi
 
-# 設定ファイルが存在し、jqが利用可能な場合は設定値を読み込む
-if [ -f "$CONFIG_FILE" ] && command -v jq &> /dev/null; then
-    CONFIGURED_DOCS_ROOT=$(jq -r '.docsRoot // empty' "$CONFIG_FILE" 2>/dev/null)
-    CONFIGURED_REQUIREMENT=$(jq -r '.directories.requirement // empty' "$CONFIG_FILE" 2>/dev/null)
-    CONFIGURED_SPECIFICATION=$(jq -r '.directories.specification // empty' "$CONFIG_FILE" 2>/dev/null)
-    CONFIGURED_TASK=$(jq -r '.directories.task // empty' "$CONFIG_FILE" 2>/dev/null)
+# 設定ファイルが存在する場合は設定値を読み込む
+if [ -f "$CONFIG_FILE" ]; then
+    if command -v jq &> /dev/null; then
+        # jqが利用可能な場合
+        CONFIGURED_DOCS_ROOT=$(jq -r '.docsRoot // empty' "$CONFIG_FILE" 2>/dev/null)
+        CONFIGURED_REQUIREMENT=$(jq -r '.directories.requirement // empty' "$CONFIG_FILE" 2>/dev/null)
+        CONFIGURED_SPECIFICATION=$(jq -r '.directories.specification // empty' "$CONFIG_FILE" 2>/dev/null)
+        CONFIGURED_TASK=$(jq -r '.directories.task // empty' "$CONFIG_FILE" 2>/dev/null)
 
-    # 設定値があれば上書き
-    [ -n "$CONFIGURED_DOCS_ROOT" ] && DOCS_ROOT="$CONFIGURED_DOCS_ROOT"
-    [ -n "$CONFIGURED_REQUIREMENT" ] && REQUIREMENT_DIR="$CONFIGURED_REQUIREMENT"
-    [ -n "$CONFIGURED_SPECIFICATION" ] && SPECIFICATION_DIR="$CONFIGURED_SPECIFICATION"
-    [ -n "$CONFIGURED_TASK" ] && TASK_DIR="$CONFIGURED_TASK"
+        # 設定値があれば上書き
+        [ -n "$CONFIGURED_DOCS_ROOT" ] && DOCS_ROOT="$CONFIGURED_DOCS_ROOT"
+        [ -n "$CONFIGURED_REQUIREMENT" ] && REQUIREMENT_DIR="$CONFIGURED_REQUIREMENT"
+        [ -n "$CONFIGURED_SPECIFICATION" ] && SPECIFICATION_DIR="$CONFIGURED_SPECIFICATION"
+        [ -n "$CONFIGURED_TASK" ] && TASK_DIR="$CONFIGURED_TASK"
+    else
+        # jqがない場合はgrepで簡易的に読み込み
+        CONFIGURED_DOCS_ROOT=$(grep -o '"docsRoot"[[:space:]]*:[[:space:]]*"[^"]*"' "$CONFIG_FILE" 2>/dev/null | sed 's/.*"\([^"]*\)"$/\1/')
+        [ -n "$CONFIGURED_DOCS_ROOT" ] && DOCS_ROOT="$CONFIGURED_DOCS_ROOT"
+    fi
 fi
 
 # 環境変数ファイルに書き出し（Claude Codeが提供する場合）

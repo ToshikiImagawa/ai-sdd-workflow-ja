@@ -13,13 +13,23 @@ Generates PRD (Requirements Specification) from input business requirements acco
 
 This command follows the sdd-workflow agent principles for PRD generation.
 
-### Configuration File Check
+### Directory Path Resolution
 
-**At runtime, check for `.sdd-config.json` at project root and use configuration values to resolve directory paths if present.**
+**Use `SDD_*` environment variables to resolve directory paths.**
 
-For configuration file details, refer to the "Project Configuration File" section in the `sdd-workflow:sdd-workflow` agent.
+| Environment Variable     | Default Value         | Description                  |
+|:-------------------------|:----------------------|:-----------------------------|
+| `SDD_DOCS_ROOT`          | `.sdd`                | Documentation root           |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`    | PRD/Requirements directory   |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification`  | Specification/Design directory |
+| `SDD_TASK_PATH`          | `.sdd/task`           | Task log directory           |
 
-The following documentation uses default values (`.sdd`, `requirement`, `specification`), but replace with custom values if a configuration file exists.
+**Path Resolution Priority:**
+1. Use `SDD_*` environment variables if set
+2. Check `.sdd-config.json` if environment variables are not set
+3. Use default values if neither exists
+
+The following documentation uses default values, but replace with custom values if environment variables or configuration file exists.
 
 ### Skills Used
 
