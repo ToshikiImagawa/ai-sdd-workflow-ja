@@ -45,6 +45,7 @@ $ARGUMENTS
 フラット構造と階層構造の両方をサポートします。
 
 **フラット構造の場合**:
+
 ```
 .sdd/requirement/{機能名}.md を読み込む（PRD、存在する場合）
 .sdd/specification/{機能名}_spec.md を読み込む（存在する場合）
@@ -52,6 +53,7 @@ $ARGUMENTS
 ```
 
 **階層構造の場合**（引数に `/` が含まれる場合）:
+
 ```
 .sdd/requirement/{親機能名}/index.md を読み込む（親機能のPRD、存在する場合）
 .sdd/requirement/{親機能名}/{機能名}.md を読み込む（子機能のPRD、存在する場合）
@@ -62,6 +64,7 @@ $ARGUMENTS
 ```
 
 **入力例（階層構造）**:
+
 ```
 /task_breakdown auth/user-login
 /task_breakdown auth/user-login TICKET-123

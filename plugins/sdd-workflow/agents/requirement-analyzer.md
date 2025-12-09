@@ -315,12 +315,14 @@ Project requirement diagrams are located in the `.sdd/requirement/` directory.
 Requirement diagrams support both flat and hierarchical structures:
 
 **Flat Structure**:
+
 ```
 .sdd/requirement/
 └── {feature-name}.md
 ```
 
 **Hierarchical Structure**:
+
 ```
 .sdd/requirement/
 ├── {feature-name}.md              # Top-level feature

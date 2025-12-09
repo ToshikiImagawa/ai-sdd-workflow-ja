@@ -304,6 +304,7 @@ requirementDiagram
 **実行時に `.sdd-config.json` が存在する場合は設定値を使用します。**
 
 デフォルトのディレクトリ構成:
+
 - ドキュメントルート: `.sdd`
 - 要求ディレクトリ: `requirement`
 
@@ -314,12 +315,14 @@ requirementDiagram
 要求図はフラット構造と階層構造の両方をサポートします：
 
 **フラット構造**:
+
 ```
 {docsRoot}/{requirement}/
 └── {機能名}.md
 ```
 
 **階層構造**:
+
 ```
 {docsRoot}/{requirement}/
 ├── {機能名}.md              # トップレベル機能

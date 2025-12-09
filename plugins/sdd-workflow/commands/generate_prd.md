@@ -25,8 +25,8 @@ The following documentation uses default values (`.sdd`, `requirement`, `specifi
 
 This command uses the following skills:
 
-| Skill                        | Purpose                                                               |
-|:-----------------------------|:----------------------------------------------------------------------|
+| Skill                        | Purpose                                                              |
+|:-----------------------------|:---------------------------------------------------------------------|
 | `sdd-workflow:sdd-templates` | Generate `.sdd/PRD_TEMPLATE.md` when project template does not exist |
 
 **Template Preparation Flow**:
@@ -112,6 +112,7 @@ If important items cannot be determined from input, **confirm with user before g
 Check the following before generation. Both flat and hierarchical structures are supported.
 
 **For flat structure**:
+
 ```
 Does .sdd/requirement/{feature-name}.md already exist? (PRD)
 Does .sdd/specification/{feature-name}_spec.md already exist? (spec)
@@ -119,6 +120,7 @@ Does .sdd/specification/{feature-name}_design.md already exist? (design)
 ```
 
 **For hierarchical structure** (when placing under parent feature):
+
 ```
 Does .sdd/requirement/{parent-feature}/index.md already exist? (parent feature PRD)
 Does .sdd/requirement/{parent-feature}/{feature-name}.md already exist? (child feature PRD)
@@ -158,6 +160,7 @@ Follow these steps to prepare the template:
 - Manage requirement IDs (UR-xxx, FR-xxx, NFR-xxx) uniquely
 
 **Save Location**:
+
 - Flat structure: `.sdd/requirement/{feature-name}.md`
 - Hierarchical structure (parent feature): `.sdd/requirement/{parent-feature}/index.md`
 - Hierarchical structure (child feature): `.sdd/requirement/{parent-feature}/{feature-name}.md`

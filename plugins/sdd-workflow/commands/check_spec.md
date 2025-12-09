@@ -47,6 +47,7 @@ $ARGUMENTS
 Both flat and hierarchical structures are supported.
 
 **For flat structure**:
+
 ```
 With argument → Target the following files:
   - .sdd/requirement/{argument}.md (PRD, if exists)
@@ -56,6 +57,7 @@ Without argument → Target all files under .sdd/specification/ (recursively)
 ```
 
 **For hierarchical structure** (when argument contains `/`, or when specifying hierarchical path):
+
 ```
 Argument in "{parent-feature}/{feature-name}" format → Target the following files:
   - .sdd/requirement/{parent-feature}/{feature-name}.md (PRD)
@@ -72,6 +74,7 @@ Argument is "{parent-feature}" only → Target the following files:
 ```
 
 **Hierarchical structure input examples**:
+
 ```
 /check_spec auth/user-login     # Check user-login feature under auth domain
 /check_spec auth                # Check entire auth domain

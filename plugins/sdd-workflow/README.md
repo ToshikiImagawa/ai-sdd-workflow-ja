@@ -289,6 +289,7 @@ Both flat and hierarchical structures are supported.
 ```
 
 **Hierarchical structure usage examples**:
+
 ```
 /generate_prd auth/user-login   # Generate user-login PRD under auth domain
 /generate_spec auth/user-login  # Generate specification under auth domain
@@ -310,19 +311,20 @@ Place a `.sdd-config.json` file in your project root to customize directory name
 }
 ```
 
-| Setting                     | Default              | Description                              |
-|:----------------------------|:---------------------|:-----------------------------------------|
-| `docsRoot`                  | `.sdd`              | Documentation root directory             |
-| `directories.requirement`   | `requirement`| PRD (Requirements Specification) directory |
-| `directories.specification` | `specification`      | Specification/design document directory  |
-| `directories.task`          | `task`               | Temporary task logs directory            |
+| Setting                     | Default         | Description                                |
+|:----------------------------|:----------------|:-------------------------------------------|
+| `docsRoot`                  | `.sdd`          | Documentation root directory               |
+| `directories.requirement`   | `requirement`   | PRD (Requirements Specification) directory |
+| `directories.specification` | `specification` | Specification/design document directory    |
+| `directories.task`          | `task`          | Temporary task logs directory              |
 
 **Notes**:
+
 - If the configuration file doesn't exist, default values are used
 - Partial configuration is supported (unspecified items use defaults)
-- Hook scripts (`check-spec-exists.sh`, `check-commit-prefix.sh`) also reference this configuration file (requires jq)
 
 **Custom configuration example**:
+
 ```json
 {
   "docsRoot": "docs",
@@ -334,6 +336,7 @@ Place a `.sdd-config.json` file in your project root to customize directory name
 ```
 
 This configuration results in the following directory structure:
+
 ```
 docs/
 ├── requirements/       # PRD (Requirements Specification)

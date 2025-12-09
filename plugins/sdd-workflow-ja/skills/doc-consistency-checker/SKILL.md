@@ -42,6 +42,7 @@ graph RL
 フラット構造と階層構造の両方をサポートします。
 
 **フラット構造**:
+
 ```
 .sdd/
 ├── requirement/{機能名}.md
@@ -51,6 +52,7 @@ graph RL
 ```
 
 **階層構造**:
+
 ```
 .sdd/
 ├── requirement/

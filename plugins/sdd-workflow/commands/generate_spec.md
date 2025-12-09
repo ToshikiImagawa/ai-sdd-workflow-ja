@@ -28,8 +28,8 @@ The following documentation uses default values (`.sdd`, `requirement`, `specifi
 
 This command uses the following skills:
 
-| Skill                        | Purpose                                                                                                        |
-|:-----------------------------|:---------------------------------------------------------------------------------------------------------------|
+| Skill                        | Purpose                                                                                                      |
+|:-----------------------------|:-------------------------------------------------------------------------------------------------------------|
 | `sdd-workflow:sdd-templates` | Generate `.sdd/SPECIFICATION_TEMPLATE.md`, `.sdd/DESIGN_DOC_TEMPLATE.md` when project templates do not exist |
 
 **Template Preparation Flow**:
@@ -114,6 +114,7 @@ If important items cannot be determined from input, **confirm with user before g
 Check the following before generation. Both flat and hierarchical structures are supported.
 
 **For flat structure**:
+
 ```
 Does .sdd/requirement/{feature-name}.md exist? (PRD)
 Does .sdd/specification/{feature-name}_spec.md already exist?
@@ -121,6 +122,7 @@ Does .sdd/specification/{feature-name}_design.md already exist?
 ```
 
 **For hierarchical structure** (when placing under parent feature):
+
 ```
 Does .sdd/requirement/{parent-feature}/index.md exist? (parent feature PRD)
 Does .sdd/requirement/{parent-feature}/{feature-name}.md exist? (child feature PRD)
@@ -131,6 +133,7 @@ Does .sdd/specification/{parent-feature}/{feature-name}_design.md already exist?
 ```
 
 **Hierarchical structure usage decision**:
+
 - Use hierarchical structure when corresponding PRD exists in hierarchical structure
 - Use hierarchical structure when parent feature (category) is specified in input
 - Recommended to confirm with user whether to use hierarchical structure
@@ -163,6 +166,7 @@ Follow these steps to prepare the template:
 - Reference PRD requirement IDs (UR-xxx, FR-xxx, NFR-xxx) in functional requirements
 
 **Save Location**:
+
 - Flat structure: `.sdd/specification/{feature-name}_spec.md`
 - Hierarchical structure (parent feature): `.sdd/specification/{parent-feature}/index_spec.md`
 - Hierarchical structure (child feature): `.sdd/specification/{parent-feature}/{feature-name}_spec.md`
@@ -187,6 +191,7 @@ Follow these steps to prepare the template:
 - Ensure consistency with spec
 
 **Save Location**:
+
 - Flat structure: `.sdd/specification/{feature-name}_design.md`
 - Hierarchical structure (parent feature): `.sdd/specification/{parent-feature}/index_design.md`
 - Hierarchical structure (child feature): `.sdd/specification/{parent-feature}/{feature-name}_design.md`

@@ -15,12 +15,12 @@ A command to migrate legacy AI-SDD directory structure (v1.x) to the new version
 
 ## Breaking Changes Overview (v1.x → v2.0.0)
 
-| Legacy (v1.x) | New (v2.0.0) | Description |
-|:---|:---|:---|
-| `.docs/` | `.sdd/` | Documentation root directory |
-| `requirement-diagram/` | `requirement/` | Requirement documents directory |
-| `review/` | `task/` | Task log directory |
-| `/review_cleanup` | `/task_cleanup` | Cleanup command |
+| Legacy (v1.x)          | New (v2.0.0)    | Description                     |
+|:-----------------------|:----------------|:--------------------------------|
+| `.docs/`               | `.sdd/`         | Documentation root directory    |
+| `requirement-diagram/` | `requirement/`  | Requirement documents directory |
+| `review/`              | `task/`         | Task log directory              |
+| `/review_cleanup`      | `/task_cleanup` | Cleanup command                 |
 
 ## Execution Flow
 
@@ -54,6 +54,7 @@ A command to migrate legacy AI-SDD directory structure (v1.x) to the new version
 **Recommended**: For early-stage projects or when unified naming conventions are desired
 
 Process:
+
 1. `git mv .docs .sdd` to rename root directory
 2. `git mv .sdd/requirement-diagram .sdd/requirement` to rename requirement directory
 3. `git mv .sdd/review .sdd/task` to rename task directory
@@ -61,10 +62,12 @@ Process:
 5. Commit changes
 
 **Benefits**:
+
 - Full compatibility with new plugin version
 - Simpler document references
 
 **Note**:
+
 - May require updating existing references or scripts
 - Tracked as rename in Git history
 
@@ -73,6 +76,7 @@ Process:
 **Recommended**: For existing projects with many references or when avoiding breaking changes
 
 Process:
+
 1. Generate `.sdd-config.json` with legacy directory names
 2. Plugin operates based on configuration file
 
@@ -90,10 +94,12 @@ Process:
 ```
 
 **Benefits**:
+
 - No changes to existing structure
 - Existing references and scripts continue to work
 
 **Note**:
+
 - New documents will use legacy directory names
 - Configuration file management required
 
@@ -123,10 +129,12 @@ Legacy structure is detected under these conditions:
 ### Migration Options
 
 **A: Migrate to New Structure**
+
 - Rename directories to align with new naming conventions
 - Recommended: For new or early-stage projects
 
 **B: Keep Legacy Structure**
+
 - Generate `.sdd-config.json` to maintain current structure
 - Recommended: For existing projects with many external references
 
@@ -178,6 +186,7 @@ Which option would you like to choose?
 
 1. Add `.sdd-config.json` to version control
 2. Commit changes (recommended message: `[docs] Add AI-SDD compatibility config`)
+
 ```
 
 ## Error Handling
@@ -185,39 +194,47 @@ Which option would you like to choose?
 ### Project Not Under Git
 
 ```
+
 ⚠️ This project is not under Git management.
 
 If you choose Option A (directory rename),
 manual backup is recommended.
 
 Continue?
+
 ```
 
 ### Already Using New Structure
 
 ```
+
 ✅ This project is already using the new structure.
 
 No migration needed.
 
 Current structure:
+
 - Docs root: .sdd
 - Requirement: requirement
 - Task: task
+
 ```
 
 ### .sdd-config.json Already Exists
 
 ```
+
 ℹ️ `.sdd-config.json` already exists.
 
 Current settings:
+
 - docsRoot: {current value}
 - directories.requirement: {current value}
 - directories.task: {current value}
 
 The plugin will operate based on this configuration.
 To modify settings, manually edit `.sdd-config.json`.
+
 ```
 
 ## Commit
@@ -227,18 +244,22 @@ After migration complete:
 ### For Option A
 
 ```
+
 [docs] Migrate to AI-SDD v2.0.0 structure
 
 - Renamed .docs/ → .sdd/
 - Renamed requirement-diagram/ → requirement/
 - Renamed review/ → task/
+
 ```
 
 ### For Option B
 
 ```
+
 [docs] Add AI-SDD compatibility config
 
 - Generated .sdd-config.json
 - Maintained legacy directory structure
+
 ```

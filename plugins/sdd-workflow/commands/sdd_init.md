@@ -142,8 +142,8 @@ Both flat and hierarchical structures are supported.
 
 ### Template Files to Generate
 
-| Template                   | Path                              | Purpose                                    |
-|:---------------------------|:----------------------------------|:-------------------------------------------|
+| Template                   | Path                             | Purpose                                    |
+|:---------------------------|:---------------------------------|:-------------------------------------------|
 | **PRD Template**           | `.sdd/PRD_TEMPLATE.md`           | Requirements specification in SysML format |
 | **Specification Template** | `.sdd/SPECIFICATION_TEMPLATE.md` | Abstract system specification              |
 | **Design Doc Template**    | `.sdd/DESIGN_DOC_TEMPLATE.md`    | Technical design document                  |

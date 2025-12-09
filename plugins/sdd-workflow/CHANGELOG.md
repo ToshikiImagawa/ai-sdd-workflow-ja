@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Migration
 
 Use the `/sdd_migrate` command to migrate from legacy versions (v1.x):
+
 - **Option A**: Rename directories to migrate to new structure
 - **Option B**: Generate `.sdd-config.json` to maintain legacy structure
 

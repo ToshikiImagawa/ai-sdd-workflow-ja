@@ -45,6 +45,7 @@ $ARGUMENTS
 Both flat and hierarchical structures are supported.
 
 **For flat structure**:
+
 ```
 Load .sdd/requirement/{feature-name}.md (PRD, if exists)
 Load .sdd/specification/{feature-name}_spec.md (if exists)
@@ -52,6 +53,7 @@ Load .sdd/specification/{feature-name}_design.md (required)
 ```
 
 **For hierarchical structure** (when argument contains `/`):
+
 ```
 Load .sdd/requirement/{parent-feature}/index.md (parent feature PRD, if exists)
 Load .sdd/requirement/{parent-feature}/{feature-name}.md (child feature PRD, if exists)
@@ -62,6 +64,7 @@ Load .sdd/specification/{parent-feature}/{feature-name}_design.md (child feature
 ```
 
 **Hierarchical structure input examples**:
+
 ```
 /task_breakdown auth/user-login
 /task_breakdown auth/user-login TICKET-123

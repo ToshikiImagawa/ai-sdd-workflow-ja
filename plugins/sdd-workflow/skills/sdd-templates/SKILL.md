@@ -33,7 +33,7 @@ When generating documents, **always search for templates in this order**:
 
 | Priority         | Template          | Path                      | Usage Condition                         |
 |:-----------------|:------------------|:--------------------------|:----------------------------------------|
-| **1 (Highest)**  | Project templates | `.sdd/*.md`              | Use if exists                           |
+| **1 (Highest)**  | Project templates | `.sdd/*.md`               | Use if exists                           |
 | **2 (Fallback)** | Plugin templates  | This skill's `templates/` | ONLY when project templates don't exist |
 
 ## Prerequisites
@@ -54,8 +54,8 @@ For configuration file details, refer to the "Project Configuration File" sectio
 
 Used only when project templates do not exist:
 
-| Template                             | File                                                         | Corresponding Project Template    |
-|:-------------------------------------|:-------------------------------------------------------------|:----------------------------------|
+| Template                             | File                                                         | Corresponding Project Template   |
+|:-------------------------------------|:-------------------------------------------------------------|:---------------------------------|
 | **PRD (Requirements Specification)** | [templates/prd_template.md](templates/prd_template.md)       | `.sdd/PRD_TEMPLATE.md`           |
 | **Abstract Specification**           | [templates/spec_template.md](templates/spec_template.md)     | `.sdd/SPECIFICATION_TEMPLATE.md` |
 | **Technical Design Doc**             | [templates/design_template.md](templates/design_template.md) | `.sdd/DESIGN_DOC_TEMPLATE.md`    |

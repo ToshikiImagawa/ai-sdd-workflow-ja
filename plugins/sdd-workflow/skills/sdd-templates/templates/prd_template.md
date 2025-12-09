@@ -9,11 +9,11 @@ The filename should be `{feature-name}.md`.
 
 ## Difference from Spec / Design Doc
 
-| Document                   | SDD Phase         | Role and Focus                                                                           | Abstraction           |
-|----------------------------|-------------------|------------------------------------------------------------------------------------------|-----------------------|
+| Document           | SDD Phase         | Role and Focus                                                                           | Abstraction           |
+|--------------------|-------------------|------------------------------------------------------------------------------------------|-----------------------|
 | `requirement/*.md` | **Specify**       | **"What to build" "Why to build"** - Defines business requirements. No technical details | Highest (Abstract)    |
-| `xxx_spec.md`              | **Specify**       | **"What to build"** - Defines abstract structure and behavior. No technical details      | High (Abstract)       |
-| `xxx_design.md`            | **Plan (Design)** | **"How to implement"** - Concrete technical design. Ensures design decision transparency | Medium-Low (Concrete) |
+| `xxx_spec.md`      | **Specify**       | **"What to build"** - Defines abstract structure and behavior. No technical details      | High (Abstract)       |
+| `xxx_design.md`    | **Plan (Design)** | **"How to implement"** - Concrete technical design. Ensures design decision transparency | Medium-Low (Concrete) |
 
 ---
 

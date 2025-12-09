@@ -15,12 +15,12 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 ## 破壊的変更の概要（v1.x → v2.0.0）
 
-| 旧構成（v1.x） | 新構成（v2.0.0） | 説明 |
-|:---|:---|:---|
-| `.docs/` | `.sdd/` | ドキュメントルートディレクトリ |
-| `requirement-diagram/` | `requirement/` | 要求仕様書格納ディレクトリ |
-| `review/` | `task/` | タスクログ格納ディレクトリ |
-| `/review_cleanup` | `/task_cleanup` | クリーンアップコマンド |
+| 旧構成（v1.x）              | 新構成（v2.0.0）     | 説明              |
+|:-----------------------|:----------------|:----------------|
+| `.docs/`               | `.sdd/`         | ドキュメントルートディレクトリ |
+| `requirement-diagram/` | `requirement/`  | 要求仕様書格納ディレクトリ   |
+| `review/`              | `task/`         | タスクログ格納ディレクトリ   |
+| `/review_cleanup`      | `/task_cleanup` | クリーンアップコマンド     |
 
 ## 実行フロー
 
@@ -54,6 +54,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 **推奨**: プロジェクトが初期段階の場合や、統一された命名規則を使いたい場合
 
 処理内容:
+
 1. `git mv .docs .sdd` でルートディレクトリをリネーム
 2. `git mv .sdd/requirement-diagram .sdd/requirement` で要求仕様ディレクトリをリネーム
 3. `git mv .sdd/review .sdd/task` でタスクディレクトリをリネーム
@@ -61,10 +62,12 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 5. 変更をコミット
 
 **利点**:
+
 - 新しいプラグインバージョンと完全に互換
 - ドキュメント参照がシンプルに
 
 **注意**:
+
 - 既存の参照やスクリプトの更新が必要な場合がある
 - Git履歴でリネームとして追跡される
 
@@ -73,6 +76,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 **推奨**: 既存のプロジェクトで多くの参照がある場合や、破壊的変更を避けたい場合
 
 処理内容:
+
 1. `.sdd-config.json` を生成し、旧ディレクトリ名を設定
 2. プラグインは設定ファイルに基づいて動作
 
@@ -90,10 +94,12 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ```
 
 **利点**:
+
 - 既存の構成を変更しない
 - 既存の参照やスクリプトがそのまま動作
 
 **注意**:
+
 - 新しいドキュメントでは旧ディレクトリ名が使用される
 - 設定ファイルの管理が必要
 
@@ -123,10 +129,12 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ### 移行オプション
 
 **A: 新構成に移行**
+
 - ディレクトリをリネームして新しい命名規則に統一
 - 推奨: 新規プロジェクトや初期段階のプロジェクト
 
 **B: 旧構成を維持**
+
 - `.sdd-config.json` を生成して現在の構成を維持
 - 推奨: 多くの外部参照がある既存プロジェクト
 
@@ -178,6 +186,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 1. `.sdd-config.json` をバージョン管理に追加
 2. 変更をコミット（推奨メッセージ: `[docs] AI-SDD 互換性設定を追加`）
+
 ```
 
 ## エラーハンドリング
@@ -185,39 +194,47 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ### Git管理外のプロジェクト
 
 ```
+
 ⚠️ このプロジェクトはGit管理下にありません。
 
 オプションA（ディレクトリリネーム）を選択する場合、
 手動でのバックアップを推奨します。
 
 続行しますか？
+
 ```
 
 ### 既に新構成の場合
 
 ```
+
 ✅ このプロジェクトは既に新しい構成を使用しています。
 
 マイグレーションは不要です。
 
 現在の構成:
+
 - ドキュメントルート: .sdd
 - 要求仕様: requirement
 - タスク: task
+
 ```
 
 ### .sdd-config.json が既に存在する場合
 
 ```
+
 ℹ️ `.sdd-config.json` が既に存在します。
 
 現在の設定:
+
 - docsRoot: {現在の値}
 - directories.requirement: {現在の値}
 - directories.task: {現在の値}
 
 この設定に基づいてプラグインは動作します。
 設定を変更する場合は、手動で `.sdd-config.json` を編集してください。
+
 ```
 
 ## コミット
@@ -227,18 +244,22 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ### オプションAの場合
 
 ```
+
 [docs] AI-SDD v2.0.0 構成に移行
 
 - .docs/ → .sdd/ にリネーム
 - requirement-diagram/ → requirement/ にリネーム
 - review/ → task/ にリネーム
+
 ```
 
 ### オプションBの場合
 
 ```
+
 [docs] AI-SDD 互換性設定を追加
 
 - .sdd-config.json を生成
 - 旧ディレクトリ構成を維持
+
 ```

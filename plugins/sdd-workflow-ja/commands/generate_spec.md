@@ -28,8 +28,8 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 このコマンドは以下のスキルを使用します：
 
-| スキル                             | 用途                                                                                         |
-|:--------------------------------|:-------------------------------------------------------------------------------------------|
+| スキル                             | 用途                                                                                       |
+|:--------------------------------|:-----------------------------------------------------------------------------------------|
 | `sdd-workflow-ja:sdd-templates` | プロジェクトテンプレートが存在しない場合に `.sdd/SPECIFICATION_TEMPLATE.md`、`.sdd/DESIGN_DOC_TEMPLATE.md` を生成 |
 
 **テンプレート準備フロー**:
@@ -114,6 +114,7 @@ $ARGUMENTS
 生成前に以下を確認してください。フラット構造と階層構造の両方をサポートします。
 
 **フラット構造の場合**:
+
 ```
 .sdd/requirement/{機能名}.md が存在するか？（PRD）
 .sdd/specification/{機能名}_spec.md が既に存在するか？
@@ -121,6 +122,7 @@ $ARGUMENTS
 ```
 
 **階層構造の場合**（親機能配下に配置する場合）:
+
 ```
 .sdd/requirement/{親機能名}/index.md が存在するか？（親機能のPRD）
 .sdd/requirement/{親機能名}/{機能名}.md が存在するか？（子機能のPRD）
@@ -131,6 +133,7 @@ $ARGUMENTS
 ```
 
 **階層構造の使用判断**:
+
 - 対応するPRDが階層構造で存在する場合は、同じ階層構造を使用
 - 入力に親機能（カテゴリ）が指定されている場合は階層構造を使用
 - ユーザーに階層構造で配置するか確認することを推奨
@@ -163,6 +166,7 @@ $ARGUMENTS
 - PRDの要求ID（UR-xxx, FR-xxx, NFR-xxx）を機能要件で参照
 
 **保存先**:
+
 - フラット構造: `.sdd/specification/{機能名}_spec.md`
 - 階層構造（親機能）: `.sdd/specification/{親機能名}/index_spec.md`
 - 階層構造（子機能）: `.sdd/specification/{親機能名}/{機能名}_spec.md`
@@ -187,6 +191,7 @@ $ARGUMENTS
 - specとの整合性を確保
 
 **保存先**:
+
 - フラット構造: `.sdd/specification/{機能名}_design.md`
 - 階層構造（親機能）: `.sdd/specification/{親機能名}/index_design.md`
 - 階層構造（子機能）: `.sdd/specification/{親機能名}/{機能名}_design.md`

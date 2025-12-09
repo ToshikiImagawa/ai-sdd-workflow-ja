@@ -42,6 +42,7 @@ graph RL
 Both flat and hierarchical structures are supported.
 
 **Flat Structure**:
+
 ```
 .sdd/
 ├── requirement/{feature-name}.md
@@ -51,6 +52,7 @@ Both flat and hierarchical structures are supported.
 ```
 
 **Hierarchical Structure**:
+
 ```
 .sdd/
 ├── requirement/

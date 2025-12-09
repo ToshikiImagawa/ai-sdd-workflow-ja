@@ -69,12 +69,12 @@ AI-SDD workflow supports customizing directory names via a `.sdd-config.json` fi
 
 ### Configuration Items
 
-| Item                          | Default Value          | Description                           |
-|:------------------------------|:-----------------------|:--------------------------------------|
-| `docsRoot`                    | `.sdd`                | Documentation root directory          |
-| `directories.requirement`     | `requirement`  | PRD/Requirements specification directory |
-| `directories.specification`   | `specification`        | Abstract specification/design document directory |
-| `directories.task`            | `task`                 | Task log/temporary work log directory |
+| Item                        | Default Value   | Description                                      |
+|:----------------------------|:----------------|:-------------------------------------------------|
+| `docsRoot`                  | `.sdd`          | Documentation root directory                     |
+| `directories.requirement`   | `requirement`   | PRD/Requirements specification directory         |
+| `directories.specification` | `specification` | Abstract specification/design document directory |
+| `directories.task`          | `task`          | Task log/temporary work log directory            |
 
 ### Configuration File Loading Rules
 
@@ -153,14 +153,15 @@ Both flat and hierarchical structures are supported. Choose based on project sca
 
 #### Hierarchical Structure Guidelines
 
-| Condition | Recommended Structure |
-|:--|:--|
-| Less than 10 features | Flat structure |
-| 10 or more features | Hierarchical structure |
-| Features spanning multiple domains | Hierarchical structure |
+| Condition                                | Recommended Structure  |
+|:-----------------------------------------|:-----------------------|
+| Less than 10 features                    | Flat structure         |
+| 10 or more features                      | Hierarchical structure |
+| Features spanning multiple domains       | Hierarchical structure |
 | Features with parent-child relationships | Hierarchical structure |
 
 **Hierarchical path examples**:
+
 - `requirement/auth/index.md` → Auth domain overview and requirements list
 - `requirement/auth/user-login.md` → User login requirements under auth domain
 - `specification/auth/index_spec.md` → Auth domain abstract specification
@@ -172,7 +173,7 @@ Both flat and hierarchical structures are supported. Choose based on project sca
 
 | Path                        | Persistence    | Management Rules                                                                                                  |
 |:----------------------------|:---------------|:------------------------------------------------------------------------------------------------------------------|
-| `requirement/`      | **Persistent** | Define high-level requirements (business requirements). Foundation for SysML requirements diagrams                |
+| `requirement/`              | **Persistent** | Define high-level requirements (business requirements). Foundation for SysML requirements diagrams                |
 | `specification/*_spec.md`   | **Persistent** | Define the **abstract structure and behavior** of the system. No technical details                                |
 | `specification/*_design.md` | **Persistent** | Describe **specific technical design**, architecture, and rationale for technology selection                      |
 | `task/`                     | **Temporary**  | **Delete** after implementation complete. Integrate important design decisions into `*_design.md` before deletion |
@@ -445,7 +446,8 @@ Criteria for when to update each document:
 | Plan | .sdd/specification/[{path}/]{name}_design.md | Exists / Needs Update / Needs Creation |
 | Tasks | .sdd/task/{ticket}/ | Needs Creation |
 
-※ `[{path}/]` is only specified for hierarchical structure (e.g., `auth/`). For parent features, `{name}` becomes `index`
+※ `[{path}/]` is only specified for hierarchical structure (e.g., `auth/`). For parent features, `{name}` becomes
+`index`
 
 ### Recommended Workflow
 

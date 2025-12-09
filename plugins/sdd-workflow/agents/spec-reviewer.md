@@ -37,42 +37,42 @@ following perspectives:
 
 Requirements diagrams support both flat structure (`{feature-name}.md`) and hierarchical structure (`{parent-feature}/index.md`, `{parent-feature}/{child-feature}.md`).
 
-| Check Item                      | Criteria                                  |
-|:--------------------------------|:------------------------------------------|
-| **Background/Purpose**          | Is business value clearly described?      |
-| **User Requirements**           | Is it written from user perspective?      |
-| **Functional Requirements**     | Are they derived from user requirements?  |
-| **Non-Functional Requirements** | Are performance, security, etc. defined?  |
-| **Requirement IDs**             | Are unique IDs assigned?                  |
-| **Priority**                    | Is MoSCoW method used for classification? |
+| Check Item                      | Criteria                                                                                    |
+|:--------------------------------|:--------------------------------------------------------------------------------------------|
+| **Background/Purpose**          | Is business value clearly described?                                                        |
+| **User Requirements**           | Is it written from user perspective?                                                        |
+| **Functional Requirements**     | Are they derived from user requirements?                                                    |
+| **Non-Functional Requirements** | Are performance, security, etc. defined?                                                    |
+| **Requirement IDs**             | Are unique IDs assigned?                                                                    |
+| **Priority**                    | Is MoSCoW method used for classification?                                                   |
 | **Hierarchical Structure**      | For hierarchical structure, does `index.md` have overview and child requirement references? |
 
 ### 2. Abstract Specification (`*_spec.md`)
 
 Specifications support both flat structure (`{feature-name}_spec.md`) and hierarchical structure (`{parent-feature}/index_spec.md`, `{parent-feature}/{child-feature}_spec.md`).
 
-| Check Item               | Criteria                                    |
-|:-------------------------|:--------------------------------------------|
-| **Background**           | Is it described why this feature is needed? |
-| **Overview**             | Is it described what to achieve?            |
-| **API**                  | Are public interfaces defined?              |
-| **Data Model**           | Are major types/entities defined?           |
-| **No Technical Details** | Are implementation details excluded?        |
-| **PRD Mapping**          | Is mapping to requirement IDs clear?        |
+| Check Item                 | Criteria                                                                       |
+|:---------------------------|:-------------------------------------------------------------------------------|
+| **Background**             | Is it described why this feature is needed?                                    |
+| **Overview**               | Is it described what to achieve?                                               |
+| **API**                    | Are public interfaces defined?                                                 |
+| **Data Model**             | Are major types/entities defined?                                              |
+| **No Technical Details**   | Are implementation details excluded?                                           |
+| **PRD Mapping**            | Is mapping to requirement IDs clear?                                           |
 | **Hierarchical Structure** | For hierarchical structure, does `index_spec.md` have parent feature overview? |
 
 ### 3. Technical Design Document (`*_design.md`)
 
 Design documents support both flat structure (`{feature-name}_design.md`) and hierarchical structure (`{parent-feature}/index_design.md`, `{parent-feature}/{child-feature}_design.md`).
 
-| Check Item                | Criteria                                             |
-|:--------------------------|:-----------------------------------------------------|
-| **Implementation Status** | Is current status documented?                        |
-| **Design Goals**          | Are technical goals to achieve clear?                |
-| **Technology Stack**      | Are technologies and selection rationale documented? |
-| **Architecture**          | Is system structure diagrammed?                      |
-| **Design Decisions**      | Are important decisions and rationale documented?    |
-| **Spec Consistency**      | Is it consistent with abstract specification?        |
+| Check Item                 | Criteria                                                                                |
+|:---------------------------|:----------------------------------------------------------------------------------------|
+| **Implementation Status**  | Is current status documented?                                                           |
+| **Design Goals**           | Are technical goals to achieve clear?                                                   |
+| **Technology Stack**       | Are technologies and selection rationale documented?                                    |
+| **Architecture**           | Is system structure diagrammed?                                                         |
+| **Design Decisions**       | Are important decisions and rationale documented?                                       |
+| **Spec Consistency**       | Is it consistent with abstract specification?                                           |
 | **Hierarchical Structure** | For hierarchical structure, does `index_design.md` have parent feature design overview? |
 
 ## Ambiguity Detection Patterns
