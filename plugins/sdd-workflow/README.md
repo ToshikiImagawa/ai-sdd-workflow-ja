@@ -115,11 +115,10 @@ This command automatically:
 
 ### Hooks
 
-| Hook                  | Trigger                 | Description                                                               |
-|:----------------------|:------------------------|:--------------------------------------------------------------------------|
-| `session-start`       | SessionStart            | Loads settings from `.sdd-config.json` and sets environment variables    |
-| `check-spec-exists`   | PreToolUse (Edit/Write) | Verifies specification existence before implementation, shows warning    |
-| `check-commit-prefix` | PostToolUse (Bash)      | Checks commit message conventions                                         |
+| Hook                | Trigger                 | Description                                                            |
+|:--------------------|:------------------------|:-----------------------------------------------------------------------|
+| `session-start`     | SessionStart            | Loads settings from `.sdd-config.json` and sets environment variables  |
+| `check-spec-exists` | PreToolUse (Edit/Write) | Verifies specification existence before implementation, shows warning  |
 
 ## Usage
 
@@ -188,17 +187,6 @@ To enable hooks, add the following to your project's `.claude/settings.json`:
           {
             "type": "command",
             "command": "hooks/check-spec-exists.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "hooks/check-commit-prefix.sh"
           }
         ]
       }
@@ -396,19 +384,10 @@ sdd-workflow/
 ├── hooks/
 │   ├── session-start.sh         # Session start initialization
 │   ├── check-spec-exists.sh     # Specification existence check
-│   ├── check-commit-prefix.sh   # Commit prefix check
 │   └── settings.example.json    # Hooks configuration example
 ├── LICENSE
 └── README.md
 ```
-
-## Commit Message Convention
-
-| Prefix     | Usage                                       |
-|:-----------|:--------------------------------------------|
-| `[docs]`   | Add/update documentation                    |
-| `[spec]`   | Add/update specifications (`*_spec.md`)     |
-| `[design]` | Add/update design documents (`*_design.md`) |
 
 ## License
 

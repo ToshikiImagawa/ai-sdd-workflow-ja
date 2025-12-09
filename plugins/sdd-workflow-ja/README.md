@@ -114,11 +114,10 @@ chmod +x hooks/*.sh
 
 ### フック
 
-| フック                   | トリガー                   | 説明                                   |
-|:----------------------|:-----------------------|:-------------------------------------|
-| `session-start`       | SessionStart           | `.sdd-config.json`から設定を読み込み、環境変数を設定 |
-| `check-spec-exists`   | PreToolUse（Edit/Write） | 実装前に仕様書の存在を確認し、警告を表示                 |
-| `check-commit-prefix` | PostToolUse（Bash）      | コミットメッセージ規約をチェック                     |
+| フック                 | トリガー                   | 説明                                   |
+|:--------------------|:-----------------------|:-------------------------------------|
+| `session-start`     | SessionStart           | `.sdd-config.json`から設定を読み込み、環境変数を設定 |
+| `check-spec-exists` | PreToolUse（Edit/Write） | 実装前に仕様書の存在を確認し、警告を表示                 |
 
 ## 使用方法
 
@@ -187,17 +186,6 @@ chmod +x hooks/*.sh
           {
             "type": "command",
             "command": "hooks/check-spec-exists.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "hooks/check-commit-prefix.sh"
           }
         ]
       }
@@ -397,19 +385,10 @@ sdd-workflow-ja/
 ├── hooks/
 │   ├── session-start.sh         # セッション開始時の初期化
 │   ├── check-spec-exists.sh     # 仕様書存在チェック
-│   ├── check-commit-prefix.sh   # コミットプレフィックスチェック
 │   └── settings.example.json    # hooks設定例
 ├── LICENSE
 └── README.md
 ```
-
-## コミットメッセージ規約
-
-| プレフィックス    | 用途                       |
-|:-----------|:-------------------------|
-| `[docs]`   | ドキュメントの追加・更新             |
-| `[spec]`   | 仕様書の追加・更新（`*_spec.md`）   |
-| `[design]` | 設計書の追加・更新（`*_design.md`） |
 
 ## ライセンス
 

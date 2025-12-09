@@ -59,8 +59,13 @@
 
 - `check-spec-exists` - 環境変数ベースの設定に移行
     - SessionStartフックで設定された環境変数を参照
-- `check-commit-prefix` - 環境変数ベースの設定に移行
-    - SessionStartフックで設定された環境変数を参照
+
+### Removed
+
+#### フック
+
+- `check-commit-prefix` - 削除
+    - コミットメッセージ規約がプラグインの機能で使用されていないため削除
 
 ## [1.1.0] - 2025-12-06
 
@@ -175,7 +180,6 @@
 #### フック
 
 - `check-spec-exists` - 実装前に仕様書の存在を確認
-- `check-commit-prefix` - コミットメッセージ規約（[docs], [spec], [design]）のチェック
 
 #### 統合
 

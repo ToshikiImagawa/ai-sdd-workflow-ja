@@ -88,8 +88,13 @@ Use the `/sdd_migrate` command to migrate from legacy versions (v1.x):
 
 - `check-spec-exists` - Migrated to environment variable-based configuration
     - References environment variables set by SessionStart hook
-- `check-commit-prefix` - Migrated to environment variable-based configuration
-    - References environment variables set by SessionStart hook
+
+### Removed
+
+#### Hooks
+
+- `check-commit-prefix` - Removed
+    - Removed because commit message conventions are not used by plugin functionality
 
 ## [1.1.0] - 2025-12-06
 
@@ -205,7 +210,6 @@ Use the `/sdd_migrate` command to migrate from legacy versions (v1.x):
 #### Hooks
 
 - `check-spec-exists` - Verify specification existence before implementation
-- `check-commit-prefix` - Check commit message convention ([docs], [spec], [design])
 
 #### Integration
 

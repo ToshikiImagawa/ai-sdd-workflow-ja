@@ -36,7 +36,6 @@ ai-sdd-workflow/
 │   │   ├── hooks/
 │   │   │   ├── session-start.sh   # セッション開始時の初期化
 │   │   │   ├── check-spec-exists.sh
-│   │   │   ├── check-commit-prefix.sh
 │   │   │   └── settings.example.json
 │   │   ├── LICENSE
 │   │   ├── README.md
@@ -122,14 +121,6 @@ Specify（仕様化） → Plan（計画） → Tasks（タスク分解） → I
 
 - 設定ファイルが存在しない場合はデフォルト値が使用されます
 - 部分的な設定も可能（指定されていない項目はデフォルト値）
-
-## コミットメッセージ規約
-
-| プレフィックス    | 用途                       |
-|:-----------|:-------------------------|
-| `[docs]`   | ドキュメントの追加・更新             |
-| `[spec]`   | 仕様書の追加・更新（`*_spec.md`）   |
-| `[design]` | 設計書の追加・更新（`*_design.md`） |
 
 ## Vibe Coding防止
 
