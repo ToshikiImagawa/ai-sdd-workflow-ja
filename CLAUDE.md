@@ -121,6 +121,25 @@ Specify（仕様化） → Plan（計画） → Tasks（タスク分解） → I
 - 設定ファイルが存在しない場合はデフォルト値が使用されます
 - 部分的な設定も可能（指定されていない項目はデフォルト値）
 
+### 環境変数によるパス解決
+
+セッション開始時に `session-start` フックが `.sdd-config.json` を読み込み、以下の環境変数を設定します。
+
+| 環境変数                     | デフォルト値               | 説明                |
+|:-------------------------|:---------------------|:------------------|
+| `SDD_DOCS_ROOT`          | `.sdd`               | ドキュメントルート         |
+| `SDD_REQUIREMENT_DIR`    | `requirement`        | 要求仕様書ディレクトリ名      |
+| `SDD_SPECIFICATION_DIR`  | `specification`      | 仕様書・設計書ディレクトリ名    |
+| `SDD_TASK_DIR`           | `task`               | タスクログディレクトリ名      |
+| `SDD_REQUIREMENT_PATH`   | `.sdd/requirement`   | 要求仕様書フルパス         |
+| `SDD_SPECIFICATION_PATH` | `.sdd/specification` | 仕様書・設計書フルパス       |
+| `SDD_TASK_PATH`          | `.sdd/task`          | タスクログフルパス         |
+
+**パス解決の優先順位:**
+1. 環境変数 `SDD_*` が設定されている場合はそれを使用
+2. 環境変数がない場合は `.sdd-config.json` を確認
+3. どちらもない場合はデフォルト値を使用
+
 ## Vibe Coding防止
 
 曖昧な指示（「いい感じに」「適当に」「前と同じように」など）を検出した場合、仕様の明確化を促す。仕様書なしでの実装は避け、最低限
