@@ -66,6 +66,8 @@ ai-sdd-workflow/
 │   │   ├── commands/
 │   │   ├── skills/
 │   │   ├── hooks/
+│   │   ├── scripts/
+│   │   ├── CHANGELOG.md
 │   │   ├── LICENSE
 │   │   └── README.md
 │   └── sdd-workflow/              # English plugin
@@ -75,9 +77,12 @@ ai-sdd-workflow/
 │       ├── commands/
 │       ├── skills/
 │       ├── hooks/
+│       ├── scripts/
+│       ├── CHANGELOG.md
 │       ├── LICENSE
 │       └── README.md
 ├── CLAUDE.md
+├── LICENSE
 └── README.md
 ```
 
