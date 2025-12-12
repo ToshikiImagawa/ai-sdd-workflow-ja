@@ -31,9 +31,9 @@ For configuration file details, refer to the "Project Configuration File" sectio
 
 This command uses the following skills:
 
-| Skill                        | Purpose                                                                        |
-|:-----------------------------|:-------------------------------------------------------------------------------|
-| `sdd-workflow:sdd-templates` | Generate PRD, Specification, and Design Doc templates based on project context |
+| Skill                        | Purpose                                                                                            |
+|:-----------------------------|:---------------------------------------------------------------------------------------------------|
+| `sdd-workflow:sdd-templates` | Generate project constitution and PRD, Specification, Design Doc templates based on project context |
 
 ## Execution Flow
 
